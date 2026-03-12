@@ -10,6 +10,8 @@
 
 钟锐, 2024213607, 241118832, zr@bupt.edu.cn
 
+孙昱, 2024213608, 241118441, sunyu2024@bupt.edu.cn
+
 , BUPT Student Number, QM Student Number, Email
 
 Name, BUPT Student Number, QM Student Number, Email
