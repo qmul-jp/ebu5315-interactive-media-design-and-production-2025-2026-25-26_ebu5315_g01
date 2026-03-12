@@ -8,9 +8,9 @@
 
 ## Members:
 
-Name, BUPT Student Number, QM Student Number, Email
+钟锐, 2024213607, 241118832, zr@bupt.edu.cn
 
-Name, BUPT Student Number, QM Student Number, Email
+, BUPT Student Number, QM Student Number, Email
 
 Name, BUPT Student Number, QM Student Number, Email
 
