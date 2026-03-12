@@ -12,12 +12,6 @@
 
 孙昱, 2024213608, 241118441, sunyu2024@bupt.edu.cn
 
-, BUPT Student Number, QM Student Number, Email
-
-Name, BUPT Student Number, QM Student Number, Email
-
-Name, BUPT Student Number, QM Student Number, Email
-
-Name, BUPT Student Number, QM Student Number, Email
+胡峻宁，2024213621，241118120，2024213621@bupt.cn
 
 ## Assigned TA: XXXXXXX
