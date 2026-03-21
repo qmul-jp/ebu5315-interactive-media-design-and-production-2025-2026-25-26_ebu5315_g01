@@ -8,10 +8,10 @@
 
 ## Members:
 
-钟锐, 2024213607, 241118832, zr@bupt.edu.cn, who is responsible for the quiz.
+胡峻宁, 2024213621, 241118120, 2024213621@bupt.cn, who is responsible for the homepage. He is member a.
 
-孙昱, 2024213608, 241118441, sunyu2024@bupt.edu.cn, who is responsible for the game.
+孙昱, 2024213608, 241118441, sunyu2024@bupt.edu.cn, who is responsible for the game.He is member b.
 
-胡峻宁, 2024213621, 241118120, 2024213621@bupt.cn, who is responsible for the homepage.
+钟锐, 2024213607, 241118832, zr@bupt.edu.cn, who is responsible for the quiz. He is member c.
 
 ## Assigned TA: Yingnan Zhou
