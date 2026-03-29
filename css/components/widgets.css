@@ -1,0 +1,229 @@
+/* 其他组件：AI 聊天、悬浮按钮、Premium 横幅 */
+.ai-icon-large {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #9333EA, #3B82F6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 24px;
+    box-shadow: 0 8px 24px rgba(147, 51, 234, 0.3);
+    color: white;
+}
+
+.ai-chat-container {
+    max-width: 768px;
+    margin: 0 auto;
+}
+
+.chat-box {
+    background: linear-gradient(135deg, #EFF6FF, #F3E8FF);
+    border: 1px solid var(--gray-200);
+    border-radius: 16px;
+    padding: 32px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+body.dark-mode .chat-box {
+    background: linear-gradient(135deg, var(--gray-800), var(--gray-700));
+    border-color: var(--gray-600);
+}
+
+.chat-message {
+    background-color: white;
+    border-radius: 12px;
+    padding: 16px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    margin-bottom: 24px;
+    display: flex;
+    gap: 12px;
+}
+
+body.dark-mode .chat-message {
+    background-color: var(--gray-900);
+}
+
+.chat-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background-color: var(--primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    color: white;
+}
+
+.chat-name {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text);
+    margin-bottom: 4px;
+}
+
+.chat-text {
+    color: var(--text);
+    line-height: 1.6;
+}
+
+.chat-input-container {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.chat-input {
+    flex: 1;
+    padding: 16px;
+    border-radius: 12px;
+    border: 2px solid var(--gray-300);
+    background-color: white;
+    color: var(--text);
+    font-size: 16px;
+    transition: border-color 0.3s ease;
+}
+
+body.dark-mode .chat-input {
+    background-color: var(--gray-800);
+    border-color: var(--gray-600);
+}
+
+.chat-input:focus {
+    outline: none;
+    border-color: var(--primary);
+}
+
+.quick-questions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.quick-question-btn {
+    padding: 8px 16px;
+    border-radius: 20px;
+    background-color: white;
+    border: 1px solid var(--gray-200);
+    color: var(--text-muted);
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+body.dark-mode .quick-question-btn {
+    background-color: var(--gray-800);
+    border-color: var(--gray-600);
+}
+
+.quick-question-btn:hover {
+    background-color: var(--gray-100);
+    color: var(--text);
+}
+
+.floating-chat-btn {
+    position: fixed;
+    bottom: 32px;
+    right: 32px;
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #9333EA, #3B82F6);
+    border: none;
+    color: white;
+    cursor: pointer;
+    box-shadow: 0 8px 24px rgba(147, 51, 234, 0.4);
+    transition: all 0.3s ease;
+    z-index: 40;
+    animation: fade-in 0.3s ease-out 1s both;
+}
+
+.floating-chat-btn:hover {
+    transform: scale(1.1);
+    box-shadow: 0 12px 32px rgba(147, 51, 234, 0.5);
+}
+
+.premium-banner {
+    position: relative;
+    background: linear-gradient(90deg, #9333EA 0%, #3B82F6 50%, #6366F1 100%);
+    border-radius: 16px;
+    padding: 48px;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(147, 51, 234, 0.3);
+}
+
+.premium-bg-circle {
+    position: absolute;
+    width: 256px;
+    height: 256px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.1);
+    filter: blur(60px);
+}
+
+.premium-bg-circle-1 {
+    top: 0;
+    right: 0;
+    transform: translate(50%, -50%);
+}
+
+.premium-bg-circle-2 {
+    bottom: 0;
+    left: 0;
+    transform: translate(-50%, 50%);
+}
+
+.premium-content-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 32px;
+}
+
+.premium-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.crown-icon {
+    color: #FDE047;
+}
+
+.premium-badge {
+    padding: 6px 12px;
+    border-radius: 20px;
+    background-color: rgba(253, 224, 71, 0.2);
+    color: #FDE047;
+    font-size: 14px;
+    font-weight: 600;
+    border: 1px solid rgba(253, 224, 71, 0.3);
+}
+
+.premium-title {
+    font-size: 28px;
+    font-weight: 700;
+    color: white;
+    margin-bottom: 12px;
+}
+
+.premium-description {
+    font-size: 18px;
+    color: #DBEAFE;
+    max-width: 600px;
+    line-height: 1.6;
+}
+
+@keyframes fade-in {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

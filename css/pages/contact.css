@@ -1,0 +1,102 @@
+/* 联系页 */
+.contact-section {
+    padding: 80px 0;
+    background-color: var(--gray-50);
+}
+
+body.dark-mode .contact-section {
+    background-color: var(--gray-800);
+}
+
+.contact-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 48px;
+}
+
+.contact-info-title {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 24px;
+}
+
+.contact-info-text {
+    font-size: 16px;
+    color: var(--text-muted);
+    line-height: 1.6;
+    margin-bottom: 32px;
+}
+
+.contact-items {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.contact-item {
+    display: flex;
+    gap: 16px;
+}
+
+.contact-item-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.contact-item-icon-blue {
+    background-color: #DBEAFE;
+    color: var(--primary);
+}
+
+body.dark-mode .contact-item-icon-blue {
+    background-color: #1E3A8A;
+}
+
+.contact-item-icon-green {
+    background-color: #D1FAE5;
+    color: var(--secondary);
+}
+
+body.dark-mode .contact-item-icon-green {
+    background-color: #14532D;
+}
+
+.contact-item-icon-purple {
+    background-color: #F3E8FF;
+    color: #9333EA;
+}
+
+body.dark-mode .contact-item-icon-purple {
+    background-color: #581C87;
+}
+
+.contact-item-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 4px;
+}
+
+.contact-item-text {
+    font-size: 14px;
+    color: var(--text-muted);
+}
+
+.contact-form-container {
+    background-color: white;
+    border: 1px solid var(--gray-200);
+    border-radius: 16px;
+    padding: 32px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+body.dark-mode .contact-form-container {
+    background-color: var(--gray-900);
+    border-color: var(--gray-700);
+}

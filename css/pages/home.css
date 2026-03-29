@@ -1,0 +1,321 @@
+/* 首页：Hero、各区块背景与动效 */
+.hero {
+    background: linear-gradient(135deg, #EFF6FF 0%, #E0E7FF 100%);
+    overflow: hidden;
+    transition: background 0.3s ease;
+}
+
+body.dark-mode .hero {
+    background: linear-gradient(135deg, #0F172A 0%, #1E293B 100%);
+}
+
+.hero .container {
+    padding-top: 96px;
+    padding-bottom: 96px;
+}
+
+.hero-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 48px;
+    align-items: center;
+    min-height: 600px;
+}
+
+.hero-content {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.hero-title {
+    font-size: 48px;
+    font-weight: 700;
+    line-height: 1.2;
+    color: var(--text);
+}
+
+.hero-subtitle {
+    font-size: 18px;
+    line-height: 1.7;
+    color: var(--text-muted);
+}
+
+.hero-buttons {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.hero-visual {
+    position: relative;
+    height: 500px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.circle-animation {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.rotating-circle-1,
+.rotating-circle-2 {
+    position: absolute;
+    border-radius: 50%;
+    border: 2px solid;
+    opacity: 0.3;
+}
+
+.rotating-circle-1 {
+    width: 400px;
+    height: 400px;
+    border-color: #BFDBFE;
+    animation: rotate-clockwise 20s linear infinite;
+}
+
+body.dark-mode .rotating-circle-1 {
+    border-color: #1E3A8A;
+}
+
+.rotating-circle-2 {
+    width: 320px;
+    height: 320px;
+    border-color: #BBF7D0;
+    animation: rotate-counter 15s linear infinite;
+}
+
+body.dark-mode .rotating-circle-2 {
+    border-color: #14532D;
+}
+
+.main-circle {
+    position: relative;
+    width: 300px;
+    height: 300px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #3B82F6, #9333EA);
+    box-shadow: 0 20px 60px rgba(59, 130, 246, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: pulse-scale 3s ease-in-out infinite;
+}
+
+.inner-circle {
+    width: 280px;
+    height: 280px;
+    border-radius: 50%;
+    background-color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--primary);
+}
+
+body.dark-mode .inner-circle {
+    background-color: var(--gray-800);
+}
+
+.inner-circle svg {
+    color: var(--primary);
+}
+
+.floating-shape {
+    position: absolute;
+    border-radius: 50%;
+    opacity: 0.2;
+    filter: blur(40px);
+}
+
+.floating-shape-1 {
+    width: 64px;
+    height: 64px;
+    background-color: #22C55E;
+    top: 80px;
+    right: 80px;
+    animation: float-1 4s ease-in-out infinite;
+}
+
+.floating-shape-2 {
+    width: 80px;
+    height: 80px;
+    background-color: #A855F7;
+    bottom: 80px;
+    left: 80px;
+    animation: float-2 5s ease-in-out infinite;
+}
+
+@keyframes rotate-clockwise {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+@keyframes rotate-counter {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(-360deg); }
+}
+
+@keyframes pulse-scale {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
+
+@keyframes float-1 {
+    0%, 100% { transform: translate(0, 0); }
+    50% { transform: translate(10px, -20px); }
+}
+
+@keyframes float-2 {
+    0%, 100% { transform: translate(0, 0); }
+    50% { transform: translate(-10px, 20px); }
+}
+
+.animate-fade-in {
+    animation: home-fade-in 0.6s ease-out;
+}
+
+.animate-fade-in-delay-1 {
+    animation: home-fade-in 0.6s ease-out 0.2s both;
+}
+
+.animate-fade-in-delay-2 {
+    animation: home-fade-in 0.6s ease-out 0.4s both;
+}
+
+@keyframes home-fade-in {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.animated-path {
+    stroke-dasharray: 628;
+    stroke-dashoffset: 628;
+    animation: draw-path 2s ease-out forwards;
+}
+
+.animated-line-1,
+.animated-line-2 {
+    stroke-dasharray: 100;
+    stroke-dashoffset: 100;
+}
+
+.animated-line-1 {
+    animation: draw-line 1.5s ease-out 0.5s forwards;
+}
+
+.animated-line-2 {
+    animation: draw-line 1.5s ease-out 0.7s forwards;
+}
+
+.animated-dot {
+    transform: scale(0);
+    animation: scale-in 0.3s ease-out 1s forwards;
+}
+
+@keyframes draw-path {
+    to { stroke-dashoffset: 0; }
+}
+
+@keyframes draw-line {
+    to { stroke-dashoffset: 0; }
+}
+
+@keyframes scale-in {
+    to { transform: scale(1); }
+}
+
+.theorems-section,
+.features-section,
+.ai-section,
+.usp-section,
+.premium-section {
+    padding: 80px 0;
+}
+
+.theorems-section {
+    background-color: white;
+}
+
+body.dark-mode .theorems-section {
+    background-color: var(--gray-900);
+}
+
+.features-section {
+    background-color: var(--gray-50);
+}
+
+body.dark-mode .features-section {
+    background-color: var(--gray-800);
+}
+
+.ai-section {
+    background-color: white;
+}
+
+body.dark-mode .ai-section {
+    background-color: var(--gray-900);
+}
+
+.usp-section {
+    background-color: var(--gray-50);
+}
+
+body.dark-mode .usp-section {
+    background-color: var(--gray-800);
+}
+
+.usp-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 32px;
+}
+
+.usp-item {
+    text-align: center;
+}
+
+.usp-icon {
+    width: 64px;
+    height: 64px;
+    border-radius: 16px;
+    background: linear-gradient(135deg, #3B82F6, #9333EA);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 24px;
+    color: white;
+    box-shadow: 0 4px 16px rgba(59, 130, 246, 0.3);
+}
+
+.usp-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 12px;
+}
+
+.usp-description {
+    font-size: 16px;
+    color: var(--text-muted);
+    line-height: 1.6;
+}
+
+.premium-section {
+    background-color: white;
+}
+
+body.dark-mode .premium-section {
+    background-color: var(--gray-900);
+}

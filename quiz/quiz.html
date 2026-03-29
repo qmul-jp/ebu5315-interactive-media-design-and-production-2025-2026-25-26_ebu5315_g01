@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz - CircleLearn</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/reset.css">
+    <link rel="stylesheet" href="../css/variables.css">
+    <link rel="stylesheet" href="../css/base.css">
+    <link rel="stylesheet" href="../css/layout.css">
+    <link rel="stylesheet" href="../css/components/buttons.css">
+    <link rel="stylesheet" href="../css/pages/quiz.css">
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <nav class="nav">
+                <a href="../index.html#home" class="logo" aria-label="CircleLearn Home">
+                    <div class="logo-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                            <circle cx="12" cy="12" r="10"/>
+                        </svg>
+                    </div>
+                    <span class="logo-text">GEOMETRY CHALLENGER</span>
+                </a>
+
+                <div class="nav-links">
+                    <a href="../index.html#home" class="nav-link">Home</a>
+                    <a href="../game/game.html" class="nav-link">Game</a>
+                    <a href="quiz.html" class="nav-link active">Quiz</a>
+                </div>
+
+                <div class="nav-actions">
+                    <div class="settings-dropdown">
+                        <button type="button" class="btn-icon" id="settingsToggle" aria-label="Open settings" aria-expanded="false" aria-haspopup="true">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="3"></circle>
+                                <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33h.01a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51h.01a1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82v.01a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+                            </svg>
+                        </button>
+                        <div class="settings-menu" id="settingsMenu" role="menu" aria-label="Settings menu">
+                            <button type="button" class="settings-item" id="menuLangToggle" role="menuitem">
+                                <span>语言</span>
+                                <span class="settings-value" id="menuLangValue">EN</span>
+                            </button>
+                            <button type="button" class="settings-item" id="menuThemeToggle" role="menuitem">
+                                <span>护眼模式</span>
+                                <span class="settings-value" id="menuThemeValue">关</span>
+                            </button>
+                            <a href="../contact/contact.html" class="settings-item settings-link" role="menuitem">联系我们</a>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <section class="page-subhero">
+        <div class="container">
+            <h1 class="page-subhero-title">Practice Quiz</h1>
+            <p class="page-subhero-lead">Answer GCSE-style circle theorem questions. Questions are loaded from the quiz data file (see js/data/quiz-questions.js).</p>
+        </div>
+    </section>
+
+    <main class="page-content">
+        <div class="container">
+            <div class="quiz-placeholder-card">
+                <div id="quizRoot" class="quiz-area"></div>
+                <a href="../index.html#home" class="btn btn-outline" style="margin-top: 24px;">Back to Home</a>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <a href="../index.html#home" class="logo">
+                        <div class="logo-icon">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                <circle cx="12" cy="12" r="10"/>
+                            </svg>
+                        </div>
+                        <span class="logo-text">CircleLearn</span>
+                    </a>
+                    <p class="footer-description">
+                        Master GCSE circle geometry through interactive learning, engaging games, and AI-powered guidance.
+                    </p>
+                </div>
+                <div class="footer-links-section">
+                    <h4 class="footer-links-title">Quick Links</h4>
+                    <ul class="footer-links">
+                        <li><a href="../index.html#home">Home</a></li>
+                        <li><a href="../game/game.html">Game</a></li>
+                        <li><a href="quiz.html">Quiz</a></li>
+                        <li><a href="../contact/contact.html">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links-section">
+                    <h4 class="footer-links-title">Legal</h4>
+                    <ul class="footer-links">
+                        <li><a href="../index.html#privacy">Privacy Policy</a></li>
+                        <li><a href="../index.html#terms">Terms of Service</a></li>
+                        <li><a href="../index.html#accessibility">Accessibility</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p class="footer-copyright">© 2026 CircleLearn. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../js/utils.js"></script>
+    <script src="../js/main.js"></script>
+    <script src="../js/data/quiz-questions.js"></script>
+    <script src="../js/pages/quiz.js"></script>
+</body>
+</html>
