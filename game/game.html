@@ -11,6 +11,9 @@
     <link rel="stylesheet" href="../css/layout.css">
     <link rel="stylesheet" href="../css/components/buttons.css">
     <link rel="stylesheet" href="../css/pages/game.css">
+    <!-- 游戏子页面样式（按需加载） -->
+    <link rel="stylesheet" href="../css/pages/pi-sniper.css">
+    <link rel="stylesheet" href="../css/pages/gravity-slingshot.css">
 </head>
 <body>
     <header class="header">
@@ -56,24 +59,161 @@
         </div>
     </header>
 
-    <section class="page-subhero">
+    <!-- ===== 游戏选择视图 ===== -->
+    <section class="page-subhero" id="gameMenuView">
         <div class="container">
-            <h1 class="page-subhero-title">Interactive Game</h1>
-            <p class="page-subhero-lead">Practice circle theorems through levels and puzzles. Full gameplay will expand here in future versions.</p>
+            <h1 class="page-subhero-title" data-game-i18n="game.select.title">Choose a Game</h1>
+            <p class="page-subhero-lead" data-game-i18n="game.select.subtitle">Explore the mysteries of circle geometry through interactive games</p>
         </div>
     </section>
 
-    <main class="page-content">
+    <main class="page-content" id="gameMenuView">
         <div class="container">
-            <div class="game-placeholder-card">
-                <p>Game canvas and level flow will be connected in the next iteration. For now, use this page as the dedicated Game module entry from the home page.</p>
-                <div class="game-actions">
-                    <button type="button" class="btn btn-primary" id="gameStartBtn">Start placeholder run</button>
-                    <a href="../index.html#home" class="btn btn-outline">Back to Home</a>
+            <div class="game-grid">
+                <!-- 引力弹弓 -->
+                <div class="game-card" id="cardSlingshot">
+                    <div class="game-card-preview">
+                        <canvas id="previewSlingshot"></canvas>
+                        <span class="game-card-tag" data-game-i18n="game.slingshot.tag">Physics Puzzle</span>
+                    </div>
+                    <div class="game-card-info">
+                        <h3 data-game-i18n="game.slingshot.name">Gravity Slingshot</h3>
+                        <p data-game-i18n="game.slingshot.desc">Bend trajectories using planetary gravity and shoot energy balls into wormholes! Master radius, tangent, and arc length.</p>
+                        <div class="game-knowledge-tags">
+                            <span class="knowledge-tag">Radius</span>
+                            <span class="knowledge-tag">Area A=πr²</span>
+                            <span class="knowledge-tag">Tangent</span>
+                            <span class="knowledge-tag">Arc Length</span>
+                            <span class="knowledge-tag">π</span>
+                        </div>
+                        <button type="button" class="btn btn-primary btn-primary-full game-play-btn" id="btnPlaySlingshot" data-game-i18n="game.play">Play Now</button>
+                    </div>
+                </div>
+
+                <!-- 圆周狙击 -->
+                <div class="game-card" id="cardSniper">
+                    <div class="game-card-preview">
+                        <canvas id="previewSniper"></canvas>
+                        <span class="game-card-tag" data-game-i18n="game.sniper.tag">Precision Shooting</span>
+                    </div>
+                    <div class="game-card-info">
+                        <h3 data-game-i18n="game.sniper.name">Pi Sniper</h3>
+                        <p data-game-i18n="game.sniper.desc">Aim precisely at target angles on the unit circle! Challenge your angle intuition and unlock radian & sector area modes.</p>
+                        <div class="game-knowledge-tags">
+                            <span class="knowledge-tag">Unit Circle</span>
+                            <span class="knowledge-tag">Central Angle</span>
+                            <span class="knowledge-tag">Radian</span>
+                            <span class="knowledge-tag">Arc Length</span>
+                            <span class="knowledge-tag">Sector Area</span>
+                        </div>
+                        <button type="button" class="btn btn-primary btn-primary-full game-play-btn" id="btnPlaySniper" data-game-i18n="game.play">Play Now</button>
+                    </div>
                 </div>
             </div>
         </div>
     </main>
+
+    <!-- ===== 圆周狙击游戏视图 ===== -->
+    <div class="game-page-view" id="sniperView" style="display:none;">
+        <div class="game-header-bar">
+            <div class="game-header-left">
+                <button type="button" class="btn btn-outline game-back-btn" id="sniperBackBtn">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+                    <span data-game-i18n="sniper.backToMenu">Back to Menu</span>
+                </button>
+                <span class="game-header-title" data-game-i18n="sniper.title">Pi Sniper</span>
+            </div>
+            <div class="game-header-stats">
+                <div class="game-stat">
+                    <span class="game-stat-label" data-game-i18n="sniper.score">Score</span>
+                    <span class="game-stat-value" id="sniperScore">0</span>
+                </div>
+                <div class="game-stat">
+                    <span class="game-stat-label" data-game-i18n="sniper.combo">Combo</span>
+                    <span class="game-stat-value" id="sniperCombo">0</span>
+                </div>
+                <div class="game-stat">
+                    <span class="game-stat-label" data-game-i18n="sniper.time">Time</span>
+                    <span class="game-stat-value" id="sniperTime">60</span>
+                </div>
+            </div>
+        </div>
+        <div class="game-canvas-wrapper">
+            <canvas id="sniperCanvas"></canvas>
+        </div>
+        <!-- 知识提示 -->
+        <div class="game-knowledge-tip" id="sniperKnowledgeTip">
+            <span class="knowledge-tip-label">💡</span>
+            <span id="sniperKnowledgeText">Unit Circle: A circle with radius 1</span>
+        </div>
+        <!-- 游戏开始覆盖层 -->
+        <div class="game-overlay" id="sniperStartOverlay">
+            <div class="game-overlay-panel">
+                <h2 data-game-i18n="sniper.title">Pi Sniper</h2>
+                <p class="game-overlay-desc" data-game-i18n="game.sniper.desc">Aim precisely at target angles on the unit circle!</p>
+                <button type="button" class="btn btn-primary btn-primary-full" id="sniperStartBtn" data-game-i18n="sniper.start">Start</button>
+            </div>
+        </div>
+        <!-- 游戏结束覆盖层 -->
+        <div class="game-overlay" id="sniperEndOverlay" style="display:none;">
+            <div class="game-overlay-panel">
+                <h2 data-game-i18n="sniper.gameOver">Game Over</h2>
+                <div class="game-final-score" id="sniperFinalScore">0</div>
+                <p class="game-record-badge" id="sniperRecordBadge" style="display:none;" data-game-i18n="sniper.newRecord">New Record!</p>
+                <div class="game-overlay-buttons">
+                    <button type="button" class="btn btn-primary" id="sniperRestartBtn" data-game-i18n="sniper.restart">Restart</button>
+                    <button type="button" class="btn btn-outline" id="sniperMenuBtn" data-game-i18n="sniper.backToMenu">Back to Menu</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== 引力弹弓游戏视图 ===== -->
+    <div class="game-page-view" id="slingshotView" style="display:none;">
+        <div class="game-header-bar">
+            <div class="game-header-left">
+                <button type="button" class="btn btn-outline game-back-btn" id="slingshotBackBtn">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+                    <span data-game-i18n="slingshot.backToMenu">Back to Menu</span>
+                </button>
+                <span class="game-header-title" data-game-i18n="slingshot.title">Gravity Slingshot</span>
+            </div>
+            <div class="game-header-stats">
+                <div class="game-stat">
+                    <span class="game-stat-label" data-game-i18n="slingshot.level">Level</span>
+                    <span class="game-stat-value" id="slingshotLevel">1</span>
+                </div>
+                <div class="game-stat">
+                    <span class="game-stat-label" data-game-i18n="slingshot.shots">Shots</span>
+                    <span class="game-stat-value" id="slingshotShots">0</span>
+                </div>
+                <div class="game-stat">
+                    <span class="game-stat-label" data-game-i18n="slingshot.best">Best</span>
+                    <span class="game-stat-value" id="slingshotBest">-</span>
+                </div>
+            </div>
+        </div>
+        <div class="game-canvas-wrapper">
+            <canvas id="slingshotCanvas"></canvas>
+        </div>
+        <!-- 知识提示 -->
+        <div class="game-knowledge-tip" id="slingshotKnowledgeTip">
+            <span class="knowledge-tip-label">💡</span>
+            <span id="slingshotKnowledgeText">Radius (r): Planet size determines gravity strength</span>
+        </div>
+        <!-- 关卡完成覆盖层 -->
+        <div class="game-overlay" id="slingshotWinOverlay" style="display:none;">
+            <div class="game-overlay-panel">
+                <h2 data-game-i18n="slingshot.win">Target Hit!</h2>
+                <div class="game-stars" id="slingshotStars">⭐⭐⭐</div>
+                <div class="game-overlay-buttons">
+                    <button type="button" class="btn btn-primary" id="slingshotNextBtn" data-game-i18n="slingshot.next">Next Level</button>
+                    <button type="button" class="btn btn-outline" id="slingshotRetryBtn" data-game-i18n="slingshot.retry">Retry</button>
+                    <button type="button" class="btn btn-outline" id="slingshotMenuBtn" data-game-i18n="slingshot.backToMenu">Back to Menu</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <footer class="footer">
         <div class="container">
@@ -117,6 +257,10 @@
 
     <script src="../js/utils.js"></script>
     <script src="../js/main.js"></script>
+    <script src="../js/data/game-i18n.js"></script>
+    <script src="../js/data/game-audio.js"></script>
     <script src="../js/pages/game.js"></script>
+    <script src="../js/pages/pi-sniper.js"></script>
+    <script src="../js/pages/gravity-slingshot.js"></script>
 </body>
 </html>
