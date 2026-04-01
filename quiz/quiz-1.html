@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Geometry Challenger</title>
+    <style>
+        /* 基础重置和全局样式 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: #F8FAFC;
+            color: #1E293B;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* 顶部导航栏 */
+        header {
+            background-color: #FFFFFF;
+            padding: 15px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #E2E8F0;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 700;
+            font-size: 18px;
+            color: #0F172A;
+        }
+
+        .logo-icon {
+            width: 24px;
+            height: 24px;
+            border: 3px solid #3B82F6;
+            border-radius: 50%;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #64748B;
+            font-weight: 500;
+            font-size: 15px;
+        }
+
+        .nav-links a:hover, .nav-links a.active {
+            color: #0F172A;
+        }
+
+        .header-controls {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            color: #475569;
+        }
+
+        .toggle-switch {
+            width: 40px;
+            height: 20px;
+            border: 2px solid #1E293B;
+            border-radius: 20px;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .toggle-switch::after {
+            content: '';
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 12px;
+            height: 12px;
+            background-color: #1E293B;
+            border-radius: 50%;
+        }
+
+        /* 主体内容区 */
+        main {
+            display: flex;
+            gap: 20px;
+            padding: 30px 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+            flex: 1;
+        }
+
+        /* 左侧：题目区域 */
+        .quiz-content {
+            flex: 1.5;
+            background-color: #FFFFFF;
+            border-radius: 12px;
+            padding: 40px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        }
+
+        .breadcrumbs {
+            font-size: 14px;
+            color: #64748B;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            font-size: 28px;
+            color: #1E293B;
+            margin-bottom: 20px;
+        }
+
+        .quiz-meta {
+            display: flex;
+            justify-content: space-between;
+            font-weight: 600;
+            margin-bottom: 20px;
+            font-size: 16px;
+        }
+
+        .hint-box {
+            background-color: #EFF6FF;
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid #3B82F6;
+            margin-bottom: 30px;
+        }
+
+        .hint-box h4 {
+            color: #1D4ED8;
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+
+        .hint-box p {
+            color: #1E40AF;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .question-text {
+            font-size: 18px;
+            font-weight: 500;
+            margin-bottom: 20px;
+        }
+
+        .question-image-placeholder {
+            width: 250px;
+            height: 60px;
+            border: 1px solid #333;
+            margin: 0 auto 30px auto;
+            position: relative;
+            background: #fff;
+        }
+
+        /* 画一个简单的X作为占位图示意 */
+        .question-image-placeholder::before,
+        .question-image-placeholder::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            border-top: 1px solid #333;
+            transform-origin: center;
+        }
+        .question-image-placeholder::before { transform: translateY(30px) rotate(13deg); }
+        .question-image-placeholder::after { transform: translateY(30px) rotate(-13deg); }
+
+        .options-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 40px;
+        }
+
+        .option-btn {
+            padding: 15px 20px;
+            background-color: #FFFFFF;
+            border: 1px solid #CBD5E1;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 16px;
+            color: #334155;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .option-btn:hover {
+            border-color: #3B82F6;
+            background-color: #F8FAFC;
+        }
+
+        .option-btn.selected {
+            border-color: #3B82F6;
+            background-color: #EFF6FF;
+            color: #1D4ED8;
+            font-weight: 500;
+        }
+
+        .action-buttons {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-size: 15px;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            border: 1px solid #3B82F6;
+            color: #3B82F6;
+        }
+
+        .btn-primary {
+            background-color: #3B82F6;
+            border: none;
+            color: white;
+        }
+
+        /* 右侧：题目导航面板 */
+        .quiz-sidebar {
+            flex: 1;
+            background-color: #F0F4F8;
+            border-radius: 12px;
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .sidebar-header h3 {
+            font-size: 18px;
+            color: #1E293B;
+        }
+
+        .btn-close {
+            padding: 6px 12px;
+            background: white;
+            border: 1px solid #3B82F6;
+            color: #3B82F6;
+            border-radius: 6px;
+            font-size: 12px;
+            cursor: pointer;
+        }
+
+        .question-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 40px;
+        }
+
+        .grid-item {
+            background-color: #FFFFFF;
+            border: 1px solid #E2E8F0;
+            border-radius: 8px;
+            padding: 15px 10px;
+            text-align: center;
+            cursor: pointer;
+        }
+
+        .grid-item .q-num {
+            font-size: 18px;
+            font-weight: 700;
+            color: #334155;
+            margin-bottom: 5px;
+        }
+
+        .grid-item .q-status {
+            font-size: 11px;
+            color: #64748B;
+        }
+
+        .grid-item.current {
+            border: 2px solid #3B82F6;
+            background-color: #EFF6FF;
+        }
+
+        .grid-item.current .q-num, 
+        .grid-item.current .q-status {
+            color: #3B82F6;
+        }
+
+        .submit-container {
+            margin-top: auto;
+            text-align: center;
+        }
+
+        .btn-submit {
+            padding: 12px 30px;
+            background-color: #3B82F6;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        /* 悬浮聊天按钮 */
+        .fab-chat {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 50px;
+            height: 50px;
+            background-color: #6366F1;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo-container">
+            <div class="logo-icon"></div>
+            <span>GEOMETRY CHALLENGER</span>
+        </div>
+        <nav class="nav-links">
+            <a href="#">Home</a>
+            <a href="#">Game</a>
+            <a href="#" class="active">Quiz</a>
+        </nav>
+        <div class="header-controls">
+            <span>🌐 EN</span>
+            <span>⚙️</span>
+            <div class="toggle-switch"></div>
+        </div>
+    </header>
+
+    <main>
+        <div class="quiz-content">
+            <div class="breadcrumbs">Home / Quiz / Level 1</div>
+            
+            <h1>Quiz Module: Level 1 -<br>Basic Circle Theorems</h1>
+            
+            <div class="quiz-meta">
+                <span>Question 1 of 10</span>
+                <span>Time Remaining: <span id="timer">09:45</span></span>
+            </div>
+
+            <div class="hint-box">
+                <h4>Hint from AI:</h4>
+                <p>Remember the relationship between the angle at the center and the angle at the circumference subtended by the same arc.</p>
+            </div>
+
+            <div class="question-text">
+                What is the value of angle X in the circle below?
+            </div>
+
+            <div class="question-image-placeholder"></div>
+
+            <div class="options-list">
+                <button class="option-btn" onclick="selectOption(this)">A) 45 degrees</button>
+                <button class="option-btn" onclick="selectOption(this)">B) 90 degrees</button>
+                <button class="option-btn" onclick="selectOption(this)">C) 180 degrees</button>
+                <button class="option-btn" onclick="selectOption(this)">D) 60 degrees</button>
+            </div>
+
+            <div class="action-buttons">
+                <button class="btn btn-outline">← Previous</button>
+                <button class="btn btn-primary">Next Question →</button>
+            </div>
+        </div>
+
+        <div class="quiz-sidebar">
+            <div class="sidebar-header">
+                <h3>All Questions (Level 1)</h3>
+                <button class="btn-close">🔒 Close</button>
+            </div>
+
+            <div class="question-grid">
+                <div class="grid-item current">
+                    <div class="q-num">1</div>
+                    <div class="q-status">Current</div>
+                </div>
+                <div class="grid-item">
+                    <div class="q-num">2</div>
+                    <div class="q-status">Unattempted</div>
+                </div>
+                <div class="grid-item">
+                    <div class="q-num">3</div>
+                    <div class="q-status">Unattempted</div>
+                </div>
+                <div class="grid-item">
+                    <div class="q-num">4</div>
+                    <div class="q-status">Unattempted</div>
+                </div>
+                <div class="grid-item">
+                    <div class="q-num">5</div>
+                    <div class="q-status">Unattempted</div>
+                </div>
+                <div class="grid-item">
+                    <div class="q-num">6</div>
+                    <div class="q-status">Unattempted</div>
+                </div>
+                <div class="grid-item">
+                    <div class="q-num">7</div>
+                    <div class="q-status">Unattempted</div>
+                </div>
+                <div class="grid-item">
+                    <div class="q-num">8</div>
+                    <div class="q-status">Unattempted</div>
+                </div>
+                <div class="grid-item">
+                    <div class="q-num">9</div>
+                    <div class="q-status">Unattempted</div>
+                </div>
+                <div class="grid-item">
+                    <div class="q-num">10</div>
+                    <div class="q-status">Unattempted</div>
+                </div>
+            </div>
+
+            <div class="submit-container">
+                <button class="btn-submit">Submit Quiz</button>
+            </div>
+        </div>
+    </main>
+
+    <div class="fab-chat">
+        💬
+    </div>
+
+    <script>
+        // 选项选择逻辑
+        function selectOption(clickedButton) {
+            // 移除所有选项的选中状态
+            const buttons = document.querySelectorAll('.option-btn');
+            buttons.forEach(btn => btn.classList.remove('selected'));
+            
+            // 为当前点击的选项添加选中状态
+            clickedButton.classList.add('selected');
+        }
+
+        // 简单的倒计时逻辑模拟 (从 09:45 开始)
+        let totalSeconds = 9 * 60 + 45;
+        const timerElement = document.getElementById('timer');
+
+        setInterval(() => {
+            if(totalSeconds <= 0) return;
+            totalSeconds--;
+            
+            const minutes = Math.floor(totalSeconds / 60);
+            const seconds = totalSeconds % 60;
+            
+            // 格式化为 MM:SS
+            const displayMinutes = String(minutes).padStart(2, '0');
+            const displaySeconds = String(seconds).padStart(2, '0');
+            
+            timerElement.textContent = `${displayMinutes}:${displaySeconds}`;
+        }, 1000);
+    </script>
+</body>
+</html>
