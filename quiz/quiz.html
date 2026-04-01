@@ -1,120 +1,385 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quiz - CircleLearn</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../css/reset.css">
-    <link rel="stylesheet" href="../css/variables.css">
-    <link rel="stylesheet" href="../css/base.css">
-    <link rel="stylesheet" href="../css/layout.css">
-    <link rel="stylesheet" href="../css/components/buttons.css">
-    <link rel="stylesheet" href="../css/pages/quiz.css">
+    <title>Geometry Challenger - Quiz Dashboard</title>
+    <style>
+        :root {
+            --primary-blue: #2563eb;
+            --bg-gray: #f8fafc;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --hint-bg: #eff6ff;
+            --border-color: #e2e8f0;
+            --sidebar-bg: #F0F4F8;
+            --card-bg: #ffffff;
+        }
+
+        /* 深色模式变量（对应你截图里的深蓝背景） */
+        body.dark-mode {
+            --bg-gray: #101827;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --border-color: #334155;
+            --card-bg: #1f2937;
+            --sidebar-bg: #111827;
+            --hint-bg: #1e293b;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-gray);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        /* 顶部导航栏 */
+        header {
+            background: var(--card-bg);
+            padding: 1rem 3rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border-color);
+            z-index: 10;
+            transition: background-color 0.3s ease, border-color 0.3s ease;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        .logo-icon {
+            width: 24px; height: 24px;
+            border: 3px solid var(--primary-blue);
+            border-radius: 50%;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: var(--text-muted);
+            margin: 0 1.5rem;
+            font-weight: 500;
+        }
+        nav a.active { color: var(--text-main); }
+
+        .header-controls { display: flex; align-items: center; gap: 1.5rem; }
+
+        .toggle-switch {
+            width: 40px; height: 20px;
+            border: 2px solid #334155;
+            border-radius: 20px;
+            position: relative;
+            cursor: pointer;
+            transition: border-color 0.3s ease;
+        }
+        .toggle-switch::after {
+            content: ''; position: absolute; right: 3px; top: 2px;
+            width: 12px; height: 12px; background: #334155; border-radius: 50%;
+            transition: left 0.25s ease, right 0.25s ease, background-color 0.3s ease;
+        }
+
+        /* 滑块激活态（小圆点滑动 + 高亮边框） */
+        .toggle-switch.active {
+            border-color: var(--primary-blue);
+        }
+        .toggle-switch.active::after {
+            left: 3px;
+            right: auto;
+            background: var(--primary-blue);
+        }
+
+        /* 主体布局 - 关键点：允许内容左右排列 */
+        main {
+            flex: 1;
+            display: flex;
+            gap: 20px;
+            padding: 2rem 3rem;
+            max-width: 1400px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        /* 左侧题目卡片 */
+        .quiz-content {
+            flex: 2; /* 占据更多空间 */
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 2.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            position: relative;
+            height: fit-content;
+            transition: background-color 0.3s ease;
+        }
+
+        /* 点击这个可以切换侧边栏 */
+        .card-label {
+            position: absolute;
+            top: 2rem; right: 2.5rem;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            cursor: pointer;
+            text-transform: lowercase;
+            transition: color 0.2s;
+            border-bottom: 1px dashed transparent;
+        }
+        .card-label:hover {
+            color: var(--primary-blue);
+            border-bottom-color: var(--primary-blue);
+        }
+
+        .breadcrumbs { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1rem; }
+        h1 { font-size: 1.8rem; margin-bottom: 1.5rem; line-height: 1.2; }
+
+        .quiz-meta {
+            display: flex; justify-content: space-between;
+            font-weight: 600; margin-bottom: 1.5rem;
+        }
+
+        .hint-box {
+            background: var(--hint-bg);
+            border-left: 4px solid var(--primary-blue);
+            padding: 1.25rem; border-radius: 4px; margin-bottom: 1.5rem;
+        }
+        .hint-box h4 { color: var(--primary-blue); font-size: 0.9rem; margin-bottom: 0.3rem; }
+        .hint-box p { font-size: 0.9rem; color: #1e40af; line-height: 1.4; }
+        body.dark-mode .hint-box p { color: var(--text-muted); }
+
+        /* 图形占位 */
+        .diagram {
+            width: 250px; height: 50px;
+            border: 1px solid #333;
+            margin: 1.5rem auto;
+            position: relative;
+        }
+        .diagram::before, .diagram::after {
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            border-top: 1px solid #333; transform-origin: center;
+        }
+        .diagram::before { transform: translateY(25px) rotate(11deg); }
+        .diagram::after { transform: translateY(25px) rotate(-11deg); }
+
+        /* 选项样式 */
+        .options-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 2rem; }
+        .option-btn {
+            padding: 1rem; border: 1px solid var(--border-color);
+            background: var(--card-bg); border-radius: 8px; cursor: pointer; text-align: center;
+            transition: all 0.2s;
+        }
+        .option-btn:hover { background: var(--bg-gray); }
+        .option-btn.selected {
+            border-color: var(--primary-blue);
+            background: var(--hint-bg);
+            color: var(--primary-blue);
+            font-weight: 600;
+        }
+
+        .action-buttons { display: flex; justify-content: space-between; }
+        .btn {
+            padding: 0.8rem 1.5rem; border-radius: 6px; cursor: pointer;
+            font-weight: 600; transition: opacity 0.2s;
+        }
+        .btn-prev { border: 1px solid var(--primary-blue); color: var(--primary-blue); background: white; }
+        .btn-next { background: var(--primary-blue); color: white; border: none; }
+        body.dark-mode .btn-prev { background: var(--card-bg); }
+
+        /* 右侧侧边栏 - 初始状态隐藏 */
+        .quiz-sidebar {
+            flex: 1;
+            background: var(--sidebar-bg);
+            border-radius: 12px;
+            padding: 2rem;
+            display: none; /* 初始隐藏 */
+            flex-direction: column;
+            height: fit-content;
+        }
+
+        .sidebar-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
+        .sidebar-header h3 { font-size: 1.1rem; }
+        .btn-close {
+            background: var(--card-bg); border: 1px solid var(--primary-blue);
+            color: var(--primary-blue); padding: 4px 10px; border-radius: 4px; cursor: pointer;
+        }
+
+        .question-grid {
+            display: grid; grid-template-columns: repeat(3, 1fr);
+            gap: 12px; margin-bottom: 2rem;
+        }
+        .grid-item {
+            background: var(--card-bg); border: 1px solid var(--border-color);
+            padding: 12px 5px; border-radius: 8px; text-align: center; cursor: pointer;
+        }
+        .grid-item.current { border: 2px solid var(--primary-blue); background: var(--hint-bg); color: var(--primary-blue); }
+        .q-num { font-weight: 700; display: block; }
+        .q-status { font-size: 0.7rem; color: var(--text-muted); }
+
+        .btn-submit {
+            background: var(--primary-blue); color: white; border: none;
+            padding: 1rem; border-radius: 6px; width: 100%; cursor: pointer; font-weight: 600;
+        }
+
+        /* 悬浮聊天按钮 */
+        .chat-fab {
+            position: fixed; bottom: 2rem; right: 2rem;
+            width: 50px; height: 50px; background: #6366f1;
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            color: white; cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+    </style>
 </head>
 <body>
-    <header class="header">
-        <div class="container">
-            <nav class="nav">
-                <a href="../index.html#home" class="logo" aria-label="CircleLearn Home">
-                    <div class="logo-icon">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                            <circle cx="12" cy="12" r="10"/>
-                        </svg>
-                    </div>
-                    <span class="logo-text">GEOMETRY CHALLENGER</span>
-                </a>
 
-                <div class="nav-links">
-                    <a href="../index.html#home" class="nav-link">Home</a>
-                    <a href="../game/game.html" class="nav-link">Game</a>
-                    <a href="quiz.html" class="nav-link active">Quiz</a>
-                </div>
-
-                <div class="nav-actions">
-                    <div class="settings-dropdown">
-                        <button type="button" class="btn-icon" id="settingsToggle" aria-label="Open settings" aria-expanded="false" aria-haspopup="true">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <circle cx="12" cy="12" r="3"></circle>
-                                <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33h.01a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51h.01a1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82v.01a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
-                            </svg>
-                        </button>
-                        <div class="settings-menu" id="settingsMenu" role="menu" aria-label="Settings menu">
-                            <button type="button" class="settings-item" id="menuLangToggle" role="menuitem">
-                                <span>语言</span>
-                                <span class="settings-value" id="menuLangValue">EN</span>
-                            </button>
-                            <button type="button" class="settings-item" id="menuThemeToggle" role="menuitem">
-                                <span>护眼模式</span>
-                                <span class="settings-value" id="menuThemeValue">关</span>
-                            </button>
-                            <a href="../contact/contact.html" class="settings-item settings-link" role="menuitem">联系我们</a>
-                        </div>
-                    </div>
-                </div>
-            </nav>
+    <header>
+        <div class="logo">
+            <div class="logo-icon"></div>
+            GEOMETRY CHALLENGER
+        </div>
+        <nav>
+            <a href="#">Home</a>
+            <a href="#">Game</a>
+            <a href="#" class="active">Quiz</a>
+        </nav>
+        <div class="header-controls">
+            <span>🌐 EN</span>
+            <span>⚙️</span>
+            <div class="toggle-switch" id="themeToggle" role="switch" aria-label="切换深色模式" aria-checked="false"></div>
         </div>
     </header>
 
-    <section class="page-subhero">
-        <div class="container">
-            <h1 class="page-subhero-title">Practice Quiz</h1>
-            <p class="page-subhero-lead">Answer GCSE-style circle theorem questions. Questions are loaded from the quiz data file (see js/data/quiz-questions.js).</p>
-        </div>
-    </section>
-
-    <main class="page-content">
-        <div class="container">
-            <div class="quiz-placeholder-card">
-                <div id="quizRoot" class="quiz-area"></div>
-                <a href="../index.html#home" class="btn btn-outline" style="margin-top: 24px;">Back to Home</a>
+    <main>
+        <div class="quiz-content">
+            <span class="card-label" id="toggleSidebarBtn">question</span>
+            <div class="breadcrumbs">Home / Quiz / Level 1</div>
+            <h1>Quiz Module: Level 1 -<br>Basic Circle Theorems</h1>
+            
+            <div class="quiz-meta">
+                <span>Question 1 of 10</span>
+                <span>Time Remaining: <span id="timer">09:45</span></span>
             </div>
+
+            <div class="hint-box">
+                <h4>Hint from AI:</h4>
+                <p>Remember the relationship between the angle at the center and the angle at the circumference subtended by the same arc.</p>
+            </div>
+
+            <p style="margin-bottom: 1rem; font-weight: 500;">What is the value of angle X in the circle below?</p>
+            <div class="diagram"></div>
+
+            <div class="options-list">
+                <div class="option-btn" onclick="selectOption(this)">A) 45 degrees</div>
+                <div class="option-btn" onclick="selectOption(this)">B) 90 degrees</div>
+                <div class="option-btn" onclick="selectOption(this)">C) 180 degrees</div>
+                <div class="option-btn" onclick="selectOption(this)">D) 60 degrees</div>
+            </div>
+
+            <div class="action-buttons">
+                <button class="btn btn-prev">← Previous</button>
+                <button class="btn btn-next">Next Question →</button>
+            </div>
+        </div>
+
+        <div class="quiz-sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <h3>All Questions (Level 1)</h3>
+                <button class="btn-close" onclick="hideSidebar()">🔒 Close</button>
+            </div>
+
+            <div class="question-grid">
+                <div class="grid-item current">
+                    <span class="q-num">1</span>
+                    <span class="q-status">Current</span>
+                </div>
+                <script>
+                    for(let i=2; i<=10; i++) {
+                        document.write(`
+                            <div class="grid-item">
+                                <span class="q-num">${i}</span>
+                                <span class="q-status">Unattempted</span>
+                            </div>
+                        `);
+                    }
+                </script>
+            </div>
+
+            <button class="btn-submit">Submit Quiz</button>
         </div>
     </main>
 
-    <footer class="footer">
-        <div class="container">
-            <div class="footer-grid">
-                <div class="footer-brand">
-                    <a href="../index.html#home" class="logo">
-                        <div class="logo-icon">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                                <circle cx="12" cy="12" r="10"/>
-                            </svg>
-                        </div>
-                        <span class="logo-text">CircleLearn</span>
-                    </a>
-                    <p class="footer-description">
-                        Master GCSE circle geometry through interactive learning, engaging games, and AI-powered guidance.
-                    </p>
-                </div>
-                <div class="footer-links-section">
-                    <h4 class="footer-links-title">Quick Links</h4>
-                    <ul class="footer-links">
-                        <li><a href="../index.html#home">Home</a></li>
-                        <li><a href="../game/game.html">Game</a></li>
-                        <li><a href="quiz.html">Quiz</a></li>
-                        <li><a href="../contact/contact.html">Contact</a></li>
-                    </ul>
-                </div>
-                <div class="footer-links-section">
-                    <h4 class="footer-links-title">Legal</h4>
-                    <ul class="footer-links">
-                        <li><a href="../index.html#privacy">Privacy Policy</a></li>
-                        <li><a href="../index.html#terms">Terms of Service</a></li>
-                        <li><a href="../index.html#accessibility">Accessibility</a></li>
-                    </ul>
-                </div>
-            </div>
-            <div class="footer-bottom">
-                <p class="footer-copyright">© 2026 CircleLearn. All rights reserved.</p>
-            </div>
-        </div>
-    </footer>
+    <div class="chat-fab">💬</div>
 
-    <script src="../js/utils.js"></script>
-    <script src="../js/main.js"></script>
-    <script src="../js/data/quiz-questions.js"></script>
-    <script src="../js/pages/quiz.js"></script>
+    <script>
+        const sidebar = document.getElementById('sidebar');
+        const toggleBtn = document.getElementById('toggleSidebarBtn');
+        const themeToggle = document.getElementById('themeToggle');
+
+        // 核心功能：点击 question 标签切换侧边栏
+        toggleBtn.addEventListener('click', function() {
+            if (sidebar.style.display === 'none' || sidebar.style.display === '') {
+                sidebar.style.display = 'flex';
+            } else {
+                sidebar.style.display = 'none';
+            }
+        });
+
+        // 侧边栏内部的关闭按钮
+        function hideSidebar() {
+            sidebar.style.display = 'none';
+        }
+
+        // 选项选择逻辑
+        function selectOption(el) {
+            document.querySelectorAll('.option-btn').forEach(btn => btn.classList.remove('selected'));
+            el.classList.add('selected');
+        }
+
+        // 简易倒计时
+        let time = 9 * 60 + 45;
+        setInterval(() => {
+            if(time <= 0) return;
+            time--;
+            const m = Math.floor(time/60).toString().padStart(2, '0');
+            const s = (time%60).toString().padStart(2, '0');
+            document.getElementById('timer').textContent = `${m}:${s}`;
+        }, 1000);
+
+        // 深色模式切换（右上角滑块）
+        function syncThemeUI() {
+            const isDark = document.body.classList.contains('dark-mode');
+            if (themeToggle) {
+                themeToggle.classList.toggle('active', isDark);
+                themeToggle.setAttribute('aria-checked', isDark ? 'true' : 'false');
+            }
+        }
+
+        // 页面加载时：读取偏好
+        if (localStorage.getItem('theme') === 'dark') {
+            document.body.classList.add('dark-mode');
+        }
+        syncThemeUI();
+
+        // 点击滑块切换 + 记忆
+        if (themeToggle) {
+            themeToggle.addEventListener('click', () => {
+                document.body.classList.toggle('dark-mode');
+                const theme = document.body.classList.contains('dark-mode') ? 'dark' : 'light';
+                localStorage.setItem('theme', theme);
+                syncThemeUI();
+            });
+        }
+    </script>
 </body>
 </html>
