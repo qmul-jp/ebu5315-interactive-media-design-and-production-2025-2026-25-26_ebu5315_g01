@@ -54,6 +54,7 @@
 
 .btn-outline:hover {
     background-color: #EFF6FF;
+    transform: translateY(-2px);
 }
 
 body.dark-mode .btn-outline:hover {
