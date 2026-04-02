@@ -52,14 +52,26 @@
             });
         }
 
+        // 进入引力弹弓
+        const btnSlingshot = document.getElementById('btnPlaySlingshot');
+        if (btnSlingshot) {
+            btnSlingshot.addEventListener('click', (e) => {
+                e.stopPropagation();
+                GameAudio.playClick();
+                showView('slingshot');
+                if (typeof GravitySlingshot !== 'undefined') GravitySlingshot.show();
+            });
+        }
+
         // 返回菜单按钮
-        ['sniperBackBtn', 'sniperMenuBtn',].forEach(id => {
+        ['sniperBackBtn', 'sniperMenuBtn', 'slingshotBackBtn', 'slingshotMenuBtn'].forEach(id => {
             const btn = document.getElementById(id);
             if (btn) {
                 btn.addEventListener('click', () => {
                     GameAudio.playClick();
                     // 停止游戏
                     if (typeof PiSniper !== 'undefined') PiSniper.hide();
+                    if (typeof GravitySlingshot !== 'undefined') GravitySlingshot.hide();
                     showView('menu');
                 });
             }
@@ -68,7 +80,83 @@
 
     // ===== 预览动画 =====
     function initPreviewAnimations() {
+        initSlingshotPreview();
         initSniperPreview();
+    }
+
+    function initSlingshotPreview() {
+        const canvas = document.getElementById('previewSlingshot');
+        if (!canvas) return;
+        const ctx = canvas.getContext('2d');
+        canvas.width = 400;
+        canvas.height = 200;
+
+        const planets = [
+            { x: 120, y: 100, r: 30, color: '#2563EB' },
+            { x: 280, y: 80, r: 20, color: '#7C3AED' },
+            { x: 200, y: 150, r: 25, color: '#EC4899' }
+        ];
+
+        let ball = { x: 30, y: 100, trail: [] };
+        let angle = 0;
+
+        function animate() {
+            if (canvas.style.display === 'none') {
+                requestAnimationFrame(animate);
+                return;
+            }
+            ctx.fillStyle = '#0F172A';
+            ctx.fillRect(0, 0, 400, 200);
+
+            // 星空
+            for (let i = 0; i < 30; i++) {
+                ctx.beginPath();
+                ctx.arc((i * 137.5) % 400, (i * 97.3) % 200, 0.5, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(255,255,255,${0.3 + Math.sin(angle + i) * 0.2})`;
+                ctx.fill();
+            }
+
+            // 行星
+            planets.forEach(p => {
+                const grad = ctx.createRadialGradient(p.x - p.r * 0.3, p.y - p.r * 0.3, 0, p.x, p.y, p.r);
+                grad.addColorStop(0, p.color);
+                grad.addColorStop(1, 'rgba(0,0,0,0.5)');
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+                ctx.fillStyle = grad;
+                ctx.fill();
+
+                // 引力场光晕
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.r * 1.5, 0, Math.PI * 2);
+                ctx.strokeStyle = `rgba(37, 99, 235, ${0.1 + Math.sin(angle * 2) * 0.05})`;
+                ctx.lineWidth = 1;
+                ctx.stroke();
+            });
+
+            // 能量球沿曲线运动
+            angle += 0.02;
+            ball.x = 30 + 340 * ((Math.sin(angle * 0.5) + 1) / 2);
+            ball.y = 100 + Math.sin(angle * 1.5) * 60;
+
+            ball.trail.push({ x: ball.x, y: ball.y });
+            if (ball.trail.length > 40) ball.trail.shift();
+
+            ball.trail.forEach((t, i) => {
+                ctx.beginPath();
+                ctx.arc(t.x, t.y, 2, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(34, 197, 94, ${i / ball.trail.length * 0.6})`;
+                ctx.fill();
+            });
+
+            ctx.beginPath();
+            ctx.arc(ball.x, ball.y, 5, 0, Math.PI * 2);
+            ctx.fillStyle = '#22C55E';
+            ctx.fill();
+
+            requestAnimationFrame(animate);
+        }
+        animate();
     }
 
     function initSniperPreview() {

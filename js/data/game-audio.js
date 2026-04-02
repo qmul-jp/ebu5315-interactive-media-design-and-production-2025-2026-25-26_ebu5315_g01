@@ -63,6 +63,42 @@ const GameAudio = (() => {
         source.start();
     }
 
+     // ===== 引力弹弓音效 =====
+    function playLaunch() {
+        if (!enabled || !ctx) return;
+        resume();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(200, ctx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(800, ctx.currentTime + 0.15);
+        gain.gain.setValueAtTime(0.3 * volume, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.2);
+        osc.connect(gain);
+        gain.connect(masterGain);
+        osc.start();
+        osc.stop(ctx.currentTime + 0.2);
+    }
+
+    function playHitWormhole() {
+        playTone(523, 'sine', 0.3, 0.3, 0);
+        playTone(659, 'sine', 0.3, 0.25, 0.05);
+        playTone(784, 'sine', 0.4, 0.2, 0.1);
+        playTone(1047, 'sine', 0.5, 0.15, 0.15);
+    }
+
+    function playCollision() {
+        playNoise(0.15, 0.3);
+        playTone(80, 'sine', 0.2, 0.3);
+    }
+
+    function playStarRating(stars) {
+        const base = 440;
+        for (let i = 0; i < stars; i++) {
+            playTone(base * Math.pow(2, i / 6), 'sine', 0.3, 0.25, i * 0.15);
+        }
+    }
+    
     // ===== 圆周狙击音效 =====
     function playShoot() {
         if (!enabled || !ctx) return;
