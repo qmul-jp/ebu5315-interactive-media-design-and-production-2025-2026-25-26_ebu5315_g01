@@ -94,6 +94,96 @@ body.dark-mode .rotating-circle-2 {
     border-color: #14532D;
 }
 
+.main-circle-wrap {
+    position: relative;
+    z-index: 2;
+    width: 300px;
+    height: 300px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.hero-visual-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 36px;
+    height: 36px;
+    border: none;
+    border-radius: 50%;
+    background: transparent;
+    cursor: pointer;
+    color: #9CA3AF;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 0.2s ease, color 0.2s ease, background 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    z-index: 4;
+}
+
+body.dark-mode .hero-visual-arrow {
+    color: #94A3B8;
+}
+
+.hero-visual-arrow:hover:not(:disabled) {
+    color: #6B7280;
+    background: rgba(15, 23, 42, 0.06);
+}
+
+body.dark-mode .hero-visual-arrow:hover:not(:disabled) {
+    color: #CBD5E1;
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.hero-visual-arrow:disabled {
+    opacity: 0.35;
+    cursor: default;
+}
+
+.hero-visual-arrow--prev {
+    left: -42px;
+}
+
+.hero-visual-arrow--next {
+    right: -42px;
+}
+
+.hero-visual-arrow--prev::before,
+.hero-visual-arrow--next::before {
+    content: '';
+    display: block;
+    width: 9px;
+    height: 9px;
+    border-left: 2px solid currentColor;
+    border-bottom: 2px solid currentColor;
+}
+
+.hero-visual-arrow--prev::before {
+    transform: rotate(45deg);
+    margin-left: 3px;
+}
+
+.hero-visual-arrow--next::before {
+    transform: rotate(-135deg);
+    margin-left: -3px;
+}
+
+.circle-animation.is-rc1-hover .hero-visual-arrow {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+}
+
+.circle-animation.is-rc1-hover .hero-visual-arrow:disabled {
+    opacity: 0.35;
+    pointer-events: none;
+}
+
 .main-circle {
     position: relative;
     width: 300px;
@@ -108,10 +198,12 @@ body.dark-mode .rotating-circle-2 {
 }
 
 .inner-circle {
+    position: relative;
     width: 280px;
     height: 280px;
     border-radius: 50%;
     background-color: white;
+    overflow: hidden;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -122,8 +214,141 @@ body.dark-mode .inner-circle {
     background-color: var(--gray-800);
 }
 
-.inner-circle svg {
+.inner-circle-image {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.6s ease;
+}
+
+.inner-circle-diagram {
+    position: relative;
+    z-index: 0;
     color: var(--primary);
+    opacity: 1;
+    transition: opacity 0.6s ease;
+}
+
+.inner-circle[class*='show-'] .inner-circle-diagram {
+    z-index: 2;
+    pointer-events: auto;
+    cursor: pointer;
+    opacity: 0;
+}
+
+.inner-circle.show-pizza .inner-circle-pizza {
+    opacity: 1;
+}
+
+.inner-circle.show-donut .inner-circle-donut {
+    opacity: 1;
+}
+
+.inner-circle.show-moon .inner-circle-moon {
+    opacity: 1;
+}
+
+.inner-circle.show-emoji .inner-circle-emoji {
+    opacity: 1;
+}
+
+.inner-circle.show-sunflower .inner-circle-sunflower {
+    opacity: 1;
+}
+
+.inner-circle.show-oreo .inner-circle-oreo {
+    opacity: 1;
+}
+
+.inner-circle.show-cat .inner-circle-cat {
+    opacity: 1;
+}
+
+.inner-circle.show-can .inner-circle-can {
+    opacity: 1;
+}
+
+.inner-circle.show-egg .inner-circle-egg {
+    opacity: 1;
+}
+
+.inner-circle.show-coin .inner-circle-coin {
+    opacity: 1;
+}
+
+.inner-circle.show-noodles .inner-circle-noodles {
+    opacity: 1;
+}
+
+/*微调各个图片的大小，位置等*/
+.inner-circle-pizza {
+    transform: translateY(-2px) scale(1.04);
+}
+
+.inner-circle-donut {
+    transform: translateY(2px) scale(1.21);
+    transform-origin: center;
+}
+
+.inner-circle-moon {
+    object-fit: contain;
+    padding: 6px;
+    transform: translateY(4px) translateX(-2px) scale(1.06);
+    transform-origin: center;
+}
+
+.inner-circle-emoji {
+    object-fit: contain;
+    padding: 6px;
+    transform: translateY(-8px) translateX(9px) scale(1.90);
+    transform-origin: center;
+}
+
+.inner-circle-sunflower {
+    transform: scale(1.29);
+}
+
+.inner-circle-oreo {
+    object-fit: contain;
+    padding: 10px;
+    transform: translateY(0px) translateX(-15px) scale(2.38);
+    transform-origin: center;
+}
+
+.inner-circle-cat {
+    object-fit: contain;
+    transform: translateY(3px) translateX(0px) scale(1.18);
+    transform-origin: center;
+}
+
+.inner-circle-can {
+    object-fit: contain;
+    transform: translateY(0px) translateX(0px) scale(2.27) rotate(0deg);
+    transform-origin: center;
+}
+
+.inner-circle-egg {
+    object-fit: contain;
+    transform: translateY(12px) translateX(-2px) scale(1.90);
+    transform-origin: center;
+}
+
+.inner-circle-coin {
+    object-fit: contain;
+    transform: translateY(0px) translateX(2px) scale(1.70);
+    transform-origin: center;
+}
+
+.inner-circle-noodles {
+    object-fit: contain;
+    transform: translateY(-1px) translateX(-2px) scale(1.11);
+    transform-origin: center;
 }
 
 .floating-shape {

@@ -88,15 +88,30 @@
                     <div class="circle-animation">
                         <div class="rotating-circle-1"></div>
                         <div class="rotating-circle-2"></div>
-                        <div class="main-circle">
+                        <div class="main-circle-wrap">
+                            <button type="button" class="hero-visual-arrow hero-visual-arrow--prev" aria-label="上一张" title="上一张"></button>
+                            <div class="main-circle">
                             <div class="inner-circle">
-                                <svg width="240" height="240" viewBox="0 0 240 240">
+                                <svg class="inner-circle-diagram" width="240" height="240" viewBox="0 0 240 240" aria-hidden="true">
                                     <circle cx="120" cy="120" r="100" fill="none" stroke="currentColor" stroke-width="2" class="animated-path"/>
                                     <line x1="120" y1="120" x2="220" y2="120" stroke="currentColor" stroke-width="2" class="animated-line-1"/>
                                     <line x1="120" y1="120" x2="50" y2="50" stroke="currentColor" stroke-width="2" class="animated-line-2"/>
                                     <circle cx="120" cy="120" r="4" fill="currentColor" class="animated-dot"/>
                                 </svg>
+                                <img src="assets/images/homepage/pizza.png" alt="Pizza visual" class="inner-circle-image inner-circle-pizza">
+                                <img src="assets/images/homepage/甜甜圈.png" alt="Donut visual" class="inner-circle-image inner-circle-donut">
+                                <img src="assets/images/homepage/月球.png" alt="Moon visual" class="inner-circle-image inner-circle-moon">
+                                <img src="assets/images/homepage/emoji.png" alt="Emoji visual" class="inner-circle-image inner-circle-emoji">
+                                <img src="assets/images/homepage/向日葵.png" alt="Sunflower visual" class="inner-circle-image inner-circle-sunflower">
+                                <img src="assets/images/homepage/奥利奥.png" alt="Oreo visual" class="inner-circle-image inner-circle-oreo">
+                                <img src="assets/images/homepage/小猫.png" alt="Cat visual" class="inner-circle-image inner-circle-cat">
+                                <img src="assets/images/homepage/易拉罐.png" alt="Can visual" class="inner-circle-image inner-circle-can">
+                                <img src="assets/images/homepage/煎蛋.png" alt="Egg visual" class="inner-circle-image inner-circle-egg">
+                                <img src="assets/images/homepage/硬币.png" alt="Coin visual" class="inner-circle-image inner-circle-coin">
+                                <img src="assets/images/homepage/面条.png" alt="Noodles visual" class="inner-circle-image inner-circle-noodles">
                             </div>
+                            </div>
+                            <button type="button" class="hero-visual-arrow hero-visual-arrow--next" aria-label="下一张" title="下一张"></button>
                         </div>
                         <div class="floating-shape floating-shape-1"></div>
                         <div class="floating-shape floating-shape-2"></div>
@@ -115,55 +130,92 @@
 
             <div class="theorem-grid">
                 <div class="theorem-card">
-                    <div class="theorem-icon">⊙</div>
+                    <div class="theorem-media">
+                        <div class="theorem-icon">⊙</div>
+                        <div class="theorem-image">
+                            <img src="assets/images/homepage/Angle at the Centre.png" alt="Angle at the Centre diagram">
+                        </div>
+                    </div>
                     <h3 class="theorem-title">Angle at the Centre</h3>
-                    <p class="theorem-description">The angle at the centre is twice the angle at the circumference.</p>
-                    <a href="#learn" class="theorem-link">
-                        Learn More
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <line x1="5" y1="12" x2="19" y2="12"/>
-                            <polyline points="12 5 19 12 12 19"/>
-                        </svg>
-                    </a>
                 </div>
 
                 <div class="theorem-card">
-                    <div class="theorem-icon">◐</div>
+                    <div class="theorem-media">
+                        <div class="theorem-icon">◐</div>
+                        <div class="theorem-image">
+                            <img src="assets/images/homepage/Angles in Semicircle.png" alt="Angles in Semicircle diagram">
+                        </div>
+                    </div>
                     <h3 class="theorem-title">Angles in Semicircle</h3>
-                    <p class="theorem-description">The angle in a semicircle is always 90 degrees.</p>
-                    <a href="#learn" class="theorem-link">
-                        Learn More
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <line x1="5" y1="12" x2="19" y2="12"/>
-                            <polyline points="12 5 19 12 12 19"/>
-                        </svg>
-                    </a>
                 </div>
 
                 <div class="theorem-card">
-                    <div class="theorem-icon">◯</div>
+                    <div class="theorem-media">
+                        <div class="theorem-icon">◯</div>
+                        <div class="theorem-image">
+                            <img src="assets/images/homepage/Cyclic Quadrilateral.png" alt="Cyclic Quadrilateral diagram">
+                        </div>
+                    </div>
                     <h3 class="theorem-title">Cyclic Quadrilateral</h3>
-                    <p class="theorem-description">Opposite angles in a cyclic quadrilateral add up to 180°.</p>
-                    <a href="#learn" class="theorem-link">
-                        Learn More
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                </div>
+
+                <div class="theorem-card-spotlight">
+                    <a href="#learn" class="btn-theorem-learn-more">
+                        <span>Learn More</span>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true">
                             <line x1="5" y1="12" x2="19" y2="12"/>
                             <polyline points="12 5 19 12 12 19"/>
                         </svg>
                     </a>
+                    <div class="theorem-card" id="theorem-radius-tangent">
+                        <div class="theorem-media">
+                            <div class="theorem-icon">⟂</div>
+                            <div class="theorem-image">
+                                <img src="assets/images/homepage/Radius to a Tangent.png" alt="Radius to a Tangent diagram">
+                            </div>
+                        </div>
+                        <h3 class="theorem-title">Radius to a Tangent</h3>
+                    </div>
                 </div>
 
                 <div class="theorem-card">
-                    <div class="theorem-icon">⟂</div>
-                    <h3 class="theorem-title">Tangent Properties</h3>
-                    <p class="theorem-description">The angle between a tangent and radius is 90 degrees.</p>
-                    <a href="#learn" class="theorem-link">
-                        Learn More
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <line x1="5" y1="12" x2="19" y2="12"/>
-                            <polyline points="12 5 19 12 12 19"/>
-                        </svg>
-                    </a>
+                    <div class="theorem-media">
+                        <div class="theorem-icon">∠</div>
+                        <div class="theorem-image">
+                            <img src="assets/images/homepage/Angles in the Same Segment.png" alt="Angles in the Same Segment diagram">
+                        </div>
+                    </div>
+                    <h3 class="theorem-title">Angles in the Same Segment</h3>
+                </div>
+
+                <div class="theorem-card">
+                    <div class="theorem-media">
+                        <div class="theorem-icon">⇄</div>
+                        <div class="theorem-image">
+                            <img src="assets/images/homepage/Tangents from a Point to a Circle.png" alt="Tangents from a Point to a Circle diagram">
+                        </div>
+                    </div>
+                    <h3 class="theorem-title">Tangents from a Point to a Circle</h3>
+                </div>
+
+                <div class="theorem-card">
+                    <div class="theorem-media">
+                        <div class="theorem-icon">∡</div>
+                        <div class="theorem-image">
+                            <img src="assets/images/homepage/Tangents from a Point to a Circle II.png" alt="Tangents from a Point to a Circle 2 diagram">
+                        </div>
+                    </div>
+                    <h3 class="theorem-title">Tangents from a Point to a Circle II</h3>
+                </div>
+
+                <div class="theorem-card">
+                    <div class="theorem-media">
+                        <div class="theorem-icon">⊿</div>
+                        <div class="theorem-image">
+                            <img src="assets/images/homepage/Alternate Segment Theorem.png" alt="Alternate Segment Theorem diagram">
+                        </div>
+                    </div>
+                    <h3 class="theorem-title">Alternate Segment Theorem</h3>
                 </div>
             </div>
         </div>

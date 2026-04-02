@@ -5,6 +5,86 @@
     gap: 24px;
 }
 
+.theorem-card-spotlight {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    align-self: stretch;
+}
+
+.theorem-card-spotlight .theorem-card {
+    flex: 1 1 auto;
+    min-height: 0;
+}
+
+.theorem-card-spotlight .btn-theorem-learn-more {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: calc(100% + 14px);
+    width: auto;
+    z-index: 2;
+}
+
+.btn-theorem-learn-more {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+    padding: 14px 22px;
+    border-radius: 14px;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    color: #fff;
+    background: linear-gradient(135deg, #3b82f6 0%, #6366f1 45%, #9333ea 100%);
+    box-shadow:
+        0 10px 28px rgba(59, 130, 246, 0.38),
+        0 2px 8px rgba(99, 102, 241, 0.25);
+    transition:
+        transform 0.28s cubic-bezier(0.34, 1.2, 0.64, 1),
+        box-shadow 0.28s ease,
+        filter 0.28s ease;
+}
+
+.btn-theorem-learn-more svg {
+    flex-shrink: 0;
+    transition: transform 0.28s cubic-bezier(0.34, 1.2, 0.64, 1);
+}
+
+.btn-theorem-learn-more:hover {
+    transform: translateY(-3px);
+    box-shadow:
+        0 16px 40px rgba(147, 51, 234, 0.38),
+        0 4px 12px rgba(59, 130, 246, 0.25);
+    filter: brightness(1.06);
+}
+
+.btn-theorem-learn-more:hover svg {
+    transform: translateX(4px);
+}
+
+.btn-theorem-learn-more:active {
+    transform: translateY(-1px);
+    filter: brightness(0.98);
+}
+
+.btn-theorem-learn-more:focus-visible {
+    outline: 3px solid rgba(99, 102, 241, 0.6);
+    outline-offset: 3px;
+}
+
+body.dark-mode .btn-theorem-learn-more {
+    box-shadow:
+        0 10px 32px rgba(59, 130, 246, 0.32),
+        0 2px 10px rgba(0, 0, 0, 0.35);
+}
+
 .theorem-card {
     background-color: white;
     border: 1px solid var(--gray-200);
@@ -27,8 +107,8 @@ body.dark-mode .theorem-card {
 }
 
 .theorem-icon {
-    width: 64px;
-    height: 64px;
+    width: 55px;
+    height: 55px;
     border-radius: 50%;
     background-color: #DBEAFE;
     display: flex;
@@ -49,11 +129,42 @@ body.dark-mode .theorem-icon {
     transform: scale(1.1);
 }
 
+.theorem-media {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
+.theorem-media .theorem-icon {
+    flex-shrink: 0;
+    margin-bottom: 0;
+    position: relative;
+    top: -30px;
+}
+
 .theorem-title {
     font-size: 20px;
     font-weight: 600;
     color: var(--text);
+    margin-top: 20px;
     margin-bottom: 12px;
+}
+
+.theorem-image {
+    width: 100%;
+    margin-bottom: 12px;
+}
+
+.theorem-media .theorem-image {
+    margin-bottom: 0;
+}
+
+.theorem-image img {
+    width: 100%;
+    height: 140px;
+    object-fit: contain;
+    display: block;
 }
 
 .theorem-description {

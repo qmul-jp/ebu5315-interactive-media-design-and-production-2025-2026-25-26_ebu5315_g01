@@ -102,36 +102,19 @@ function initSmoothAnchorScroll() {
 }
 
 function initNavScrollSpy() {
-    /* 仅首页使用 # 锚点区块高亮；子页面用当前页 .active，避免滚动时误清除 */
+    /* 仅首页启用：当前导航只有 Home 锚点，首页任意滚动位置都保持 Home 高亮 */
     if (!document.body.classList.contains('page-scroll-spy')) return;
 
-    const sections = document.querySelectorAll('section[id]');
     const navLinks = document.querySelectorAll('.nav-link');
-    if (!sections.length || !navLinks.length) return;
+    if (!navLinks.length) return;
 
-    const onScroll = () => {
-        let current = '';
-        sections.forEach((section) => {
-            const sectionTop = section.offsetTop;
-            if (window.pageYOffset >= sectionTop - 100) {
-                current = section.getAttribute('id');
-            }
-        });
-        if (!current && window.pageYOffset < 120) {
-            current = 'home';
-        }
-
-        navLinks.forEach((link) => {
-            link.classList.remove('active');
-            const h = link.getAttribute('href');
-            if (h === `#${current}`) {
-                link.classList.add('active');
-            }
-        });
-    };
-
-    window.addEventListener('scroll', onScroll);
-    onScroll();
+    navLinks.forEach((link) => {
+        link.classList.remove('active');
+    });
+    const homeLink = document.querySelector('.nav-link[href="#home"]');
+    if (homeLink) {
+        homeLink.classList.add('active');
+    }
 }
 
 function injectRippleStyles() {
