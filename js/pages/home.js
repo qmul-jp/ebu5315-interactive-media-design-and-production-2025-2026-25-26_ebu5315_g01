@@ -1,6 +1,32 @@
 /**
  * 首页：Hero 圆形视觉状态、悬停箭头、悬浮聊天、滚动显现
  */
+(function initHeroIntro() {
+    const root = document.documentElement;
+    if (!root.classList.contains('hero-intro-play')) return;
+    const circleAnimation = document.querySelector('.circle-animation');
+    const heroFadeEls = document.querySelectorAll(
+        '.hero-content .animate-fade-in, .hero-content .animate-fade-in-delay-1, .hero-content .animate-fade-in-delay-2'
+    );
+    heroFadeEls.forEach((el) => {
+        el.classList.remove('animate-fade-in', 'animate-fade-in-delay-1', 'animate-fade-in-delay-2');
+    });
+    const finish = () => {
+        root.classList.remove('hero-intro-play');
+    };
+    const fallbackMs = 3400;
+    const t = window.setTimeout(finish, fallbackMs);
+    if (circleAnimation) {
+        const onEnd = (e) => {
+            if (e.animationName !== 'heroCircleIntro') return;
+            window.clearTimeout(t);
+            circleAnimation.removeEventListener('animationend', onEnd);
+            finish();
+        };
+        circleAnimation.addEventListener('animationend', onEnd);
+    }
+})();
+
 (function () {
     const innerCircle = document.querySelector('.inner-circle');
     const diagramSvg = document.querySelector('.inner-circle-diagram');
