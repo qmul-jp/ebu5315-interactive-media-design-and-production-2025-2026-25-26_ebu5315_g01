@@ -29,3 +29,418 @@ body.dark-mode .game-placeholder-card {
     justify-content: center;
     align-items: center;
 }
+
+/* ===== 游戏选择网格 ===== */
+.game-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+    gap: 24px;
+    margin-top: 16px;
+}
+
+.game-card {
+    background-color: white;
+    border: 1px solid var(--gray-200);
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+    cursor: pointer;
+}
+
+body.dark-mode .game-card {
+    background-color: var(--gray-900);
+    border-color: var(--gray-700);
+}
+
+.game-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 12px 40px rgba(37, 99, 235, 0.15);
+    border-color: var(--primary);
+}
+
+.game-card-preview {
+    width: 100%;
+    height: 200px;
+    position: relative;
+    overflow: hidden;
+    background: var(--gray-900);
+}
+
+.game-card-preview canvas {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+.game-card-tag {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(8px);
+    color: #60A5FA;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 4px 12px;
+    border-radius: 20px;
+    border: 1px solid rgba(96, 165, 250, 0.3);
+}
+
+.game-card-info {
+    padding: 20px 24px 24px;
+}
+
+.game-card-info h3 {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 8px;
+}
+
+.game-card-info p {
+    color: var(--text-muted);
+    font-size: 14px;
+    line-height: 1.6;
+    margin-bottom: 16px;
+}
+
+.game-knowledge-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 16px;
+}
+
+.knowledge-tag {
+    font-size: 11px;
+    padding: 3px 8px;
+    border-radius: 6px;
+    background: rgba(37, 99, 235, 0.1);
+    color: var(--primary);
+    border: 1px solid rgba(37, 99, 235, 0.15);
+    font-weight: 500;
+}
+
+body.dark-mode .knowledge-tag {
+    background: rgba(96, 165, 250, 0.15);
+    color: #60A5FA;
+    border-color: rgba(96, 165, 250, 0.2);
+}
+
+.game-play-btn {
+    display: block;
+    width: 100%;
+}
+
+/* ===== 游戏页面视图（全屏游戏模式） ===== */
+.game-page-view {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 60;
+    background: var(--gray-900);
+    display: flex;
+    flex-direction: column;
+}
+
+body:not(.dark-mode) .game-page-view {
+    background: #0F172A;
+}
+
+.game-header-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 24px;
+    background: rgba(15, 23, 42, 0.95);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    z-index: 10;
+    flex-shrink: 0;
+}
+
+.game-header-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.game-back-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    padding: 6px 12px !important;
+}
+
+.game-back-btn svg {
+    flex-shrink: 0;
+}
+
+.game-header-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: #F8FAFC;
+}
+
+.game-header-stats {
+    display: flex;
+    gap: 24px;
+    align-items: center;
+}
+
+.game-stat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+}
+
+.game-stat-label {
+    font-size: 10px;
+    color: #94A3B8;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-weight: 600;
+}
+
+.game-stat-value {
+    font-size: 20px;
+    font-weight: 800;
+    color: #F8FAFC;
+    font-variant-numeric: tabular-nums;
+    min-width: 40px;
+    text-align: center;
+}
+
+.game-canvas-wrapper {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.game-canvas-wrapper canvas {
+    display: block;
+    max-width: 100%;
+    max-height: 100%;
+}
+
+/* ===== 游戏覆盖层 ===== */
+.game-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(8px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 200;
+}
+
+.game-overlay-panel {
+    background: #1E293B;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    padding: 40px;
+    max-width: 420px;
+    width: 90%;
+    text-align: center;
+}
+
+.game-overlay-panel h2 {
+    font-size: 28px;
+    font-weight: 800;
+    color: #F8FAFC;
+    margin-bottom: 12px;
+}
+
+.game-overlay-desc {
+    color: #94A3B8;
+    font-size: 14px;
+    line-height: 1.6;
+    margin-bottom: 24px;
+}
+
+.game-final-score {
+    font-size: 56px;
+    font-weight: 800;
+    background: linear-gradient(135deg, #2563EB, #60A5FA, #A78BFA);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 8px;
+}
+
+.game-record-badge {
+    display: inline-block;
+    background: linear-gradient(135deg, #F59E0B, #EF4444);
+    color: white;
+    padding: 6px 20px;
+    border-radius: 20px;
+    font-weight: 700;
+    font-size: 14px;
+    margin-bottom: 16px;
+}
+
+.game-stars {
+    font-size: 36px;
+    margin-bottom: 16px;
+}
+
+.game-overlay-buttons {
+    display: flex;
+    gap: 12px;
+    margin-top: 20px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.game-overlay-buttons .btn {
+    min-width: 120px;
+}
+
+/* ===== 知识提示 ===== */
+.game-knowledge-tip {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(30, 41, 59, 0.95);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+    padding: 10px 20px;
+    max-width: 500px;
+    width: 90%;
+    z-index: 50;
+    font-size: 13px;
+    color: #94A3B8;
+    text-align: center;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    opacity: 0;
+    transform: translateX(-50%) translateY(20px);
+    pointer-events: none;
+}
+
+.game-knowledge-tip.visible {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+}
+
+.knowledge-tip-label {
+    margin-right: 6px;
+}
+
+/* ===== 响应式 ===== */
+@media (max-width: 768px) {
+    .game-grid {
+        grid-template-columns: 1fr;
+    }
+    .game-header-bar {
+        padding: 8px 16px;
+    }
+    .game-header-stats {
+        gap: 16px;
+    }
+    .game-stat-value {
+        font-size: 16px;
+    }
+    .game-overlay-panel {
+        padding: 28px 20px;
+    }
+    .game-final-score {
+        font-size: 42px;
+    }
+    .game-back-btn span {
+        display: none;
+    }
+}
+
+/* ===== 全部通关弹窗 ===== */
+.game-complete-overlay {
+    background: rgba(0, 0, 0, 0.85);
+}
+
+.game-complete-panel {
+    max-width: 480px;
+    padding: 48px 40px;
+}
+
+.game-complete-icon {
+    font-size: 64px;
+    margin-bottom: 16px;
+    animation: trophy-bounce 0.6s ease-out;
+}
+
+@keyframes trophy-bounce {
+    0% { transform: scale(0) rotate(-15deg); }
+    50% { transform: scale(1.2) rotate(5deg); }
+    100% { transform: scale(1) rotate(0deg); }
+}
+
+.game-complete-panel h2 {
+    font-size: 32px;
+    background: linear-gradient(135deg, #F59E0B, #EF4444, #EC4899);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 16px;
+}
+
+.game-complete-desc {
+    color: #CBD5E1;
+    font-size: 15px;
+    line-height: 1.7;
+    margin-bottom: 28px;
+}
+
+.game-complete-stats {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    margin-bottom: 28px;
+}
+
+.complete-stat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+}
+
+.complete-stat-value {
+    font-size: 36px;
+    font-weight: 800;
+    color: #60A5FA;
+}
+
+.complete-stat-label {
+    font-size: 12px;
+    color: #94A3B8;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+@media (max-width: 480px) {
+    .game-complete-panel {
+        padding: 32px 24px;
+    }
+    .game-complete-icon {
+        font-size: 48px;
+    }
+    .game-complete-panel h2 {
+        font-size: 26px;
+    }
+    .game-complete-stats {
+        gap: 24px;
+    }
+    .complete-stat-value {
+        font-size: 28px;
+    }
+}
