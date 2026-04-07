@@ -69,13 +69,13 @@
             border-radius: 50%;
         }
 
-        nav a {
+        .nav-links .nav-link {
             text-decoration: none;
             color: var(--text-muted);
             margin: 0 1.5rem;
             font-weight: 500;
         }
-        nav a.active { color: var(--text-main); }
+        .nav-links .nav-link.active { color: var(--text-main); }
 
         .header-controls { display: flex; align-items: center; gap: 1.5rem; }
 
@@ -244,15 +244,15 @@
 <body>
 
     <header>
-        <div class="logo">
+        <a href="../index.html" class="logo" style="text-decoration: none; color: inherit;">
             <div class="logo-icon"></div>
             GEOMETRY CHALLENGER
+        </a>
+        <div class="nav-links">
+            <a href="../index.html" class="nav-link" data-i18n="navHome">Home</a>
+            <a href="../game/game.html" class="nav-link" data-i18n="navGame">Game</a>
+            <a href="quiz.html" class="nav-link active" data-i18n="navQuiz">Quiz</a>
         </div>
-        <nav>
-            <a href="#" data-i18n="navHome">Home</a>
-            <a href="#" data-i18n="navGame">Game</a>
-            <a href="#" class="active" data-i18n="navQuiz">Quiz</a>
-        </nav>
         <div class="header-controls">
             <span id="langToggle" style="cursor:pointer; user-select:none;">🌐 <span id="langText">EN</span></span>
             <span>⚙️</span>
