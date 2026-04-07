@@ -68,18 +68,26 @@
                         <span class="quiz-bc-sep">/</span>
                         <a href="quiz.html" data-i18n="bcQuiz">Quiz</a>
                         <span class="quiz-bc-sep">/</span>
-                        <span data-i18n="bcLevel">Level 1</span>
+                        <span id="breadcrumbLevel" data-i18n="bcLevel">Level 1</span>
                     </nav>
 
                     <section class="card quiz-container">
                         <span class="quiz-card-label" id="toggleSidebarBtn" data-i18n="sidebarToggleLabel">question</span>
+                        
                         <div class="quiz-card-header">
                             <h1 class="quiz-title">
-                                <span data-i18n="titleLine1">Quiz Module: Level 1 -</span><br>
-                                <span data-i18n="titleLine2">Basic Circle Theorems</span>
+                                <span data-i18n="titleLine1">Circle Theorem Quiz</span>
+                                <span id="levelDisplay" class="level-badge">Level 1</span>
                             </h1>
-                            <div class="quiz-meta-row">
-                                <span data-i18n="questionMeta">Question 1 of 10</span>
+
+                            <div id="progressDots" class="progress-dots">
+                                <div class="dot"></div>
+                                <div class="dot"></div>
+                                <div class="dot"></div>
+                            </div>
+
+                            <div class="quiz-meta-row" style="margin-top: 1rem;">
+                                <span id="questionCounter" data-i18n="questionMeta">Question 1 of 10</span>
                                 <div class="quiz-timer">
                                     <span data-i18n="timeLabel">Time Remaining:</span>
                                     <span id="timer">09:45</span>
@@ -87,25 +95,27 @@
                             </div>
                         </div>
 
-                        <div class="ai-hint-box">
+                        <div class="ai-hint-box" id="aiHintBox">
                             <div class="hint-label" data-i18n="hintTitle">Hint from AI:</div>
-                            <p data-i18n="hintText">Remember the relationship between the angle at the center and the angle at the circumference subtended by the same arc.</p>
+                            <p id="hintContent" data-i18n="hintText">Remember the relationship between the angle at the center and the angle at the circumference subtended by the same arc.</p>
                         </div>
 
-                        <div class="question-section">
-                            <p class="question-text" data-i18n="questionText">What is the value of angle X in the circle below?</p>
-                            <div class="geometry-canvas" aria-hidden="true"></div>
+                        <div id="quizRoot">
+                            <div class="question-section">
+                                <p class="question-text" id="questionText" data-i18n="questionText">What is the value of angle X in the circle below?</p>
+                                <div class="geometry-canvas" id="geometryCanvas" aria-hidden="true"></div>
 
-                            <div class="options-grid">
-                                <button type="button" class="btn btn-outline quiz-option-btn" onclick="selectOption(this)" data-i18n="optA">A) 45 degrees</button>
-                                <button type="button" class="btn btn-outline quiz-option-btn" onclick="selectOption(this)" data-i18n="optB">B) 90 degrees</button>
-                                <button type="button" class="btn btn-outline quiz-option-btn" onclick="selectOption(this)" data-i18n="optC">C) 180 degrees</button>
-                                <button type="button" class="btn btn-outline quiz-option-btn" onclick="selectOption(this)" data-i18n="optD">D) 60 degrees</button>
-                            </div>
+                                <div class="options-grid" id="optionsGrid">
+                                    <button type="button" class="btn btn-outline quiz-option-btn" onclick="selectOption(this)" data-i18n="optA">A) 45 degrees</button>
+                                    <button type="button" class="btn btn-outline quiz-option-btn" onclick="selectOption(this)" data-i18n="optB">B) 90 degrees</button>
+                                    <button type="button" class="btn btn-outline quiz-option-btn" onclick="selectOption(this)" data-i18n="optC">C) 180 degrees</button>
+                                    <button type="button" class="btn btn-outline quiz-option-btn" onclick="selectOption(this)" data-i18n="optD">D) 60 degrees</button>
+                                </div>
 
-                            <div class="quiz-action-buttons">
-                                <button type="button" class="btn btn-outline" data-i18n="prevBtn">← Previous</button>
-                                <button type="button" class="btn btn-primary" data-i18n="nextBtn">Next Question →</button>
+                                <div class="quiz-action-buttons">
+                                    <button type="button" class="btn btn-outline" id="prevBtn" data-i18n="prevBtn">← Previous</button>
+                                    <button type="button" class="btn btn-primary" id="nextBtn" data-i18n="nextBtn">Next Question →</button>
+                                </div>
                             </div>
                         </div>
                     </section>
@@ -113,7 +123,7 @@
 
                 <aside class="quiz-sidebar-panel" id="sidebar">
                     <div class="quiz-sidebar-header">
-                        <h3 data-i18n="sidebarTitle">All Questions (Level 1)</h3>
+                        <h3 id="sidebarTitleDisplay" data-i18n="sidebarTitle">All Questions (Level 1)</h3>
                         <button type="button" class="btn btn-outline quiz-sidebar-close" onclick="hideSidebar()" data-i18n="sidebarClose">🔒 Close</button>
                     </div>
 
@@ -124,7 +134,7 @@
                         </div>
                     </div>
 
-                    <button type="button" class="btn btn-primary-full" data-i18n="submitBtn">Submit Quiz</button>
+                    <button type="button" class="btn btn-primary-full" id="submitQuizBtn" data-i18n="submitBtn">Submit Quiz</button>
                 </aside>
             </div>
         </div>
@@ -176,30 +186,26 @@
         </svg>
     </button>
 
+    <script src="../js/data/quiz-questions.js"></script>
     <script src="../js/utils.js"></script>
     <script src="../js/main.js"></script>
+    <script src="../js/pages/quiz.js"></script>
+
     <script>
+        // 注意：复杂的业务逻辑应移至 ../js/pages/quiz.js
+        
         const i18n = {
             en: {
-                navHome: "Home",
-                navGame: "Game",
-                navQuiz: "Quiz",
-                bcHome: "Home",
-                bcQuiz: "Quiz",
-                bcLevel: "Level 1",
-                titleLine1: "Quiz Module: Level 1 -",
-                titleLine2: "Basic Circle Theorems",
+                navHome: "Home", navGame: "Game", navQuiz: "Quiz",
+                bcHome: "Home", bcQuiz: "Quiz", bcLevel: "Level 1",
+                titleLine1: "Circle Theorem Quiz",
                 questionMeta: "Question 1 of 10",
                 timeLabel: "Time Remaining:",
                 hintTitle: "Hint from AI:",
                 hintText: "Remember the relationship between the angle at the center and the angle at the circumference subtended by the same arc.",
                 questionText: "What is the value of angle X in the circle below?",
-                optA: "A) 45 degrees",
-                optB: "B) 90 degrees",
-                optC: "C) 180 degrees",
-                optD: "D) 60 degrees",
-                prevBtn: "← Previous",
-                nextBtn: "Next Question →",
+                optA: "A) 45 degrees", optB: "B) 90 degrees", optC: "C) 180 degrees", optD: "D) 60 degrees",
+                prevBtn: "← Previous", nextBtn: "Next Question →",
                 sidebarToggleLabel: "question",
                 sidebarTitle: "All Questions (Level 1)",
                 sidebarClose: "🔒 Close",
@@ -208,25 +214,16 @@
                 submitBtn: "Submit Quiz"
             },
             zh: {
-                navHome: "首页",
-                navGame: "游戏",
-                navQuiz: "测验",
-                bcHome: "首页",
-                bcQuiz: "测验",
-                bcLevel: "第一阶段",
-                titleLine1: "测验模块：等级 1 -",
-                titleLine2: "基础圆定理",
+                navHome: "首页", navGame: "游戏", navQuiz: "测验",
+                bcHome: "首页", bcQuiz: "测验", bcLevel: "等级 1",
+                titleLine1: "圆几何挑战测验",
                 questionMeta: "第 1 题（共 10 题）",
                 timeLabel: "剩余时间：",
                 hintTitle: "AI 提示：",
                 hintText: "记住同圆弧所对应的圆心角与圆周角之间的关系。",
                 questionText: "下图中角 X 的度数是多少？",
-                optA: "A) 45 度",
-                optB: "B) 90 度",
-                optC: "C) 180 度",
-                optD: "D) 60 度",
-                prevBtn: "← 上一题",
-                nextBtn: "下一题 →",
+                optA: "A) 45 度", optB: "B) 90 度", optC: "C) 180 度", optD: "D) 60 度",
+                prevBtn: "← 上一题", nextBtn: "下一题 →",
                 sidebarToggleLabel: "题目",
                 sidebarTitle: "所有题目（等级 1）",
                 sidebarClose: "🔒 关闭",
@@ -237,84 +234,21 @@
         };
 
         function readLang() {
-            let lang = localStorage.getItem('lang');
-            if (!lang) {
-                const legacy = localStorage.getItem('pref_lang');
-                if (legacy === 'zh' || legacy === 'en') lang = legacy;
-            }
-            if (lang !== 'en' && lang !== 'zh') lang = 'en';
-            return lang;
+            let lang = localStorage.getItem('lang') || 'en';
+            return (lang === 'zh' || lang === 'en') ? lang : 'en';
         }
 
         let currentLang = readLang();
 
-        const questionGridEl = document.getElementById('questionGrid');
-
-        function renderSidebarGrid() {
-            if (!questionGridEl) return;
-            if (questionGridEl.querySelectorAll('.grid-item').length >= 10) return;
-            for (let i = 2; i <= 10; i++) {
-                const item = document.createElement('div');
-                item.className = 'grid-item';
-                const num = document.createElement('span');
-                num.className = 'q-num';
-                num.textContent = String(i);
-                const status = document.createElement('span');
-                status.className = 'q-status';
-                status.setAttribute('data-i18n', 'sidebarStatusUnattempted');
-                item.appendChild(num);
-                item.appendChild(status);
-                questionGridEl.appendChild(item);
-            }
-        }
-
         function applyI18n() {
             const dict = i18n[currentLang];
-            if (!dict) return;
-            document.documentElement.lang = currentLang === 'en' ? 'en' : 'zh-CN';
             document.querySelectorAll('[data-i18n]').forEach((el) => {
                 const key = el.getAttribute('data-i18n');
-                if (dict[key] !== undefined) {
-                    el.textContent = dict[key];
-                }
+                if (dict[key]) el.textContent = dict[key];
             });
         }
 
-        function syncLangFromStorage() {
-            currentLang = readLang();
-            applyI18n();
-        }
-
-        document.addEventListener('DOMContentLoaded', () => {
-            renderSidebarGrid();
-            syncLangFromStorage();
-
-            const menuLangToggle = document.getElementById('menuLangToggle');
-            if (menuLangToggle) {
-                menuLangToggle.addEventListener('click', () => {
-                    queueMicrotask(() => syncLangFromStorage());
-                });
-            }
-
-            const sidebar = document.getElementById('sidebar');
-            const toggleBtn = document.getElementById('toggleSidebarBtn');
-            if (toggleBtn && sidebar) {
-                toggleBtn.addEventListener('click', () => {
-                    sidebar.classList.toggle('is-open');
-                });
-            }
-
-            let time = 9 * 60 + 45;
-            setInterval(() => {
-                if (time <= 0) return;
-                time--;
-                const m = Math.floor(time / 60).toString().padStart(2, '0');
-                const s = (time % 60).toString().padStart(2, '0');
-                const timerEl = document.getElementById('timer');
-                if (timerEl) timerEl.textContent = `${m}:${s}`;
-            }, 1000);
-        });
-
+        // 侧边栏逻辑
         function hideSidebar() {
             const sidebar = document.getElementById('sidebar');
             if (sidebar) sidebar.classList.remove('is-open');
@@ -324,6 +258,28 @@
             document.querySelectorAll('.quiz-option-btn').forEach((btn) => btn.classList.remove('selected'));
             el.classList.add('selected');
         }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            applyI18n();
+
+            // 侧边栏开关
+            const toggleBtn = document.getElementById('toggleSidebarBtn');
+            const sidebar = document.getElementById('sidebar');
+            if (toggleBtn && sidebar) {
+                toggleBtn.addEventListener('click', () => sidebar.classList.toggle('is-open'));
+            }
+
+            // 倒计时逻辑
+            let time = 9 * 60 + 45;
+            const timerEl = document.getElementById('timer');
+            setInterval(() => {
+                if (time <= 0) return;
+                time--;
+                const m = Math.floor(time / 60).toString().padStart(2, '0');
+                const s = (time % 60).toString().padStart(2, '0');
+                if (timerEl) timerEl.textContent = `${m}:${s}`;
+            }, 1000);
+        });
     </script>
 </body>
 </html>

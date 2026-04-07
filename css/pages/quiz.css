@@ -1,4 +1,4 @@
-/* 测验页 */
+/* 测验页基础占位卡片 */
 .quiz-placeholder-card {
     background-color: white;
     border: 1px solid var(--gray-200);
@@ -115,6 +115,38 @@ body.quiz-page.dark-mode {
     position: relative;
 }
 
+/* AI 进度逻辑：等级标签样式 */
+.level-badge {
+    background-color: var(--primary, #2563eb);
+    color: #ffffff;
+    padding: 0.25rem 0.75rem;
+    border-radius: var(--radius-full, 999px);
+    font-size: 0.875rem;
+    margin-left: 10px;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+/* AI 进度逻辑：连续对题的进度点容器 */
+.progress-dots {
+    display: flex;
+    gap: 6px;
+    margin-top: 8px;
+}
+
+.dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--gray-300);
+    transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.dot.active {
+    background: #10b981; /* 成功绿 */
+    transform: scale(1.1);
+}
+
 .quiz-card-label {
     position: absolute;
     top: 1.5rem;
@@ -180,6 +212,9 @@ body.dark-mode .card.quiz-container {
     line-height: 1.25;
     color: var(--text);
     margin-bottom: 1.25rem;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
 }
 
 .quiz-meta-row {
