@@ -78,6 +78,46 @@
         nav a.active { color: var(--text-main); }
 
         .header-controls { display: flex; align-items: center; gap: 1.5rem; }
+        .settings-dropdown { position: relative; }
+        .settings-menu {
+            position: absolute;
+            top: calc(100% + 10px);
+            right: 0;
+            min-width: 200px;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            box-shadow: 0 10px 24px rgba(0,0,0,0.12);
+            padding: 8px;
+            display: none;
+            z-index: 100;
+        }
+        .settings-item {
+            width: 100%;
+            border: none;
+            background: transparent;
+            color: var(--text-main);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 12px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 0.9rem;
+            cursor: pointer;
+        }
+        .settings-item:hover { background: var(--bg-gray); }
+        .settings-value { color: var(--text-muted); font-weight: 600; }
+        .btn-icon {
+            border: 1px solid var(--border-color);
+            background: var(--card-bg);
+            color: var(--text-main);
+            border-radius: 10px;
+            padding: 6px 10px;
+            cursor: pointer;
+            font-size: 1rem;
+        }
 
         .toggle-switch {
             width: 40px; height: 20px;
@@ -254,8 +294,20 @@
             <a href="#" class="active" data-i18n="navQuiz">Quiz</a>
         </nav>
         <div class="header-controls">
-            <span id="langToggle" style="cursor:pointer; user-select:none;">🌐 <span id="langText">EN</span></span>
-            <span>⚙️</span>
+            <div class="settings-dropdown">
+                <button type="button" class="btn-icon" id="settingsToggle" aria-label="Open settings" aria-expanded="false" aria-haspopup="true">⚙️</button>
+                <div class="settings-menu" id="settingsMenu" role="menu" aria-label="Settings menu">
+                    <button type="button" class="settings-item" id="menuLangToggle" role="menuitem">
+                        <span data-i18n="settings.language">语言</span>
+                        <span class="settings-value" id="menuLangValue">EN</span>
+                    </button>
+                    <button type="button" class="settings-item" id="menuThemeToggle" role="menuitem">
+                        <span data-i18n="settings.theme">护眼模式</span>
+                        <span class="settings-value" id="menuThemeValue">关</span>
+                    </button>
+                    <a href="../contact/contact.html" class="settings-item settings-link" role="menuitem" data-i18n="settings.contact">联系我们</a>
+                </div>
+            </div>
             <div class="toggle-switch" id="themeToggle" role="switch" aria-label="切换深色模式" aria-checked="false"></div>
         </div>
     </header>
@@ -320,6 +372,9 @@
     <script>
         const i18n = {
             en: {
+                "settings.language": "Language",
+                "settings.theme": "Eye Comfort Mode",
+                "settings.contact": "Contact Us",
                 navHome: "Home",
                 navGame: "Game",
                 navQuiz: "Quiz",
@@ -345,6 +400,9 @@
                 submitBtn: "Submit Quiz"
             },
             zh: {
+                "settings.language": "语言",
+                "settings.theme": "护眼模式",
+                "settings.contact": "联系我们",
                 navHome: "首页",
                 navGame: "游戏",
                 navQuiz: "测验",
@@ -371,11 +429,15 @@
             }
         };
 
-        let currentLang = localStorage.getItem('pref_lang') || 'en';
+        let currentLang = localStorage.getItem('lang') || localStorage.getItem('pref_lang') || 'en';
         if (currentLang !== 'en' && currentLang !== 'zh') currentLang = 'en';
 
-        const langToggleEl = document.getElementById('langToggle');
-        const langTextEl = document.getElementById('langText');
+        const langToggleEl = document.getElementById('menuLangToggle');
+        const langTextEl = document.getElementById('menuLangValue');
+        const settingsToggle = document.getElementById('settingsToggle');
+        const settingsMenu = document.getElementById('settingsMenu');
+        const menuThemeToggle = document.getElementById('menuThemeToggle');
+        const menuThemeValue = document.getElementById('menuThemeValue');
         const questionGridEl = document.getElementById('questionGrid');
 
         // 侧边栏题号区：用 JS 生成，避免 document.write 导致翻译无法更新
@@ -407,7 +469,7 @@
             if (!dict) return;
 
             if (langTextEl) {
-                langTextEl.textContent = currentLang === 'en' ? 'EN' : 'CN';
+                langTextEl.textContent = currentLang === 'en' ? 'EN' : '中文';
             }
             document.documentElement.lang = currentLang === 'en' ? 'en' : 'zh-CN';
 
@@ -417,12 +479,16 @@
                     el.textContent = dict[key];
                 }
             });
+
+            document.dispatchEvent(new CustomEvent('circlelearn:langchange', { detail: { lang: currentLang } }));
         }
 
         function switchLanguage() {
             currentLang = currentLang === 'en' ? 'zh' : 'en';
+            localStorage.setItem('lang', currentLang);
             localStorage.setItem('pref_lang', currentLang);
             applyI18n();
+            syncThemeValueText();
         }
 
         if (langToggleEl) {
@@ -431,6 +497,21 @@
 
         renderSidebarGrid();
         applyI18n();
+
+        if (settingsToggle && settingsMenu) {
+            settingsToggle.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const isOpen = settingsMenu.style.display === 'block';
+                settingsMenu.style.display = isOpen ? 'none' : 'block';
+                settingsToggle.setAttribute('aria-expanded', isOpen ? 'false' : 'true');
+            });
+            document.addEventListener('click', (e) => {
+                if (!settingsMenu.contains(e.target) && e.target !== settingsToggle) {
+                    settingsMenu.style.display = 'none';
+                    settingsToggle.setAttribute('aria-expanded', 'false');
+                }
+            });
+        }
 
         const sidebar = document.getElementById('sidebar');
         const toggleBtn = document.getElementById('toggleSidebarBtn');
@@ -473,6 +554,16 @@
                 themeToggle.classList.toggle('active', isDark);
                 themeToggle.setAttribute('aria-checked', isDark ? 'true' : 'false');
             }
+            if (menuThemeValue) {
+                menuThemeValue.textContent = currentLang === 'zh' ? (isDark ? '开' : '关') : (isDark ? 'On' : 'Off');
+            }
+        }
+
+        function syncThemeValueText() {
+            const isDark = document.body.classList.contains('dark-mode');
+            if (menuThemeValue) {
+                menuThemeValue.textContent = currentLang === 'zh' ? (isDark ? '开' : '关') : (isDark ? 'On' : 'Off');
+            }
         }
 
         // 页面加载时：读取偏好
@@ -484,6 +575,15 @@
         // 点击滑块切换 + 记忆
         if (themeToggle) {
             themeToggle.addEventListener('click', () => {
+                document.body.classList.toggle('dark-mode');
+                const theme = document.body.classList.contains('dark-mode') ? 'dark' : 'light';
+                localStorage.setItem('theme', theme);
+                syncThemeUI();
+            });
+        }
+
+        if (menuThemeToggle) {
+            menuThemeToggle.addEventListener('click', () => {
                 document.body.classList.toggle('dark-mode');
                 const theme = document.body.classList.contains('dark-mode') ? 'dark' : 'light';
                 localStorage.setItem('theme', theme);

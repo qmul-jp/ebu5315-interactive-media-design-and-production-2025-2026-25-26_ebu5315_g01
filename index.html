@@ -18,7 +18,14 @@
         (function () {
             try {
                 if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-                document.documentElement.classList.add('hero-intro-play');
+                const INTRO_SEEN_KEY = 'circlelearnHomeIntroSeenV1';
+                const navEntry = performance.getEntriesByType('navigation')[0];
+                const isReload = navEntry && navEntry.type === 'reload';
+                const hasSeenIntro = sessionStorage.getItem(INTRO_SEEN_KEY) === '1';
+                if (isReload || !hasSeenIntro) {
+                    document.documentElement.classList.add('hero-intro-play');
+                }
+                sessionStorage.setItem(INTRO_SEEN_KEY, '1');
             } catch (e) {}
         })();
     </script>
@@ -37,9 +44,9 @@
                 </a>
 
                 <div class="nav-links">
-                    <a href="#home" class="nav-link active">Home</a>
-                    <a href="game/game.html" class="nav-link">Game</a>
-                    <a href="quiz/quiz.html" class="nav-link">Quiz</a>
+                    <a href="#home" class="nav-link active" data-i18n="nav.home">Home</a>
+                    <a href="game/game.html" class="nav-link" data-i18n="nav.game">Game</a>
+                    <a href="quiz/quiz.html" class="nav-link" data-i18n="nav.quiz">Quiz</a>
                 </div>
 
                 <div class="nav-actions">
@@ -52,14 +59,14 @@
                         </button>
                         <div class="settings-menu" id="settingsMenu" role="menu" aria-label="Settings menu">
                             <button type="button" class="settings-item" id="menuLangToggle" role="menuitem">
-                                <span>语言</span>
+                                <span data-i18n="settings.language">语言</span>
                                 <span class="settings-value" id="menuLangValue">EN</span>
                             </button>
                             <button type="button" class="settings-item" id="menuThemeToggle" role="menuitem">
-                                <span>护眼模式</span>
+                                <span data-i18n="settings.theme">护眼模式</span>
                                 <span class="settings-value" id="menuThemeValue">关</span>
                             </button>
-                            <a href="contact/contact.html" class="settings-item settings-link" role="menuitem">联系我们</a>
+                            <a href="contact/contact.html" class="settings-item settings-link" role="menuitem" data-i18n="settings.contact">联系我们</a>
                         </div>
                     </div>
                 </div>
@@ -71,8 +78,8 @@
         <div class="container">
             <div class="hero-grid">
                 <div class="hero-content">
-                    <h1 class="hero-title animate-fade-in">Master Circle Theorems Visually</h1>
-                    <p class="hero-subtitle animate-fade-in-delay-1">
+                    <h1 class="hero-title animate-fade-in" data-i18n="home.hero.title">Master Circle Theorems Visually</h1>
+                    <p class="hero-subtitle animate-fade-in-delay-1" data-i18n="home.hero.subtitle">
                         Learn GCSE circle geometry through interactive visualizations, engaging games, and AI-powered guidance. Master complex theorems with ease and confidence.
                     </p>
                     <div class="hero-buttons animate-fade-in-delay-2">
@@ -80,14 +87,14 @@
                             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <polygon points="5 3 19 12 5 21 5 3"/>
                             </svg>
-                            Start Game
+                            <span data-i18n="home.hero.startGame">Start Game</span>
                         </a>
                         <a href="quiz/quiz.html" class="btn btn-outline">
                             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/>
                                 <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
                             </svg>
-                            Take Quiz
+                            <span data-i18n="home.hero.takeQuiz">Take Quiz</span>
                         </a>
                     </div>
                 </div>
@@ -132,8 +139,8 @@
     <section class="theorems-section" id="learn">
         <div class="container">
             <div class="section-header">
-                <h2 class="section-title">Explore Circle Theorems</h2>
-                <p class="section-subtitle">Master fundamental circle geometry concepts</p>
+                <h2 class="section-title" data-i18n="home.theorem.sectionTitle">Explore Circle Theorems</h2>
+                <p class="section-subtitle" data-i18n="home.theorem.sectionSubtitle">Master fundamental circle geometry concepts</p>
             </div>
 
             <div class="theorem-grid">
@@ -240,8 +247,8 @@
                         <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
                     </svg>
                 </div>
-                <h2 class="section-title">Meet Your AI Math Guide</h2>
-                <p class="section-subtitle">Ask questions about circle geometry and get instant, detailed explanations powered by AI</p>
+                <h2 class="section-title" data-i18n="home.ai.title">Meet Your AI Math Guide</h2>
+                <p class="section-subtitle" data-i18n="home.ai.subtitle">Ask questions about circle geometry and get instant, detailed explanations powered by AI</p>
             </div>
 
             <div class="ai-chat-container">
@@ -255,12 +262,12 @@
                         </div>
                         <div class="chat-content">
                             <div class="chat-name">AI Assistant</div>
-                            <div class="chat-text">Hello! I'm here to help you understand circle theorems. What would you like to learn about today?</div>
+                            <div class="chat-text" data-i18n="home.ai.greeting">Hello! I'm here to help you understand circle theorems. What would you like to learn about today?</div>
                         </div>
                     </div>
 
                     <div class="chat-input-container">
-                        <input type="text" class="chat-input" placeholder="Ask about circle theorems, angles, or any geometry concept...">
+                        <input type="text" class="chat-input" data-i18n-placeholder="home.ai.inputPlaceholder" placeholder="Ask about circle theorems, angles, or any geometry concept...">
                         <button type="button" class="btn-send" aria-label="Send message">
                             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <line x1="22" y1="2" x2="11" y2="13"/>
@@ -289,8 +296,8 @@
                             <circle cx="12" cy="12" r="3"/>
                         </svg>
                     </div>
-                    <h3 class="usp-title">Visual Learning</h3>
-                    <p class="usp-description">Interactive diagrams and animations bring circle theorems to life, making complex concepts easy to understand.</p>
+                    <h3 class="usp-title" data-i18n="home.usp.visual.title">Visual Learning</h3>
+                    <p class="usp-description" data-i18n="home.usp.visual.desc">Interactive diagrams and animations bring circle theorems to life, making complex concepts easy to understand.</p>
                 </div>
 
                 <div class="usp-item">
@@ -299,8 +306,8 @@
                             <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
                         </svg>
                     </div>
-                    <h3 class="usp-title">Interactive Practice</h3>
-                    <p class="usp-description">Hands-on exercises and real-time feedback help you master geometry through active engagement.</p>
+                    <h3 class="usp-title" data-i18n="home.usp.interactive.title">Interactive Practice</h3>
+                    <p class="usp-description" data-i18n="home.usp.interactive.desc">Hands-on exercises and real-time feedback help you master geometry through active engagement.</p>
                 </div>
 
                 <div class="usp-item">
@@ -311,8 +318,8 @@
                             <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
                         </svg>
                     </div>
-                    <h3 class="usp-title">Bilingual Support</h3>
-                    <p class="usp-description">Learn in English or Chinese with seamless language switching for maximum accessibility.</p>
+                    <h3 class="usp-title" data-i18n="home.usp.bilingual.title">Bilingual Support</h3>
+                    <p class="usp-description" data-i18n="home.usp.bilingual.desc">Learn in English or Chinese with seamless language switching for maximum accessibility.</p>
                 </div>
             </div>
         </div>
@@ -329,10 +336,10 @@
                             <svg class="crown-icon" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <path d="M2 8l2 12h16l2-12-6 5-4-9-4 9z"/>
                             </svg>
-                            <span class="premium-badge">Premium</span>
+                            <span class="premium-badge" data-i18n="home.premium.badge">Premium</span>
                         </div>
-                        <h2 class="premium-title">Upgrade to Premium Practice</h2>
-                        <p class="premium-description">
+                        <h2 class="premium-title" data-i18n="home.premium.title">Upgrade to Premium Practice</h2>
+                        <p class="premium-description" data-i18n="home.premium.desc">
                             Unlock unlimited quizzes, advanced theorems, personalized learning paths, and detailed analytics. Take your geometry skills to the next level.
                         </p>
                     </div>
@@ -341,7 +348,7 @@
                             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
                             </svg>
-                            Get Premium
+                            <span data-i18n="home.premium.cta">Get Premium</span>
                         </button>
                     </div>
                 </div>
@@ -367,27 +374,27 @@
                 </div>
 
                 <div class="footer-links-section">
-                    <h4 class="footer-links-title">Quick Links</h4>
+                    <h4 class="footer-links-title" data-i18n="footer.quickLinks">Quick Links</h4>
                     <ul class="footer-links">
                         <li><a href="#home">Home</a></li>
                         <li><a href="game/game.html">Game</a></li>
                         <li><a href="quiz/quiz.html">Quiz</a></li>
-                        <li><a href="contact/contact.html">Contact</a></li>
+                        <li><a href="contact/contact.html" data-i18n="footer.contact">Contact</a></li>
                     </ul>
                 </div>
 
                 <div class="footer-links-section">
-                    <h4 class="footer-links-title">Legal</h4>
+                    <h4 class="footer-links-title" data-i18n="footer.legal">Legal</h4>
                     <ul class="footer-links">
-                        <li><a href="#privacy">Privacy Policy</a></li>
-                        <li><a href="#terms">Terms of Service</a></li>
-                        <li><a href="#accessibility">Accessibility</a></li>
+                        <li><a href="#privacy" data-i18n="footer.privacy">Privacy Policy</a></li>
+                        <li><a href="#terms" data-i18n="footer.terms">Terms of Service</a></li>
+                        <li><a href="#accessibility" data-i18n="footer.accessibility">Accessibility</a></li>
                     </ul>
                 </div>
             </div>
 
             <div class="footer-bottom">
-                <p class="footer-copyright">
+                <p class="footer-copyright" data-i18n="footer.copy">
                     © 2026 CircleLearn. All rights reserved. Built with care for students worldwide.
                 </p>
             </div>
@@ -400,6 +407,7 @@
         </svg>
     </button>
 
+    <script src="js/data/site-i18n.js"></script>
     <script src="js/utils.js"></script>
     <script src="js/main.js"></script>
     <script src="js/pages/home.js"></script>

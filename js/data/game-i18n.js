@@ -2,7 +2,7 @@
  * game-i18n.js - 游戏板块双语数据
  * 放置在 js/data/ 目录下，作为游戏模块的共享数据
  */
-const GameI18N = (() => {
+window.GameI18N = (() => {
     let currentLang = 'zh';
 
     const translations = {
@@ -89,8 +89,10 @@ const GameI18N = (() => {
     function init() {
         // 优先使用全站语言设置（由 utils.js 的 initLangToggle 管理）
         const siteLang = localStorage.getItem('lang');
-        if (siteLang && (siteLang === 'zh' || siteLang === 'en')) {
-            currentLang = siteLang;
+        const legacyLang = localStorage.getItem('pref_lang');
+        const mergedLang = siteLang || legacyLang;
+        if (mergedLang && (mergedLang === 'zh' || mergedLang === 'en')) {
+            currentLang = mergedLang;
         } else {
             const browserLang = navigator.language || 'en';
             currentLang = browserLang.startsWith('zh') ? 'zh' : 'en';

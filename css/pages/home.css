@@ -36,7 +36,7 @@ html.hero-intro-play .rotating-circle-2 {
 }
 
 html.hero-intro-play .hero-content {
-    animation: heroContentIntro 2.2s cubic-bezier(0.22, 1, 0.36, 1) 1.15s both;
+    animation: heroContentIntro 2.2s cubic-bezier(0.22, 1, 0.36, 1) 1.82s both;
 }
 
 html.hero-intro-play .hero-content .animate-fade-in,
@@ -49,13 +49,47 @@ html.hero-intro-play .hero-content .animate-fade-in-delay-2 {
 
 @keyframes heroCircleIntro {
     0% {
-        transform: translate(-34%, 10%) scale(4.5) rotate(-22deg);
+        transform: translate(0, 0) scale(4.5) rotate(-18deg);
     }
-    45% {
-        transform: translate(-10%, 4%) scale(1.95) rotate(185deg);
+    70% {
+        transform: translate(0, 0) scale(1.82) rotate(32deg);
     }
     100% {
         transform: translate(0, 0) scale(1) rotate(360deg);
+    }
+}
+
+@media (min-width: 901px) {
+    @keyframes heroCircleIntro {
+        0% {
+            transform: translate(-48%, 0) scale(4.5) rotate(-18deg);
+        }
+        70% {
+            transform: translate(-48%, 0) scale(1.82) rotate(32deg);
+        }
+        100% {
+            transform: translate(0, 0) scale(1) rotate(360deg);
+        }
+    }
+}
+
+@media (max-width: 900px) {
+    @keyframes heroCircleIntro {
+        0% {
+            transform: translate(0, 0) scale(3.4) rotate(-18deg);
+        }
+        70% {
+            transform: translate(0, 0) scale(1.55) rotate(32deg);
+        }
+        100% {
+            transform: translate(0, 0) scale(1) rotate(360deg);
+        }
+    }
+}
+
+@media (max-width: 900px) {
+    html.hero-intro-play .hero {
+        overflow: hidden;
     }
 }
 
