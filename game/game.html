@@ -15,8 +15,6 @@
     <!-- 游戏子页面样式（按需加载） -->
     <link rel="stylesheet" href="../css/pages/pi-sniper.css">
     <link rel="stylesheet" href="../css/pages/gravity-slingshot.css">
-    <link rel="stylesheet" href="../css/pages/angle-hunter.css">
-    <link rel="stylesheet" href="../css/pages/chord-breaker.css">
 </head>
 
 <body>
@@ -70,7 +68,7 @@
     </header>
 
     <!-- ===== 游戏选择视图 ===== -->
-    <section class="page-subhero" id="gameMenuHero">
+    <section class="page-subhero" id="gameMenuView">
         <div class="container">
             <h1 class="page-subhero-title" data-game-i18n="game.select.title">Choose a Game</h1>
             <p class="page-subhero-lead" data-game-i18n="game.select.subtitle">Explore the mysteries of circle geometry
@@ -78,7 +76,7 @@
         </div>
     </section>
 
-    <main class="page-content" id="gameMenuMain">
+    <main class="page-content" id="gameMenuView">
         <div class="container">
             <div class="game-grid">
                 <!-- 引力弹弓 -->
@@ -124,50 +122,6 @@
                             data-game-i18n="game.play">Play Now</button>
                     </div>
                 </div>
-
-                <!-- 角度猎人 -->
-                <!--
-                <div class="game-card" id="cardHunter">
-                    <div class="game-card-preview">
-                        <canvas id="previewHunter"></canvas>
-                        <span class="game-card-tag" data-game-i18n="game.hunter.tag">Angle Puzzle</span>
-                    </div>
-                    <div class="game-card-info">
-                        <h3 data-game-i18n="game.hunter.name">Angle Hunter</h3>
-                        <p data-game-i18n="game.hunter.desc">Drag vertices on the circle to discover hidden angles!
-                            Master Thales' theorem, inscribed angles, and cyclic quadrilateral properties.</p>
-                        <div class="game-knowledge-tags">
-                            <span class="knowledge-tag">Thales' Theorem</span>
-                            <span class="knowledge-tag">Inscribed Angle</span>
-                            <span class="knowledge-tag">Cyclic Quad</span>
-                            <span class="knowledge-tag">Same Arc</span>
-                        </div>
-                        <button type="button" class="btn btn-primary btn-primary-full game-play-btn" id="btnPlayHunter"
-                            data-game-i18n="game.play">Play Now</button>
-                    </div>
-                </div>
-                -->
-
-                <!-- 弦之裂变 -->
-                <div class="game-card" id="cardChord">
-                    <div class="game-card-preview">
-                        <canvas id="previewChord"></canvas>
-                        <span class="game-card-tag" data-game-i18n="game.chord.tag">Pinball Puzzle</span>
-                    </div>
-                    <div class="game-card-info">
-                        <h3 data-game-i18n="game.chord.name">Chord Breaker</h3>
-                        <p data-game-i18n="game.chord.desc">Launch energy balls that bounce inside the circle! Hit chord
-                            nodes to clear levels using intersecting chords theorem.</p>
-                        <div class="game-knowledge-tags">
-                            <span class="knowledge-tag">Chord Theorem</span>
-                            <span class="knowledge-tag">Secant Theorem</span>
-                            <span class="knowledge-tag">Perpendicular Bisector</span>
-                            <span class="knowledge-tag">Reflection</span>
-                        </div>
-                        <button type="button" class="btn btn-primary btn-primary-full game-play-btn" id="btnPlayChord"
-                            data-game-i18n="game.play">Play Now</button>
-                    </div>
-                </div>
             </div>
         </div>
     </main>
@@ -202,10 +156,12 @@
         <div class="game-canvas-wrapper">
             <canvas id="sniperCanvas"></canvas>
         </div>
+        <!-- 知识提示 -->
         <div class="game-knowledge-tip" id="sniperKnowledgeTip">
             <span class="knowledge-tip-label">💡</span>
             <span id="sniperKnowledgeText">Unit Circle: A circle with radius 1</span>
         </div>
+        <!-- 游戏开始覆盖层 -->
         <div class="game-overlay" id="sniperStartOverlay">
             <div class="game-overlay-panel">
                 <h2 data-game-i18n="sniper.title">Pi Sniper</h2>
@@ -215,6 +171,7 @@
                     data-game-i18n="sniper.start">Start</button>
             </div>
         </div>
+        <!-- 游戏结束覆盖层 -->
         <div class="game-overlay" id="sniperEndOverlay" style="display:none;">
             <div class="game-overlay-panel">
                 <h2 data-game-i18n="sniper.gameOver">Game Over</h2>
@@ -261,10 +218,12 @@
         <div class="game-canvas-wrapper">
             <canvas id="slingshotCanvas"></canvas>
         </div>
+        <!-- 知识提示 -->
         <div class="game-knowledge-tip" id="slingshotKnowledgeTip">
             <span class="knowledge-tip-label">💡</span>
             <span id="slingshotKnowledgeText">Radius (r): Planet size determines gravity strength</span>
         </div>
+        <!-- 关卡完成覆盖层 -->
         <div class="game-overlay" id="slingshotWinOverlay" style="display:none;">
             <div class="game-overlay-panel">
                 <h2 data-game-i18n="slingshot.win">Target Hit!</h2>
@@ -279,136 +238,27 @@
                 </div>
             </div>
         </div>
-    </div>
-
-    <!-- ===== 角度猎人游戏视图 ===== -->
-    <div class="game-page-view" id="hunterView" style="display:none;">
-        <div class="game-header-bar">
-            <div class="game-header-left">
-                <button type="button" class="btn btn-outline game-back-btn" id="hunterBackBtn">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M19 12H5M12 19l-7-7 7-7" />
-                    </svg>
-                    <span data-game-i18n="hunter.backToMenu">Back to Menu</span>
-                </button>
-                <span class="game-header-title" data-game-i18n="hunter.title">Angle Hunter</span>
-            </div>
-            <div class="game-header-stats">
-                <div class="game-stat">
-                    <span class="game-stat-label" data-game-i18n="hunter.level">Level</span>
-                    <span class="game-stat-value" id="hunterLevel">1</span>
+        <!-- 全部通关覆盖层 -->
+        <div class="game-overlay game-complete-overlay" id="slingshotCompleteOverlay" style="display:none;">
+            <div class="game-overlay-panel game-complete-panel">
+                <div class="game-complete-icon">🏆</div>
+                <h2 data-game-i18n="slingshot.complete.title">Congratulations!</h2>
+                <p class="game-complete-desc" data-game-i18n="slingshot.complete.desc">You've mastered all gravity
+                    slingshot challenges! You now understand how radius, area, and gravity work together.</p>
+                <div class="game-complete-stats">
+                    <div class="complete-stat">
+                        <span class="complete-stat-value" id="completeTotalShots">0</span>
+                        <span class="complete-stat-label" data-game-i18n="slingshot.complete.totalShots">Total
+                            Shots</span>
+                    </div>
+                    <div class="complete-stat">
+                        <span class="complete-stat-value" id="completeTotalStars">0</span>
+                        <span class="complete-stat-label" data-game-i18n="slingshot.complete.totalStars">Stars
+                            Earned</span>
+                    </div>
                 </div>
-                <div class="game-stat">
-                    <span class="game-stat-label" data-game-i18n="hunter.solved">Solved</span>
-                    <span class="game-stat-value" id="hunterSolved">0/0</span>
-                </div>
-                <div class="game-stat">
-                    <span class="game-stat-label" data-game-i18n="hunter.hints">Hints</span>
-                    <span class="game-stat-value" id="hunterHints">3</span>
-                </div>
-            </div>
-        </div>
-        <div class="game-canvas-wrapper">
-            <canvas id="hunterCanvas"></canvas>
-        </div>
-        <div class="game-knowledge-tip" id="hunterKnowledgeTip">
-            <span class="knowledge-tip-label">💡</span>
-            <span id="hunterKnowledgeText">Thales: Angle in a semicircle is always 90°</span>
-        </div>
-        <div class="game-overlay" id="hunterStartOverlay">
-            <div class="game-overlay-panel">
-                <h2 data-game-i18n="hunter.title">Angle Hunter</h2>
-                <p class="game-overlay-desc" data-game-i18n="game.hunter.desc">Drag vertices on the circle to discover
-                    hidden angles!</p>
-                <button type="button" class="btn btn-primary btn-primary-full" id="hunterStartBtn"
-                    data-game-i18n="hunter.start">Start</button>
-            </div>
-        </div>
-        <div class="game-overlay" id="hunterWinOverlay" style="display:none;">
-            <div class="game-overlay-panel">
-                <h2 data-game-i18n="hunter.win">All Angles Found!</h2>
-                <div class="game-stars" id="hunterStars">⭐⭐⭐</div>
-                <div class="game-overlay-buttons">
-                    <button type="button" class="btn btn-primary" id="hunterNextBtn" data-game-i18n="hunter.next">Next
-                        Level</button>
-                    <button type="button" class="btn btn-outline" id="hunterMenuBtn"
-                        data-game-i18n="hunter.backToMenu">Back to Menu</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- ===== 弦之裂变游戏视图 ===== -->
-    <div class="game-page-view" id="chordView" style="display:none;">
-        <div class="game-header-bar">
-            <div class="game-header-left">
-                <button type="button" class="btn btn-outline game-back-btn" id="chordBackBtn">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M19 12H5M12 19l-7-7 7-7" />
-                    </svg>
-                    <span data-game-i18n="chord.backToMenu">Back to Menu</span>
-                </button>
-                <button type="button" class="btn btn-outline" id="chordQuickRetryBtn"
-                    data-game-i18n="chord.retry">Retry</button>
-                <span class="game-header-title" data-game-i18n="chord.title">Chord Breaker</span>
-            </div>
-            <div class="game-header-stats">
-                <div class="game-stat">
-                    <span class="game-stat-label" data-game-i18n="chord.level">Level</span>
-                    <span class="game-stat-value" id="chordLevel">1</span>
-                </div>
-                <div class="game-stat">
-                    <span class="game-stat-label" data-game-i18n="chord.shots">Shots</span>
-                    <span class="game-stat-value" id="chordShots">0</span>
-                </div>
-                <div class="game-stat">
-                    <span class="game-stat-label" data-game-i18n="chord.nodes">Nodes</span>
-                    <span class="game-stat-value" id="chordNodes">0</span>
-                </div>
-            </div>
-        </div>
-        <div class="game-canvas-wrapper">
-            <canvas id="chordCanvas"></canvas>
-        </div>
-        <div class="game-knowledge-tip" id="chordKnowledgeTip">
-            <span class="knowledge-tip-label">💡</span>
-            <span id="chordKnowledgeText">Chord Theorem: PA × PB = PC × PD</span>
-        </div>
-        <div class="game-overlay" id="chordStartOverlay">
-            <div class="game-overlay-panel">
-                <h2 data-game-i18n="chord.title">Chord Breaker</h2>
-                <p class="game-overlay-desc" data-game-i18n="game.chord.desc">Launch energy balls that bounce inside the
-                    circle!</p>
-                <button type="button" class="btn btn-primary btn-primary-full" id="chordStartBtn"
-                    data-game-i18n="chord.start">Start</button>
-            </div>
-        </div>
-        <div class="game-overlay" id="chordWinOverlay" style="display:none;">
-            <div class="game-overlay-panel">
-                <h2 data-game-i18n="chord.win">Level Clear!</h2>
-                <div class="game-stars" id="chordStars">⭐⭐⭐</div>
-                <div class="game-overlay-buttons">
-                    <button type="button" class="btn btn-primary" id="chordNextBtn" data-game-i18n="chord.next">Next
-                        Level</button>
-                    <button type="button" class="btn btn-outline" id="chordRetryBtn"
-                        data-game-i18n="chord.retry">Retry</button>
-                    <button type="button" class="btn btn-outline" id="chordMenuBtn"
-                        data-game-i18n="chord.backToMenu">Back to Menu</button>
-                </div>
-            </div>
-        </div>
-        <div class="game-overlay" id="chordFinalOverlay" style="display:none;">
-            <div class="game-overlay-panel">
-                <h2 data-game-i18n="chord.finalCongrats">Congratulations!</h2>
-                <p class="game-overlay-desc" data-game-i18n="chord.finalDesc">You have completed all levels.</p>
-                <div class="game-final-score" id="chordFinalScore">0 / 24 ★</div>
-                <div class="game-stars" id="chordFinalStars">⭐⭐⭐</div>
-                <div class="game-overlay-buttons">
-                    <button type="button" class="btn btn-primary" id="chordReplayAllBtn"
-                        data-game-i18n="chord.playAgain">Play Again</button>
-                    <button type="button" class="btn btn-outline" id="chordFinalMenuBtn"
-                        data-game-i18n="chord.backToMenu">Back to Menu</button>
-                </div>
+                <button type="button" class="btn btn-primary btn-primary-full" id="slingshotCompleteBtn"
+                    data-game-i18n="slingshot.complete.backToMenu">Back to Menu</button>
             </div>
         </div>
     </div>
@@ -462,8 +312,6 @@
     <script src="../js/pages/game.js"></script>
     <script src="../js/pages/pi-sniper.js"></script>
     <script src="../js/pages/gravity-slingshot.js"></script>
-    <script src="../js/pages/angle-hunter.js"></script>
-    <script src="../js/pages/chord-breaker.js"></script>
 </body>
 
 </html>
