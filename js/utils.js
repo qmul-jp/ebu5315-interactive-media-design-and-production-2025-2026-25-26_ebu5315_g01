@@ -113,7 +113,14 @@ function initSmoothAnchorScroll() {
         anchor.addEventListener('click', function (e) {
             const href = this.getAttribute('href');
             if (!href || href === '#' || href.length < 2) return;
-            const target = document.querySelector(href);
+            let id;
+            try {
+                id = decodeURIComponent(href.slice(1));
+            } catch (err) {
+                id = href.slice(1);
+            }
+            if (!id) return;
+            const target = document.getElementById(id);
             if (target) {
                 e.preventDefault();
                 target.scrollIntoView({

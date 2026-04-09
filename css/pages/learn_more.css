@@ -173,7 +173,7 @@ body.dark-mode .learn-back-link {
 
 .learn-toc-dropdown {
     position: relative;
-    margin-bottom: 5px;
+    margin-bottom: 12px;
 }
 
 .learn-toc-trigger {
@@ -259,6 +259,7 @@ body.dark-mode .learn-toc-trigger {
     max-height: min(70vh, 420px);
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
+    margin-top: 4px;
 }
 
 body.dark-mode .learn-toc-menu {
@@ -412,6 +413,38 @@ body.dark-mode .learn-theorem-tier {
 
 .learn-theorem--basic {
     border-top: 3px solid rgba(99, 102, 241, 0.35);
+}
+
+.learn-theorem--advanced {
+    border-top: 3px solid rgba(34, 197, 94, 0.45);
+}
+
+.learn-theorem--more-advanced {
+    border-top: 3px solid rgba(245, 158, 11, 0.55);
+}
+
+.learn-sections-intro--advanced .learn-sections-tier-badge {
+    background: rgba(34, 197, 94, 0.12);
+    border-color: rgba(34, 197, 94, 0.35);
+    color: #15803d;
+}
+
+body.dark-mode .learn-sections-intro--advanced .learn-sections-tier-badge {
+    color: #86efac;
+    background: rgba(34, 197, 94, 0.15);
+    border-color: rgba(74, 222, 128, 0.35);
+}
+
+.learn-sections-intro--more-advanced .learn-sections-tier-badge {
+    background: rgba(245, 158, 11, 0.15);
+    border-color: rgba(245, 158, 11, 0.4);
+    color: #b45309;
+}
+
+body.dark-mode .learn-sections-intro--more-advanced .learn-sections-tier-badge {
+    color: #fcd34d;
+    background: rgba(245, 158, 11, 0.18);
+    border-color: rgba(251, 191, 36, 0.35);
 }
 
 .learn-theorem {

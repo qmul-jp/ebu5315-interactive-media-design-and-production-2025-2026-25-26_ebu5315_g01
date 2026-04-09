@@ -66,7 +66,7 @@
             <h1 id="learn-hero-heading" class="learn-hero-title" data-i18n="learn.hero.title">Circle theorems, explained clearly</h1>
             <p class="learn-hero-lead" data-i18n="learn.hero.lead">
                 Scroll through each theorem for a concise statement, intuition, and the diagram you saw on the home page.
-                Open the <strong>Basic</strong> menu to jump to any of the eight foundational theorems.
+                Open the Basic, Advanced, or Further Advanced menu in the sidebar to jump to a theorem.
             </p>
             <div class="learn-hero-actions">
                 <a href="../index.html#learn" class="learn-back-link">
@@ -101,6 +101,39 @@
                     <a class="learn-toc-link" href="#tangents-point" role="menuitem">Tangents from a Point</a>
                     <a class="learn-toc-link" href="#tangents-point-ii" role="menuitem">Tangents from a Point (II)</a>
                     <a class="learn-toc-link" href="#alternate-segment" role="menuitem">Alternate Segment Theorem</a>
+                </div>
+            </div>
+            <div class="learn-toc-dropdown">
+                <button type="button" class="learn-toc-trigger" id="learnTocTriggerAdvanced" aria-expanded="false" aria-controls="learnTocMenuAdvanced" aria-haspopup="true">
+                    <span class="learn-toc-trigger-text">
+                        <span class="learn-toc-trigger-title" data-i18n="learn.toc.advanced">Advanced</span>
+                    </span>
+                    <svg class="learn-toc-trigger-chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                        <polyline points="6 9 12 15 18 9"/>
+                    </svg>
+                </button>
+                <div class="learn-toc-menu" id="learnTocMenuAdvanced" role="menu" hidden>
+                    <a class="learn-toc-link" href="#adv-secant" role="menuitem">Secant Theorem</a>
+                    <a class="learn-toc-link" href="#adv-intersecting-chords" role="menuitem">Intersecting Chords Theorem</a>
+                    <a class="learn-toc-link" href="#adv-tangent-secant" role="menuitem">Tangent–Secant Theorem</a>
+                    <a class="learn-toc-link" href="#adv-perpendicular-diameter" role="menuitem">Perpendicular Diameter Theorem</a>
+                </div>
+            </div>
+            <div class="learn-toc-dropdown">
+                <button type="button" class="learn-toc-trigger" id="learnTocTriggerMoreAdvanced" aria-expanded="false" aria-controls="learnTocMenuMoreAdvanced" aria-haspopup="true">
+                    <span class="learn-toc-trigger-text">
+                        <span class="learn-toc-trigger-title" data-i18n="learn.toc.moreAdvanced">Further Advanced</span>
+                    </span>
+                    <svg class="learn-toc-trigger-chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                        <polyline points="6 9 12 15 18 9"/>
+                    </svg>
+                </button>
+                <div class="learn-toc-menu" id="learnTocMenuMoreAdvanced" role="menu" hidden>
+                    <a class="learn-toc-link" href="#more-tangency-1" role="menuitem">Point of Tangency 1</a>
+                    <a class="learn-toc-link" href="#more-tangency-2" role="menuitem">Point of Tangency 2</a>
+                    <a class="learn-toc-link" href="#more-zhangjiao" role="menuitem">张角定理</a>
+                    <a class="learn-toc-link" href="#more-reim" role="menuitem">Reim Theorem</a>
+                    <a class="learn-toc-link" href="#more-simson" role="menuitem">Simson Theorem</a>
                 </div>
             </div>
         </aside>
@@ -280,6 +313,213 @@
                     </div>
                     <div class="learn-theorem-visual">
                         <img src="../assets/images/homepage/Alternate Segment Theorem.png" alt="Diagram: alternate segment theorem">
+                    </div>
+                </div>
+            </article>
+
+            <header class="learn-sections-intro learn-sections-intro--advanced" id="advanced-theorems">
+                <div class="learn-sections-intro-inner">
+                    <span class="learn-sections-tier-badge" data-i18n="learn.tier.advanced.badge">进阶</span>
+                    <div class="learn-sections-intro-copy">
+                        <h2 class="learn-sections-tier-heading"><span data-i18n="learn.tier.advanced.heading">Advanced circle theorems (placeholder copy for each card)</span></h2>
+                    </div>
+                </div>
+            </header>
+
+            <article id="adv-secant" class="learn-theorem learn-theorem--advanced" data-theorem-tier="advanced">
+                <div class="learn-theorem-inner">
+                    <div class="learn-theorem-body">
+                        <div class="learn-theorem-badges">
+                            <span class="learn-theorem-tier"><span class="learn-theorem-tier-en" data-i18n="learn.tier.advanced.badge">Advanced</span></span>
+                            <span class="learn-theorem-index">Theorem 1</span>
+                        </div>
+                        <h2 class="learn-theorem-title">Secant Theorem</h2>
+                        <p class="learn-theorem-statement" data-i18n="learn.placeholder.statement">[Placeholder] The official statement for this theorem will be added here.</p>
+                        <p class="learn-theorem-detail" data-i18n="learn.placeholder.detail">[Placeholder] Intuition and a longer explanation will be added here.</p>
+                        <div class="learn-theorem-tip">
+                            <span class="learn-theorem-tip-icon">!</span>
+                            <span><strong data-i18n="learn.placeholder.tipStrong">Note:</strong> <span data-i18n="learn.placeholder.tip">[Placeholder] A short exam tip or reminder will be added here.</span></span>
+                        </div>
+                    </div>
+                    <div class="learn-theorem-visual">
+                        <img src="../assets/images/learn_more/进阶/Secant Theorem.png" alt="Secant Theorem diagram">
+                    </div>
+                </div>
+            </article>
+
+            <article id="adv-intersecting-chords" class="learn-theorem learn-theorem--advanced" data-theorem-tier="advanced">
+                <div class="learn-theorem-inner">
+                    <div class="learn-theorem-body">
+                        <div class="learn-theorem-badges">
+                            <span class="learn-theorem-tier"><span class="learn-theorem-tier-en" data-i18n="learn.tier.advanced.badge">Advanced</span></span>
+                            <span class="learn-theorem-index">Theorem 2</span>
+                        </div>
+                        <h2 class="learn-theorem-title">Intersecting Chords Theorem</h2>
+                        <p class="learn-theorem-statement" data-i18n="learn.placeholder.statement">[Placeholder] The official statement for this theorem will be added here.</p>
+                        <p class="learn-theorem-detail" data-i18n="learn.placeholder.detail">[Placeholder] Intuition and a longer explanation will be added here.</p>
+                        <div class="learn-theorem-tip">
+                            <span class="learn-theorem-tip-icon">!</span>
+                            <span><strong data-i18n="learn.placeholder.tipStrong">Note:</strong> <span data-i18n="learn.placeholder.tip">[Placeholder] A short exam tip or reminder will be added here.</span></span>
+                        </div>
+                    </div>
+                    <div class="learn-theorem-visual">
+                        <img src="../assets/images/learn_more/进阶/Intersecting Chords Theorem.png" alt="Intersecting Chords Theorem diagram">
+                    </div>
+                </div>
+            </article>
+
+            <article id="adv-tangent-secant" class="learn-theorem learn-theorem--advanced" data-theorem-tier="advanced">
+                <div class="learn-theorem-inner">
+                    <div class="learn-theorem-body">
+                        <div class="learn-theorem-badges">
+                            <span class="learn-theorem-tier"><span class="learn-theorem-tier-en" data-i18n="learn.tier.advanced.badge">Advanced</span></span>
+                            <span class="learn-theorem-index">Theorem 3</span>
+                        </div>
+                        <h2 class="learn-theorem-title">Tangent–Secant Theorem</h2>
+                        <p class="learn-theorem-statement" data-i18n="learn.placeholder.statement">[Placeholder] The official statement for this theorem will be added here.</p>
+                        <p class="learn-theorem-detail" data-i18n="learn.placeholder.detail">[Placeholder] Intuition and a longer explanation will be added here.</p>
+                        <div class="learn-theorem-tip">
+                            <span class="learn-theorem-tip-icon">!</span>
+                            <span><strong data-i18n="learn.placeholder.tipStrong">Note:</strong> <span data-i18n="learn.placeholder.tip">[Placeholder] A short exam tip or reminder will be added here.</span></span>
+                        </div>
+                    </div>
+                    <div class="learn-theorem-visual">
+                        <img src="../assets/images/learn_more/进阶/Tangent–Secant Theorem.png" alt="Tangent–Secant Theorem diagram">
+                    </div>
+                </div>
+            </article>
+
+            <article id="adv-perpendicular-diameter" class="learn-theorem learn-theorem--advanced" data-theorem-tier="advanced">
+                <div class="learn-theorem-inner">
+                    <div class="learn-theorem-body">
+                        <div class="learn-theorem-badges">
+                            <span class="learn-theorem-tier"><span class="learn-theorem-tier-en" data-i18n="learn.tier.advanced.badge">Advanced</span></span>
+                            <span class="learn-theorem-index">Theorem 4</span>
+                        </div>
+                        <h2 class="learn-theorem-title">Perpendicular Diameter Theorem</h2>
+                        <p class="learn-theorem-statement" data-i18n="learn.placeholder.statement">[Placeholder] The official statement for this theorem will be added here.</p>
+                        <p class="learn-theorem-detail" data-i18n="learn.placeholder.detail">[Placeholder] Intuition and a longer explanation will be added here.</p>
+                        <div class="learn-theorem-tip">
+                            <span class="learn-theorem-tip-icon">!</span>
+                            <span><strong data-i18n="learn.placeholder.tipStrong">Note:</strong> <span data-i18n="learn.placeholder.tip">[Placeholder] A short exam tip or reminder will be added here.</span></span>
+                        </div>
+                    </div>
+                    <div class="learn-theorem-visual">
+                        <img src="../assets/images/learn_more/进阶/Perpendicular Diameter Theorem.png" alt="Perpendicular Diameter Theorem diagram">
+                    </div>
+                </div>
+            </article>
+
+            <header class="learn-sections-intro learn-sections-intro--more-advanced" id="more-advanced-theorems">
+                <div class="learn-sections-intro-inner">
+                    <span class="learn-sections-tier-badge" data-i18n="learn.tier.moreAdvanced.badge">更进阶</span>
+                    <div class="learn-sections-intro-copy">
+                        <h2 class="learn-sections-tier-heading"><span data-i18n="learn.tier.moreAdvanced.heading">Further advanced theorems (placeholder copy for each card)</span></h2>
+                    </div>
+                </div>
+            </header>
+
+            <article id="more-tangency-1" class="learn-theorem learn-theorem--more-advanced" data-theorem-tier="more-advanced">
+                <div class="learn-theorem-inner">
+                    <div class="learn-theorem-body">
+                        <div class="learn-theorem-badges">
+                            <span class="learn-theorem-tier"><span class="learn-theorem-tier-en" data-i18n="learn.tier.moreAdvanced.badge">Further Advanced</span></span>
+                            <span class="learn-theorem-index">Theorem 1</span>
+                        </div>
+                        <h2 class="learn-theorem-title">Point of Tangency 1</h2>
+                        <p class="learn-theorem-statement" data-i18n="learn.placeholder.statement">[Placeholder] The official statement for this theorem will be added here.</p>
+                        <p class="learn-theorem-detail" data-i18n="learn.placeholder.detail">[Placeholder] Intuition and a longer explanation will be added here.</p>
+                        <div class="learn-theorem-tip">
+                            <span class="learn-theorem-tip-icon">!</span>
+                            <span><strong data-i18n="learn.placeholder.tipStrong">Note:</strong> <span data-i18n="learn.placeholder.tip">[Placeholder] A short exam tip or reminder will be added here.</span></span>
+                        </div>
+                    </div>
+                    <div class="learn-theorem-visual">
+                        <img src="../assets/images/learn_more/更进阶/Point of Tangency 1.png" alt="Point of Tangency 1 diagram">
+                    </div>
+                </div>
+            </article>
+
+            <article id="more-tangency-2" class="learn-theorem learn-theorem--more-advanced" data-theorem-tier="more-advanced">
+                <div class="learn-theorem-inner">
+                    <div class="learn-theorem-body">
+                        <div class="learn-theorem-badges">
+                            <span class="learn-theorem-tier"><span class="learn-theorem-tier-en" data-i18n="learn.tier.moreAdvanced.badge">Further Advanced</span></span>
+                            <span class="learn-theorem-index">Theorem 2</span>
+                        </div>
+                        <h2 class="learn-theorem-title">Point of Tangency 2</h2>
+                        <p class="learn-theorem-statement" data-i18n="learn.placeholder.statement">[Placeholder] The official statement for this theorem will be added here.</p>
+                        <p class="learn-theorem-detail" data-i18n="learn.placeholder.detail">[Placeholder] Intuition and a longer explanation will be added here.</p>
+                        <div class="learn-theorem-tip">
+                            <span class="learn-theorem-tip-icon">!</span>
+                            <span><strong data-i18n="learn.placeholder.tipStrong">Note:</strong> <span data-i18n="learn.placeholder.tip">[Placeholder] A short exam tip or reminder will be added here.</span></span>
+                        </div>
+                    </div>
+                    <div class="learn-theorem-visual">
+                        <img src="../assets/images/learn_more/更进阶/Point of Tangency 2.png" alt="Point of Tangency 2 diagram">
+                    </div>
+                </div>
+            </article>
+
+            <article id="more-zhangjiao" class="learn-theorem learn-theorem--more-advanced" data-theorem-tier="more-advanced">
+                <div class="learn-theorem-inner">
+                    <div class="learn-theorem-body">
+                        <div class="learn-theorem-badges">
+                            <span class="learn-theorem-tier"><span class="learn-theorem-tier-en" data-i18n="learn.tier.moreAdvanced.badge">Further Advanced</span></span>
+                            <span class="learn-theorem-index">Theorem 3</span>
+                        </div>
+                        <h2 class="learn-theorem-title">张角定理</h2>
+                        <p class="learn-theorem-statement" data-i18n="learn.placeholder.statement">[Placeholder] The official statement for this theorem will be added here.</p>
+                        <p class="learn-theorem-detail" data-i18n="learn.placeholder.detail">[Placeholder] Intuition and a longer explanation will be added here.</p>
+                        <div class="learn-theorem-tip">
+                            <span class="learn-theorem-tip-icon">!</span>
+                            <span><strong data-i18n="learn.placeholder.tipStrong">Note:</strong> <span data-i18n="learn.placeholder.tip">[Placeholder] A short exam tip or reminder will be added here.</span></span>
+                        </div>
+                    </div>
+                    <div class="learn-theorem-visual">
+                        <img src="../assets/images/learn_more/更进阶/张角定理.png" alt="张角定理 diagram">
+                    </div>
+                </div>
+            </article>
+
+            <article id="more-reim" class="learn-theorem learn-theorem--more-advanced" data-theorem-tier="more-advanced">
+                <div class="learn-theorem-inner">
+                    <div class="learn-theorem-body">
+                        <div class="learn-theorem-badges">
+                            <span class="learn-theorem-tier"><span class="learn-theorem-tier-en" data-i18n="learn.tier.moreAdvanced.badge">Further Advanced</span></span>
+                            <span class="learn-theorem-index">Theorem 4</span>
+                        </div>
+                        <h2 class="learn-theorem-title">Reim Theorem</h2>
+                        <p class="learn-theorem-statement" data-i18n="learn.placeholder.statement">[Placeholder] The official statement for this theorem will be added here.</p>
+                        <p class="learn-theorem-detail" data-i18n="learn.placeholder.detail">[Placeholder] Intuition and a longer explanation will be added here.</p>
+                        <div class="learn-theorem-tip">
+                            <span class="learn-theorem-tip-icon">!</span>
+                            <span><strong data-i18n="learn.placeholder.tipStrong">Note:</strong> <span data-i18n="learn.placeholder.tip">[Placeholder] A short exam tip or reminder will be added here.</span></span>
+                        </div>
+                    </div>
+                    <div class="learn-theorem-visual">
+                        <img src="../assets/images/learn_more/更进阶/Reim Theorem.png" alt="Reim Theorem diagram">
+                    </div>
+                </div>
+            </article>
+
+            <article id="more-simson" class="learn-theorem learn-theorem--more-advanced" data-theorem-tier="more-advanced">
+                <div class="learn-theorem-inner">
+                    <div class="learn-theorem-body">
+                        <div class="learn-theorem-badges">
+                            <span class="learn-theorem-tier"><span class="learn-theorem-tier-en" data-i18n="learn.tier.moreAdvanced.badge">Further Advanced</span></span>
+                            <span class="learn-theorem-index">Theorem 5</span>
+                        </div>
+                        <h2 class="learn-theorem-title">Simson Theorem</h2>
+                        <p class="learn-theorem-statement" data-i18n="learn.placeholder.statement">[Placeholder] The official statement for this theorem will be added here.</p>
+                        <p class="learn-theorem-detail" data-i18n="learn.placeholder.detail">[Placeholder] Intuition and a longer explanation will be added here.</p>
+                        <div class="learn-theorem-tip">
+                            <span class="learn-theorem-tip-icon">!</span>
+                            <span><strong data-i18n="learn.placeholder.tipStrong">Note:</strong> <span data-i18n="learn.placeholder.tip">[Placeholder] A short exam tip or reminder will be added here.</span></span>
+                        </div>
+                    </div>
+                    <div class="learn-theorem-visual">
+                        <img src="../assets/images/learn_more/更进阶/Simson Theorem.png" alt="Simson Theorem diagram">
                     </div>
                 </div>
             </article>
