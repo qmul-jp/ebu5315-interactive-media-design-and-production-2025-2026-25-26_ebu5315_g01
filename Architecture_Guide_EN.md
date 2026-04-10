@@ -2,7 +2,8 @@
 
 ## 📌 Overview
 
-This project is a **static front-end website** built using **HTML, CSS, and JavaScript only**.
+This project is a **static front-end website** built using **plain HTML, CSS, and JavaScript**.
+
 The architecture is designed to be:
 
 * Clear and maintainable
@@ -11,48 +12,72 @@ The architecture is designed to be:
 
 ---
 
-## 📁 Project Structure
+## 📁 Project Structure (aligned with the current repository)
+
+> The tree below reflects the **actual** main files and folders in the repo. Subpages live in their own folders and reference shared `css/`, `js/`, and `assets/` via relative paths.
 
 ```
 project/
-├─ index.html
-├─ game.html
-├─ quiz.html
-├─ contact.html
+├─ index.html                    # Homepage (site entry)
+├─ README.md
+├─ Architecture_Guide_CN.md      # Architecture guide (Chinese)
+├─ Architecture_Guide_EN.md      # This file (English)
+│
+├─ game/
+│  └─ game.html                  # Game module page
+│
+├─ quiz/
+│  └─ quiz.html                  # Quiz module page (standalone layout, shared site styles)
+│
+├─ contact/
+│  └─ contact.html               # Contact page
 │
 ├─ css/
-│  ├─ reset.css
-│  ├─ variables.css
-│  ├─ base.css
-│  ├─ layout.css
+│  ├─ reset.css                  # Browser reset
+│  ├─ variables.css              # Global variables (colors, grayscale, dark mode)
+│  ├─ base.css                   # Base styles (body, container, etc.)
+│  ├─ layout.css                 # Shell layout (header, footer, nav, sections)
 │  ├─ components/
-│  │  ├─ buttons.css
-│  │  ├─ cards.css
-│  │  ├─ forms.css
-│  │  └─ widgets.css
+│  │  ├─ buttons.css             # Buttons
+│  │  ├─ cards.css               # Cards / themed blocks
+│  │  ├─ forms.css               # Forms
+│  │  └─ widgets.css             # Misc (floating chat, banners, etc.)
 │  └─ pages/
-│     ├─ home.css
-│     ├─ game.css
-│     ├─ quiz.css
-│     └─ contact.css
+│     ├─ home.css                # Homepage only
+│     ├─ game.css                # Game page only
+│     ├─ quiz.css                # Quiz page only (includes dashboard extras)
+│     └─ contact.css             # Contact page only
 │
 ├─ js/
-│  ├─ main.js
-│  ├─ utils.js
+│  ├─ main.js                    # Global init (settings menu, theme, language, etc.)
+│  ├─ utils.js                   # Helpers (theme, language, anchors, ripples, etc.)
 │  ├─ data/
-│  │  ├─ circle-rules.js
-│  │  └─ quiz-questions.js
+│  │  ├─ circle-rules.js         # Circle geometry rules data
+│  │  ├─ quiz-questions.js       # Quiz bank (used by quiz.js and related code)
+│  │  ├─ game-i18n.js            # Game copy / i18n data (when used)
+│  │  └─ game-audio.js           # Game audio mapping / config (when used)
 │  └─ pages/
-│     ├─ home.js
-│     ├─ game.js
-│     ├─ quiz.js
-│     └─ contact.js
+│     ├─ home.js                 # Homepage interactions
+│     ├─ game.js                 # Main game logic
+│     ├─ pi-sniper.js            # Game sub-module (used with game)
+│     ├─ gravity-slingshot.js    # Game sub-module (used with game)
+│     ├─ quiz.js                 # Quiz logic (renders when #quizRoot exists)
+│     └─ contact.js              # Contact form, etc.
 │
 └─ assets/
-   ├─ images/
-   ├─ videos/
-   └─ audio/
+   └─ images/
+      └─ homepage/               # Images for homepage and content (theorems, decorations)
+      # videos/ and audio/ can be added as needed; images are the main asset type today
 ```
+
+### Quiz module (easy to confuse)
+
+| Entry | Description |
+| ----- | ----------- |
+| `quiz/quiz.html` | Standalone quiz HTML; loads site-wide `css/`, `js/main.js`, `js/utils.js`; UI is mainly defined in the page plus `css/pages/quiz.css`. |
+| `js/pages/quiz.js` + `js/data/quiz-questions.js` | Injects questions and scoring **only when** the page contains `id="quizRoot"` and loads these scripts; otherwise it does nothing. |
+
+When adding questions, prefer editing **`js/data/quiz-questions.js`** and keep the object shape compatible with `quiz.js`.
 
 ---
 
@@ -60,32 +85,41 @@ project/
 
 ### 1. Separation of Concerns
 
-* **HTML → structure**
-* **CSS → style**
-* **JS → behavior**
+* **HTML** → structure
+* **CSS** → presentation and layout
+* **JS** → behavior and logic
 
-### 2. Layered CSS Design
+---
 
-* `base` → global rules
-* `layout` → page structure
-* `components` → reusable styles
-* `pages` → page-specific styles
+### 2. Layered CSS
 
-### 3. Minimize Coupling
+| Layer      | Role |
+| ---------- | ---- |
+| `base`     | Global foundation |
+| `layout`   | Page shell |
+| `components` | Reusable UI |
+| `pages`    | Page-specific overrides |
 
-* Page styles should not affect other pages
-* Shared styles must go into `components`
+---
+
+### 3. Low Coupling
+
+* Pages should not depend on each other’s markup
+* Shared styling lives in `components/` and global layers
+* Avoid copy-paste across pages
 
 ---
 
 ## 📄 HTML Files
 
-| File           | Purpose                                        |
-| -------------- | ---------------------------------------------- |
-| `index.html`   | Homepage (entry point)                         |
-| `game.html`    | Interactive game section                       |
-| `quiz.html`    | Quiz and assessment section                    |
-| `contact.html` | Contact page (optional if already in homepage) |
+| Path | Purpose |
+| ---- | ------- |
+| `index.html` | Homepage (entry) |
+| `game/game.html` | Game module |
+| `quiz/quiz.html` | Quiz module |
+| `contact/contact.html` | Contact page |
+
+Subpages use paths like `../css/...` and `../js/...`. From `quiz/`, link to the homepage with `../index.html` (and `#home` anchors if needed).
 
 ---
 
@@ -96,7 +130,7 @@ project/
 | File            | Purpose                                    |
 | --------------- | ------------------------------------------ |
 | `reset.css`     | Removes browser default styles             |
-| `variables.css` | Global variables (colors, spacing, radius) |
+| `variables.css` | Global variables (colors, spacing, etc.) |
 | `base.css`      | Global styles (body, typography, links)    |
 
 ---
@@ -105,24 +139,24 @@ project/
 
 | File         | Purpose                                                       |
 | ------------ | ------------------------------------------------------------- |
-| `layout.css` | Global layout structure (header, footer, sections, container) |
+| `layout.css` | Shell layout (header, footer, sections, container) |
 
-👉 Only layout-related styles belong here.
+👉 Only structural layout belongs here.
 
 ---
 
 ### Components Layer (`css/components/`)
 
-Reusable UI elements across pages.
+Reusable UI across pages.
 
 | File          | Purpose                                                |
 | ------------- | ------------------------------------------------------ |
-| `buttons.css` | Button styles (primary, secondary, outline)            |
-| `cards.css`   | Card layouts (feature cards, theorem cards)            |
-| `forms.css`   | Form elements (inputs, labels, textarea)               |
-| `widgets.css` | Misc components (breadcrumb, banner, chatbot, toggles) |
+| `buttons.css` | Button styles                                          |
+| `cards.css`   | Card / themed layouts                                  |
+| `forms.css`   | Form elements                                          |
+| `widgets.css` | Misc (floating chat, banners, quick questions, etc.)     |
 
-👉 Rule: If used in multiple pages → put here.
+👉 Rule: if used on multiple pages → put it here.
 
 ---
 
@@ -135,7 +169,7 @@ Reusable UI elements across pages.
 | `quiz.css`    | Quiz-specific styles |
 | `contact.css` | Contact page styles  |
 
-👉 Rule: Only styles unique to that page go here.
+👉 Rule: only styles unique to that page go here.
 
 ---
 
@@ -154,12 +188,14 @@ Reusable UI elements across pages.
 
 | File         | Purpose                                         |
 | ------------ | ----------------------------------------------- |
-| `home.js`    | Homepage interactions (animations, UI behavior) |
-| `game.js`    | Game logic                                      |
-| `quiz.js`    | Quiz logic (questions, scoring)                 |
+| `home.js`    | Homepage interactions                           |
+| `game.js`    | Main game logic                                 |
+| `pi-sniper.js` | Game sub-module                               |
+| `gravity-slingshot.js` | Game sub-module                               |
+| `quiz.js`    | Quiz logic (depends on `quiz-questions.js` and a mount point) |
 | `contact.js` | Form handling                                   |
 
-👉 Each page manages its own logic independently.
+👉 Each page manages its own logic; game scripts are loaded from `game.html` as needed.
 
 ---
 
@@ -169,6 +205,8 @@ Reusable UI elements across pages.
 | ------------------- | ------------------- |
 | `circle-rules.js`   | Geometry rules data |
 | `quiz-questions.js` | Quiz question bank  |
+| `game-i18n.js`      | Game i18n / copy data |
+| `game-audio.js`     | Game audio mapping / config |
 
 👉 Keep data separate from logic for easier updates.
 
@@ -176,32 +214,31 @@ Reusable UI elements across pages.
 
 ## 🧩 Assets
 
-| Folder    | Purpose                     |
-| --------- | --------------------------- |
-| `images/` | Icons, illustrations, logos |
-| `videos/` | Hero animations or demos    |
-| `audio/`  | Optional sound effects      |
+| Path | Purpose |
+| ---- | ------- |
+| `assets/images/homepage/` | Images for the homepage and content (theorem diagrams, decorations) |
+| `assets/videos/`, `assets/audio/` | Optional; add when the project needs them |
 
 ---
 
 ## 🔄 Update & Iteration Guidelines
 
-### When adding new features:
+### When adding new features
 
-| Situation             | Where to modify            |
-| --------------------- | -------------------------- |
-| New page layout       | `layout.css`               |
-| New reusable UI       | `components/`              |
-| Page-specific feature | `css/pages/` + `js/pages/` |
-| New data              | `js/data/`                 |
+| Situation        | Where to modify |
+| ---------------- | --------------- |
+| New page         | New HTML + `css/pages/` + `js/pages/` |
+| New reusable UI  | `css/components/` |
+| Page feature     | `js/pages/` |
+| New data         | `js/data/` |
 
 ---
 
-### When modifying existing features:
+### When modifying existing features
 
-* Avoid editing global styles unless necessary
-* Prefer overriding styles in `pages/`
-* Keep components reusable
+* Prefer editing `pages/` layers first
+* Avoid changing global styles unless necessary
+* Shared components must stay reusable
 
 ---
 
@@ -209,26 +246,31 @@ Reusable UI elements across pages.
 
 Suggested division:
 
-| Role     | Files to focus on                   |
-| -------- | ----------------------------------- |
-| Homepage | `index.html`, `home.css`, `home.js` |
-| Game     | `game.html`, `game.css`, `game.js`  |
-| Quiz     | `quiz.html`, `quiz.css`, `quiz.js`  |
+| Role     | Area |
+| -------- | ---- |
+| A        | Homepage (`index`) |
+| B        | Game |
+| C        | Quiz |
 
-Shared files:
+Typical ownership:
 
-* `variables.css`
+* HTML in each section
+* `css/pages/`
+* `js/pages/`
+
+Shared files (coordinate changes):
+
 * `layout.css`
 * `components/`
-* `main.js`
+* `variables.css`
 
 ---
 
 ## ⚠️ Best Practices
 
 * Do NOT duplicate styles → reuse components
-* Do NOT mix page-specific styles into global files
-* Keep commits small and incremental
+* Do NOT put page-only styles into global files
+* Keep commits small and messages clear
 * Keep naming consistent
 
 ---
@@ -246,7 +288,7 @@ Shared files:
 
 This structure ensures:
 
-* Clean separation of responsibilities
+* Clear separation of responsibilities
 * Easy collaboration
 * Smooth iteration across versions
 * Maintainable and scalable design
