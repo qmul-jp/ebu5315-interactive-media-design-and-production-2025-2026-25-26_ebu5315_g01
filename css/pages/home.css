@@ -5,6 +5,138 @@
     transition: background 0.3s ease;
 }
 
+html.hero-intro-play .hero {
+    overflow: visible;
+}
+
+html.hero-intro-play .hero-grid {
+    position: relative;
+}
+
+html.hero-intro-play .hero-content {
+    position: relative;
+    z-index: 3;
+}
+
+html.hero-intro-play .hero-visual {
+    position: relative;
+    z-index: 1;
+}
+
+html.hero-intro-play .circle-animation {
+    animation: heroCircleIntro 2.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    transform-origin: center center;
+    will-change: transform;
+}
+
+html.hero-intro-play .rotating-circle-2 {
+    animation:
+        rotate-counter 15s linear infinite,
+        heroRc2Intro 2.6s cubic-bezier(0.33, 1, 0.68, 1) forwards;
+}
+
+html.hero-intro-play .hero-content {
+    animation: heroContentIntro 2.2s cubic-bezier(0.22, 1, 0.36, 1) 1.82s both;
+}
+
+html.hero-intro-play .hero-content .animate-fade-in,
+html.hero-intro-play .hero-content .animate-fade-in-delay-1,
+html.hero-intro-play .hero-content .animate-fade-in-delay-2 {
+    animation: none;
+    opacity: 1;
+    transform: none;
+}
+
+@keyframes heroCircleIntro {
+    0% {
+        transform: translate(0, 0) scale(4.5) rotate(-18deg);
+    }
+    70% {
+        transform: translate(0, 0) scale(1.82) rotate(32deg);
+    }
+    100% {
+        transform: translate(0, 0) scale(1) rotate(360deg);
+    }
+}
+
+@media (min-width: 901px) {
+    @keyframes heroCircleIntro {
+        0% {
+            transform: translate(-48%, 0) scale(4.5) rotate(-18deg);
+        }
+        70% {
+            transform: translate(-48%, 0) scale(1.82) rotate(32deg);
+        }
+        100% {
+            transform: translate(0, 0) scale(1) rotate(360deg);
+        }
+    }
+}
+
+@media (max-width: 900px) {
+    @keyframes heroCircleIntro {
+        0% {
+            transform: translate(0, 0) scale(3.4) rotate(-18deg);
+        }
+        70% {
+            transform: translate(0, 0) scale(1.55) rotate(32deg);
+        }
+        100% {
+            transform: translate(0, 0) scale(1) rotate(360deg);
+        }
+    }
+}
+
+@media (max-width: 900px) {
+    html.hero-intro-play .hero {
+        overflow: hidden;
+    }
+}
+
+@keyframes heroRc2Intro {
+    0% {
+        opacity: 0.12;
+        border-width: 1px;
+        box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.35);
+    }
+    35% {
+        opacity: 0.55;
+        border-width: 3px;
+        box-shadow: 0 0 0 24px rgba(34, 197, 94, 0.08);
+    }
+    100% {
+        opacity: 0.3;
+        border-width: 2px;
+        box-shadow: none;
+    }
+}
+
+@keyframes heroContentIntro {
+    0% {
+        opacity: 0;
+        transform: translate(170px, 5px);
+    }
+    100% {
+        opacity: 1;
+        transform: none;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    html.hero-intro-play .circle-animation,
+    html.hero-intro-play .rotating-circle-2,
+    html.hero-intro-play .hero-content {
+        animation: none !important;
+        transform: none !important;
+    }
+
+    html.hero-intro-play .rotating-circle-2 {
+        opacity: 0.3;
+        border-width: 2px;
+        box-shadow: none;
+    }
+}
+
 body.dark-mode .hero {
     background: linear-gradient(135deg, #0F172A 0%, #1E293B 100%);
 }

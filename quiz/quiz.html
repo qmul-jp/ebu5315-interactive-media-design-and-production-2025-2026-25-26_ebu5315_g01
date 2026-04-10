@@ -246,6 +246,8 @@
                 const key = el.getAttribute('data-i18n');
                 if (dict[key]) el.textContent = dict[key];
             });
+
+            document.dispatchEvent(new CustomEvent('circlelearn:langchange', { detail: { lang: currentLang } }));
         }
 
         // 侧边栏逻辑

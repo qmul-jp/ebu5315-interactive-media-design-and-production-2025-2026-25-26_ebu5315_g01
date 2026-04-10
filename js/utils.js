@@ -2,6 +2,19 @@
  * 工具函数：主题、语言、锚点滚动、导航高亮、涟漪样式注入
  */
 
+function getSiteLang() {
+    const stored = localStorage.getItem('lang');
+    return stored === 'zh' || stored === 'en' ? stored : 'en';
+}
+
+function setSiteLang(nextLang) {
+    const lang = nextLang === 'zh' ? 'zh' : 'en';
+    localStorage.setItem('lang', lang);
+    document.documentElement.lang = lang === 'zh' ? 'zh-CN' : 'en';
+    document.dispatchEvent(new CustomEvent('circlelearn:langchange', { detail: { lang } }));
+    return lang;
+}
+
 function initTheme() {
     const body = document.body;
     const themeToggle = document.getElementById('menuThemeToggle');
@@ -13,10 +26,17 @@ function initTheme() {
 
     const updateThemeText = () => {
         if (themeValue) {
-            themeValue.textContent = body.classList.contains('dark-mode') ? '开' : '关';
+            const lang = getSiteLang();
+            if (lang === 'zh') {
+                themeValue.textContent = body.classList.contains('dark-mode') ? '开' : '关';
+            } else {
+                themeValue.textContent = body.classList.contains('dark-mode') ? 'On' : 'Off';
+            }
         }
     };
     updateThemeText();
+
+    document.addEventListener('circlelearn:langchange', updateThemeText);
 
     if (themeToggle) {
         themeToggle.addEventListener('click', () => {
@@ -32,17 +52,21 @@ function initLangToggle() {
     const langToggle = document.getElementById('menuLangToggle');
     const langValue = document.getElementById('menuLangValue');
     if (!langToggle) return;
-    let currentLang = localStorage.getItem('lang') || 'en';
+    let currentLang = getSiteLang();
     const updateLangText = () => {
         if (langValue) {
             langValue.textContent = currentLang === 'en' ? 'EN' : '中文';
         }
     };
     updateLangText();
+    setSiteLang(currentLang);
 
     langToggle.addEventListener('click', () => {
         currentLang = currentLang === 'en' ? 'zh' : 'en';
-        localStorage.setItem('lang', currentLang);
+        setSiteLang(currentLang);
+        if (window.GameI18N && typeof window.GameI18N.setLang === 'function') {
+            window.GameI18N.setLang(currentLang);
+        }
         updateLangText();
     });
 }
@@ -89,7 +113,14 @@ function initSmoothAnchorScroll() {
         anchor.addEventListener('click', function (e) {
             const href = this.getAttribute('href');
             if (!href || href === '#' || href.length < 2) return;
-            const target = document.querySelector(href);
+            let id;
+            try {
+                id = decodeURIComponent(href.slice(1));
+            } catch (err) {
+                id = href.slice(1);
+            }
+            if (!id) return;
+            const target = document.getElementById(id);
             if (target) {
                 e.preventDefault();
                 target.scrollIntoView({
