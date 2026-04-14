@@ -18,11 +18,8 @@ function setSiteLang(nextLang) {
 function initTheme() {
     const body = document.body;
     const themeToggle = document.getElementById('menuThemeToggle');
+    const themeSwitchCheckbox = document.querySelector('.theme-switch__checkbox');
     const themeValue = document.getElementById('menuThemeValue');
-    const currentTheme = localStorage.getItem('theme') || 'light';
-    if (currentTheme === 'dark') {
-        body.classList.add('dark-mode');
-    }
 
     const updateThemeText = () => {
         if (themeValue) {
@@ -34,16 +31,30 @@ function initTheme() {
             }
         }
     };
-    updateThemeText();
+
+    const applyTheme = (isDark) => {
+        body.classList.toggle('dark-mode', isDark);
+        localStorage.setItem('theme', isDark ? 'dark' : 'light');
+        if (themeSwitchCheckbox) {
+            themeSwitchCheckbox.checked = isDark;
+        }
+        updateThemeText();
+    };
+
+    const currentTheme = localStorage.getItem('theme') || 'light';
+    applyTheme(currentTheme === 'dark');
 
     document.addEventListener('circlelearn:langchange', updateThemeText);
 
     if (themeToggle) {
         themeToggle.addEventListener('click', () => {
-            body.classList.toggle('dark-mode');
-            const theme = body.classList.contains('dark-mode') ? 'dark' : 'light';
-            localStorage.setItem('theme', theme);
-            updateThemeText();
+            applyTheme(!body.classList.contains('dark-mode'));
+        });
+    }
+
+    if (themeSwitchCheckbox) {
+        themeSwitchCheckbox.addEventListener('change', () => {
+            applyTheme(themeSwitchCheckbox.checked);
         });
     }
 }
@@ -51,22 +62,51 @@ function initTheme() {
 function initLangToggle() {
     const langToggle = document.getElementById('menuLangToggle');
     const langValue = document.getElementById('menuLangValue');
-    if (!langToggle) return;
+    const zhRadio = document.getElementById('glass-lang-zh');
+    const enRadio = document.getElementById('glass-lang-en');
+    if (!langToggle && !zhRadio && !enRadio) return;
     let currentLang = getSiteLang();
     const updateLangText = () => {
         if (langValue) {
             langValue.textContent = currentLang === 'en' ? 'EN' : '中文';
         }
+        if (zhRadio) zhRadio.checked = currentLang === 'zh';
+        if (enRadio) enRadio.checked = currentLang === 'en';
     };
     updateLangText();
     setSiteLang(currentLang);
 
-    langToggle.addEventListener('click', () => {
-        currentLang = currentLang === 'en' ? 'zh' : 'en';
+    const applyLang = (nextLang) => {
+        currentLang = nextLang === 'zh' ? 'zh' : 'en';
         setSiteLang(currentLang);
         if (window.GameI18N && typeof window.GameI18N.setLang === 'function') {
             window.GameI18N.setLang(currentLang);
         }
+        updateLangText();
+    };
+
+    if (langToggle) {
+        langToggle.addEventListener('click', () => {
+            applyLang(currentLang === 'en' ? 'zh' : 'en');
+        });
+    }
+
+    if (zhRadio) {
+        zhRadio.addEventListener('change', () => {
+            if (zhRadio.checked) applyLang('zh');
+        });
+    }
+
+    if (enRadio) {
+        enRadio.addEventListener('change', () => {
+            if (enRadio.checked) applyLang('en');
+        });
+    }
+
+    document.addEventListener('circlelearn:langchange', (e) => {
+        const nextLang = e && e.detail && e.detail.lang;
+        if (nextLang !== 'zh' && nextLang !== 'en') return;
+        currentLang = nextLang;
         updateLangText();
     });
 }

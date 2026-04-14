@@ -237,7 +237,7 @@
     const RING_POPOUT_PIE_ANGLE_RAD = Math.PI * 0.9;
     const RING_POPOUT_PIE_OUTER_PAD_PX = 180;
     const RING_POPOUT_BURGER_ANGLE_RAD = Math.PI * 1.6;
-    const RING_POPOUT_BURGER_OUTER_PAD_PX = 85;
+    const RING_POPOUT_BURGER_OUTER_PAD_PX = 70;
     /** 各层装饰图 <img> 宽度（px），高度按比例；与弹出 transform scale 相乘为最终大小 */
     const RING_POPOUT_IMG_DEFAULT_WIDTH_PX = 260;
     const RING_POPOUT_MOONCAKE_IMG_WIDTH_PX = RING_POPOUT_IMG_DEFAULT_WIDTH_PX;
@@ -992,6 +992,34 @@
             }
         });
     }
+
+    function initTheoremCardFlip() {
+        const cards = document.querySelectorAll('.theorem-card--flip');
+        if (!cards.length) return;
+        cards.forEach((card) => {
+            card.setAttribute('role', 'button');
+            card.setAttribute('tabindex', '0');
+            card.setAttribute('aria-pressed', 'false');
+            card.setAttribute('aria-label', 'Flip theorem card');
+
+            const toggle = () => {
+                const next = !card.classList.contains('is-flipped');
+                card.classList.toggle('is-flipped', next);
+                card.setAttribute('aria-pressed', next ? 'true' : 'false');
+            };
+
+            card.addEventListener('click', () => {
+                toggle();
+            });
+            card.addEventListener('keydown', (e) => {
+                if (e.key !== 'Enter' && e.key !== ' ') return;
+                e.preventDefault();
+                toggle();
+            });
+        });
+    }
+
+    initTheoremCardFlip();
 
     const observerOptions = {
         threshold: 0.1,
