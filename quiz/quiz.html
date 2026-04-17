@@ -246,9 +246,13 @@
                 const key = el.getAttribute('data-i18n');
                 if (dict[key]) el.textContent = dict[key];
             });
-
-            document.dispatchEvent(new CustomEvent('circlelearn:langchange', { detail: { lang: currentLang } }));
         }
+
+        // 监听语言切换事件
+        document.addEventListener('circlelearn:langchange', () => {
+            currentLang = readLang();
+            applyI18n();
+        });
 
         function hideSidebar() {
             const sidebar = document.getElementById('sidebar');
