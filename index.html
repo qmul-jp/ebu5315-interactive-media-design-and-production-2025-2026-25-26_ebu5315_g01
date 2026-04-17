@@ -36,7 +36,7 @@
             <nav class="nav">
                 <a href="#home" class="logo" aria-label="CircleLearn Home">
                     
-                    <img src="assets/images/homepage/icon.png" alt="CircleLearn Logo" width="32" height="32">        
+                    <img src="assets/images/homepage/icon.png" alt="CircleLearn Logo" width="40" height="40">        
                     </img>
                     
                     <span class="logo-text">GEOMETRY CHALLENGER</span>
@@ -81,7 +81,33 @@
                         </div>
                         </div>
                     </label>
-                    <a href="contact/contact.html" class="settings-item settings-link" data-i18n="settings.contact">联系我们</a>
+                    <div class="select nav-contact-select" id="navContactSelect">
+                        <button
+                            type="button"
+                            class="selected"
+                            id="navContactSelectToggle"
+                            aria-haspopup="true"
+                            aria-expanded="false"
+                            aria-controls="navContactSelectOptions"
+                        >
+                            <span data-i18n="settings.about">About</span>
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                height="1em"
+                                viewBox="0 0 512 512"
+                                class="arrow"
+                                aria-hidden="true"
+                            >
+                                <path
+                                    d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z"
+                                ></path>
+                            </svg>
+                        </button>
+                        <div class="options" id="navContactSelectOptions">
+                            <a href="contact/contact.html" class="option" data-i18n="settings.contact">Contact Us</a>
+                            <a href="#support-us" class="option option-support" data-i18n="settings.support">Support Us</a>
+                        </div>
+                    </div>
                 </div>
             </nav>
         </div>
@@ -410,7 +436,7 @@
         </div>
     </section>
 
-    <section class="premium-section">
+    <section class="premium-section" id="support-us">
         <div class="container">
             <div class="premium-banner">
                 <div class="premium-bg-circle premium-bg-circle-1"></div>

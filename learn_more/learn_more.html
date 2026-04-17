@@ -17,11 +17,7 @@
         <div class="container">
             <nav class="nav">
                 <a href="../index.html#home" class="logo" aria-label="CircleLearn Home">
-                    <div class="logo-icon">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                            <circle cx="12" cy="12" r="10"/>
-                        </svg>
-                    </div>
+                    <img src="../assets/images/homepage/icon.png" width="40" height="40"></img>
                     <span class="logo-text">GEOMETRY CHALLENGER</span>
                 </a>
 
@@ -31,24 +27,62 @@
                     <a href="../quiz/quiz.html" class="nav-link" data-i18n="nav.quiz">Quiz</a>
                 </div>
 
-                <div class="nav-actions">
-                    <div class="settings-dropdown">
-                        <button type="button" class="btn-icon" id="settingsToggle" aria-label="Open settings" aria-expanded="false" aria-haspopup="true">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <circle cx="12" cy="12" r="3"></circle>
-                                <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33h.01a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51h.01a1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82v.01a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+                <div class="nav-actions nav-settings-inline">
+                    <div class="glass-radio-group">
+                        <input type="radio" name="langPlan" id="glass-lang-en" checked="" />
+                        <label for="glass-lang-en">English</label>
+
+                        <input type="radio" name="langPlan" id="glass-lang-zh" />
+                        <label for="glass-lang-zh">简体中文</label>
+
+                        <div class="glass-glider"></div>
+                    </div>
+
+                    <label class="theme-switch">
+                        <input type="checkbox" class="theme-switch__checkbox">
+                        <div class="theme-switch__container">
+                        <div class="theme-switch__clouds"></div>
+                        <div class="theme-switch__stars-container">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 144 55" fill="none">
+                            <path fill-rule="evenodd" clip-rule="evenodd" d="M135.831 3.00688C135.055 3.85027 134.111 4.29946 133 4.35447C134.111 4.40947 135.055 4.85867 135.831 5.71123C136.607 6.55462 136.996 7.56303 136.996 8.72727C136.996 7.95722 137.172 7.25134 137.525 6.59129C137.886 5.93124 138.372 5.39954 138.98 5.00535C139.598 4.60199 140.268 4.39114 141 4.35447C139.88 4.2903 138.936 3.85027 138.16 3.00688C137.384 2.16348 136.996 1.16425 136.996 0C136.996 1.16425 136.607 2.16348 135.831 3.00688ZM31 23.3545C32.1114 23.2995 33.0551 22.8503 33.8313 22.0069C34.6075 21.1635 34.9956 20.1642 34.9956 19C34.9956 20.1642 35.3837 21.1635 36.1599 22.0069C36.9361 22.8503 37.8798 23.2903 39 23.3545C38.2679 23.3911 37.5976 23.602 36.9802 24.0053C36.3716 24.3995 35.8864 24.9312 35.5248 25.5913C35.172 26.2513 34.9956 26.9572 34.9956 27.7273C34.9956 26.563 34.6075 25.5546 33.8313 24.7112C33.0551 23.8587 32.1114 23.4095 31 23.3545ZM0 36.3545C1.11136 36.2995 2.05513 35.8503 2.83131 35.0069C3.6075 34.1635 3.99559 33.1642 3.99559 32C3.99559 33.1642 4.38368 34.1635 5.15987 35.0069C5.93605 35.8503 6.87982 36.2903 8 36.3545C7.26792 36.3911 6.59757 36.602 5.98015 37.0053C5.37155 37.3995 4.88644 37.9312 4.52481 38.5913C4.172 39.2513 3.99559 39.9572 3.99559 40.7273C3.99559 39.563 3.6075 38.5546 2.83131 37.7112C2.05513 36.8587 1.11136 36.4095 0 36.3545ZM56.8313 24.0069C56.0551 24.8503 55.1114 25.2995 54 25.3545C55.1114 25.4095 56.0551 25.8587 56.8313 26.7112C57.6075 27.5546 57.9956 28.563 57.9956 29.7273C57.9956 28.9572 58.172 28.2513 58.5248 27.5913C58.8864 26.9312 59.3716 26.3995 59.9802 26.0053C60.5976 25.602 61.2679 25.3911 62 25.3545C60.8798 25.2903 59.9361 24.8503 59.1599 24.0069C58.3837 23.1635 57.9956 22.1642 57.9956 21C57.9956 22.1642 57.6075 23.1635 56.8313 24.0069ZM81 25.3545C82.1114 25.2995 83.0551 24.8503 83.8313 24.0069C84.6075 23.1635 84.9956 22.1642 84.9956 21C84.9956 22.1642 85.3837 23.1635 86.1599 24.0069C86.9361 24.8503 87.8798 25.2903 89 25.3545C88.2679 25.3911 87.5976 25.602 86.9802 26.0053C86.3716 26.3995 85.8864 26.9312 85.5248 27.5913C85.172 28.2513 84.9956 28.9572 84.9956 29.7273C84.9956 28.563 84.6075 27.5546 83.8313 26.7112C83.0551 25.8587 82.1114 25.4095 81 25.3545ZM136 36.3545C137.111 36.2995 138.055 35.8503 138.831 35.0069C139.607 34.1635 139.996 33.1642 139.996 32C139.996 33.1642 140.384 34.1635 141.16 35.0069C141.936 35.8503 142.88 36.2903 144 36.3545C143.268 36.3911 142.598 36.602 141.98 37.0053C141.372 37.3995 140.886 37.9312 140.525 38.5913C140.172 39.2513 139.996 39.9572 139.996 40.7273C139.996 39.563 139.607 38.5546 138.831 37.7112C138.055 36.8587 137.111 36.4095 136 36.3545ZM101.831 49.0069C101.055 49.8503 100.111 50.2995 99 50.3545C100.111 50.4095 101.055 50.8587 101.831 51.7112C102.607 52.5546 102.996 53.563 102.996 54.7273C102.996 53.9572 103.172 53.2513 103.525 52.5913C103.886 51.9312 104.372 51.3995 104.98 51.0053C105.598 50.602 106.268 50.3911 107 50.3545C105.88 50.2903 104.936 49.8503 104.16 49.0069C103.384 48.1635 102.996 47.1642 102.996 46C102.996 47.1642 102.607 48.1635 101.831 49.0069Z" fill="currentColor"></path>
+                            </svg>
+                        </div>
+                        <div class="theme-switch__circle-container">
+                            <div class="theme-switch__sun-moon-container">
+                            <div class="theme-switch__moon">
+                                <div class="theme-switch__spot"></div>
+                                <div class="theme-switch__spot"></div>
+                                <div class="theme-switch__spot"></div>
+                            </div>
+                            </div>
+                        </div>
+                        </div>
+                    </label>
+                    <div class="select nav-contact-select" id="navContactSelect">
+                        <button
+                            type="button"
+                            class="selected"
+                            id="navContactSelectToggle"
+                            aria-haspopup="true"
+                            aria-expanded="false"
+                            aria-controls="navContactSelectOptions"
+                        >
+                            <span data-i18n="settings.about">About</span>
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                height="1em"
+                                viewBox="0 0 512 512"
+                                class="arrow"
+                                aria-hidden="true"
+                            >
+                                <path
+                                    d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z"
+                                ></path>
                             </svg>
                         </button>
-                        <div class="settings-menu" id="settingsMenu" role="menu" aria-label="Settings menu">
-                            <button type="button" class="settings-item" id="menuLangToggle" role="menuitem">
-                                <span data-i18n="settings.language">语言</span>
-                                <span class="settings-value" id="menuLangValue">EN</span>
-                            </button>
-                            <button type="button" class="settings-item" id="menuThemeToggle" role="menuitem">
-                                <span data-i18n="settings.theme">护眼模式</span>
-                                <span class="settings-value" id="menuThemeValue">关</span>
-                            </button>
-                            <a href="../contact/contact.html" class="settings-item settings-link" role="menuitem" data-i18n="settings.contact">联系我们</a>
+                        <div class="options" id="navContactSelectOptions">
+                            <a href="../contact/contact.html" class="option" data-i18n="settings.contact">Contact Us</a>
+                            <a href="../index.html#support-us" class="option option-support" data-i18n="settings.support">Support Us</a>
                         </div>
                     </div>
                 </div>
@@ -154,7 +188,7 @@
                     <div class="learn-theorem-body">
                         <div class="learn-theorem-badges">
                             <span class="learn-theorem-tier"><span class="learn-theorem-tier-en" data-i18n="learn.tier.basic.badge">Basic</span></span>
-                            <span class="learn-theorem-index">Theorem 1</span>
+                            <span class="learn-theorem-index"><span data-i18n="learn.theoremIndexPrefix">Theorem</span> 1</span>
                         </div>
                         <h2 class="learn-theorem-title" data-i18n="learn.basic.angleCentre.title">Angle at the Centre</h2>
                         <p class="learn-theorem-statement" data-i18n="learn.basic.angleCentre.statement">The angle subtended at the centre of a circle is twice the angle subtended at any point on the circumference, from the same arc.</p>
@@ -172,7 +206,7 @@
                     <div class="learn-theorem-body">
                         <div class="learn-theorem-badges">
                             <span class="learn-theorem-tier"><span class="learn-theorem-tier-en" data-i18n="learn.tier.basic.badge">Basic</span> </span>
-                            <span class="learn-theorem-index">Theorem 2</span>
+                            <span class="learn-theorem-index"><span data-i18n="learn.theoremIndexPrefix">Theorem</span> 2</span>
                         </div>
                         <h2 class="learn-theorem-title" data-i18n="learn.basic.anglesSemicircle.title">Angles in a Semicircle</h2>
                         <p class="learn-theorem-statement" data-i18n="learn.basic.anglesSemicircle.statement">Any angle inscribed in a semicircle is a right angle (90°).</p>
@@ -190,7 +224,7 @@
                     <div class="learn-theorem-body">
                         <div class="learn-theorem-badges">
                             <span class="learn-theorem-tier"><span class="learn-theorem-tier-en" data-i18n="learn.tier.basic.badge">Basic</span> </span>
-                            <span class="learn-theorem-index">Theorem 3</span>
+                            <span class="learn-theorem-index"><span data-i18n="learn.theoremIndexPrefix">Theorem</span> 3</span>
                         </div>
                         <h2 class="learn-theorem-title" data-i18n="learn.basic.cyclicQuadrilateral.title">Cyclic Quadrilateral</h2>
                         <p class="learn-theorem-statement" data-i18n="learn.basic.cyclicQuadrilateral.statement">Opposite angles of a cyclic quadrilateral sum to 180°.</p>
@@ -211,7 +245,7 @@
                     <div class="learn-theorem-body">
                         <div class="learn-theorem-badges">
                             <span class="learn-theorem-tier"><span class="learn-theorem-tier-en" data-i18n="learn.tier.basic.badge">Basic</span> </span>
-                            <span class="learn-theorem-index">Theorem 4</span>
+                            <span class="learn-theorem-index"><span data-i18n="learn.theoremIndexPrefix">Theorem</span> 4</span>
                         </div>
                         <h2 class="learn-theorem-title" data-i18n="learn.basic.radiusTangent.title">Radius to a Tangent</h2>
                         <p class="learn-theorem-statement" data-i18n="learn.basic.radiusTangent.statement">A radius drawn to the point of contact is perpendicular to the tangent: the angle between them is 90°.</p>
@@ -232,7 +266,7 @@
                     <div class="learn-theorem-body">
                         <div class="learn-theorem-badges">
                             <span class="learn-theorem-tier"><span class="learn-theorem-tier-en" data-i18n="learn.tier.basic.badge">Basic</span> </span>
-                            <span class="learn-theorem-index">Theorem 5</span>
+                            <span class="learn-theorem-index"><span data-i18n="learn.theoremIndexPrefix">Theorem</span> 5</span>
                         </div>
                         <h2 class="learn-theorem-title" data-i18n="learn.basic.sameSegment.title">Angles in the Same Segment</h2>
                         <p class="learn-theorem-statement" data-i18n="learn.basic.sameSegment.statement">Angles subtended by the same chord (or arc) at the circumference, on the same side of the chord, are equal.</p>
@@ -253,7 +287,7 @@
                     <div class="learn-theorem-body">
                         <div class="learn-theorem-badges">
                             <span class="learn-theorem-tier"><span class="learn-theorem-tier-en" data-i18n="learn.tier.basic.badge">Basic</span> </span>
-                            <span class="learn-theorem-index">Theorem 6</span>
+                            <span class="learn-theorem-index"><span data-i18n="learn.theoremIndexPrefix">Theorem</span> 6</span>
                         </div>
                         <h2 class="learn-theorem-title" data-i18n="learn.basic.tangentsPoint.title">Tangents from a Point to a Circle</h2>
                         <p class="learn-theorem-statement" data-i18n="learn.basic.tangentsPoint.statement">From an external point, the two tangent segments to a circle have equal lengths.</p>
@@ -274,7 +308,7 @@
                     <div class="learn-theorem-body">
                         <div class="learn-theorem-badges">
                             <span class="learn-theorem-tier"><span class="learn-theorem-tier-en" data-i18n="learn.tier.basic.badge">Basic</span> </span>
-                            <span class="learn-theorem-index">Theorem 7</span>
+                            <span class="learn-theorem-index"><span data-i18n="learn.theoremIndexPrefix">Theorem</span> 7</span>
                         </div>
                         <h2 class="learn-theorem-title" data-i18n="learn.basic.tangentsPoint2.title">Tangents from a Point (II)</h2>
                         <p class="learn-theorem-statement" data-i18n="learn.basic.tangentsPoint2.statement">The line from the external point to the centre bisects the angle between the two tangents, and bisects the angle between the two radii to the contact points.</p>
@@ -292,7 +326,7 @@
                     <div class="learn-theorem-body">
                         <div class="learn-theorem-badges">
                             <span class="learn-theorem-tier"><span class="learn-theorem-tier-en" data-i18n="learn.tier.basic.badge">Basic</span> </span>
-                            <span class="learn-theorem-index">Theorem 8</span>
+                            <span class="learn-theorem-index"><span data-i18n="learn.theoremIndexPrefix">Theorem</span> 8</span>
                         </div>
                         <h2 class="learn-theorem-title" data-i18n="learn.basic.alternateSegment.title">Alternate Segment Theorem</h2>
                         <p class="learn-theorem-statement" data-i18n="learn.basic.alternateSegment.statement">The angle between a tangent and a chord through the contact point equals the angle in the alternate segment, subtended by the chord in the opposite arc.</p>
@@ -322,7 +356,7 @@
                     <div class="learn-theorem-body">
                         <div class="learn-theorem-badges">
                             <span class="learn-theorem-tier"><span class="learn-theorem-tier-en" data-i18n="learn.tier.advanced.badge">Advanced</span></span>
-                            <span class="learn-theorem-index">Theorem 4</span>
+                            <span class="learn-theorem-index"><span data-i18n="learn.theoremIndexPrefix">Theorem</span> 1</span>
                         </div>
                         <h2 class="learn-theorem-title" data-i18n="learn.advPerpendicularDiameter.title">Perpendicular Diameter Theorem</h2>
                         <p class="learn-theorem-statement" data-i18n="learn.advPerpendicularDiameter.statement">A diameter perpendicular to a chord bisects the chord and also bisects the two arcs subtended by that chord.</p>
@@ -343,7 +377,7 @@
                     <div class="learn-theorem-body">
                         <div class="learn-theorem-badges">
                             <span class="learn-theorem-tier"><span class="learn-theorem-tier-en" data-i18n="learn.tier.advanced.badge">Advanced</span></span>
-                            <span class="learn-theorem-index">Theorem 1</span>
+                            <span class="learn-theorem-index"><span data-i18n="learn.theoremIndexPrefix">Theorem</span> 2</span>
                         </div>
                         <h2 class="learn-theorem-title" data-i18n="learn.advSecant.title">Secant Theorem</h2>
                         <p class="learn-theorem-statement" data-i18n="learn.advSecant.statement">When two secant lines are drawn from a point outside a circle, the product of the distances from that point to the two intersection points on one secant equals the same product on the other secant.</p>
@@ -364,7 +398,7 @@
                     <div class="learn-theorem-body">
                         <div class="learn-theorem-badges">
                             <span class="learn-theorem-tier"><span class="learn-theorem-tier-en" data-i18n="learn.tier.advanced.badge">Advanced</span></span>
-                            <span class="learn-theorem-index">Theorem 2</span>
+                            <span class="learn-theorem-index"><span data-i18n="learn.theoremIndexPrefix">Theorem</span> 3</span>
                         </div>
                         <h2 class="learn-theorem-title" data-i18n="learn.advIntersectingChords.title">Intersecting Chords Theorem</h2>
                         <p class="learn-theorem-statement" data-i18n="learn.advIntersectingChords.statement">For two chords intersecting inside a circle, the products of the lengths of the two segments on each chord are equal.</p>
@@ -382,7 +416,7 @@
                     <div class="learn-theorem-body">
                         <div class="learn-theorem-badges">
                             <span class="learn-theorem-tier"><span class="learn-theorem-tier-en" data-i18n="learn.tier.advanced.badge">Advanced</span></span>
-                            <span class="learn-theorem-index">Theorem 3</span>
+                            <span class="learn-theorem-index"><span data-i18n="learn.theoremIndexPrefix">Theorem</span> 4</span>
                         </div>
                         <h2 class="learn-theorem-title" data-i18n="learn.advTangentSecant.title">Tangent–Secant Theorem</h2>
                         <p class="learn-theorem-statement" data-i18n="learn.advTangentSecant.statement">From a point outside a circle, if a tangent and a secant are drawn, the tangent length is the mean proportional of the two secant segments from that point to the circle intersections.</p>
@@ -409,7 +443,7 @@
                     <div class="learn-theorem-body">
                         <div class="learn-theorem-badges">
                             <span class="learn-theorem-tier"><span class="learn-theorem-tier-en" data-i18n="learn.tier.moreAdvanced.badge">Further Advanced</span></span>
-                            <span class="learn-theorem-index">Theorem 1</span>
+                            <span class="learn-theorem-index"><span data-i18n="learn.theoremIndexPrefix">Theorem</span> 1</span>
                         </div>
                         <h2 class="learn-theorem-title" data-i18n="learn.moreTangency1.title">Point of Tangency 1</h2>
                         <p class="learn-theorem-statement" data-i18n="learn.moreTangency1.statement">If ∠MNT + ∠PQT = ∠MTP and T lies on both circles, then T is the common point of tangency of the two circles.</p>
@@ -427,7 +461,7 @@
                     <div class="learn-theorem-body">
                         <div class="learn-theorem-badges">
                             <span class="learn-theorem-tier"><span class="learn-theorem-tier-en" data-i18n="learn.tier.moreAdvanced.badge">Further Advanced</span></span>
-                            <span class="learn-theorem-index">Theorem 2</span>
+                            <span class="learn-theorem-index"><span data-i18n="learn.theoremIndexPrefix">Theorem</span> 2</span>
                         </div>
                         <h2 class="learn-theorem-title" data-i18n="learn.moreTangency2.title">Point of Tangency 2</h2>
                         <p class="learn-theorem-statement" data-i18n="learn.moreTangency2.statement">If T is a common tangency point of circles O₁ and O₂, then ∠ATB = ∠CTD; conversely, if ∠ATB = ∠CTD, then T is a common tangency point.</p>
@@ -448,7 +482,7 @@
                     <div class="learn-theorem-body">
                         <div class="learn-theorem-badges">
                             <span class="learn-theorem-tier"><span class="learn-theorem-tier-en" data-i18n="learn.tier.moreAdvanced.badge">Further Advanced</span></span>
-                            <span class="learn-theorem-index">Theorem 3</span>
+                            <span class="learn-theorem-index"><span data-i18n="learn.theoremIndexPrefix">Theorem</span> 3</span>
                         </div>
                         <h2 class="learn-theorem-title" data-i18n="learn.moreZhangjiao.title">Zhangjiao Theorem</h2>
                         <p class="learn-theorem-statement" data-i18n="learn.moreZhangjiao.statement">∠BAC=α，∠DAC=β，则有：ABsinβ+ADsinα=ACsin(α+β)。</p>
@@ -469,7 +503,7 @@
                     <div class="learn-theorem-body">
                         <div class="learn-theorem-badges">
                             <span class="learn-theorem-tier"><span class="learn-theorem-tier-en" data-i18n="learn.tier.moreAdvanced.badge">Further Advanced</span></span>
-                            <span class="learn-theorem-index">Theorem 4</span>
+                            <span class="learn-theorem-index"><span data-i18n="learn.theoremIndexPrefix">Theorem</span> 4</span>
                         </div>
                         <h2 class="learn-theorem-title" data-i18n="learn.moreReim.title">Reim Theorem</h2>
                         <p class="learn-theorem-statement" data-i18n="learn.moreReim.statement">AB is the common chord of two circles. MN is a chord of circle R. MA meets circle S again at P, and NB meets circle S again at Q. Then MN // PQ.</p>
@@ -486,7 +520,7 @@
                     <div class="learn-theorem-body">
                         <div class="learn-theorem-badges">
                             <span class="learn-theorem-tier"><span class="learn-theorem-tier-en" data-i18n="learn.tier.moreAdvanced.badge">Further Advanced</span></span>
-                            <span class="learn-theorem-index">Theorem 5</span>
+                            <span class="learn-theorem-index"><span data-i18n="learn.theoremIndexPrefix">Theorem</span> 5</span>
                         </div>
                         <h2 class="learn-theorem-title" data-i18n="learn.moreSimson.title">Simson Theorem</h2>
                         <p class="learn-theorem-statement" data-i18n="learn.moreSimson.statement">From any point on the circumcircle of a triangle (other than the triangle’s vertices), draw perpendiculars to the three sides or their extensions; the three feet are collinear. This line is called the Simson line.</p>

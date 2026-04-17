@@ -148,6 +148,49 @@ function initSettingsMenu() {
     });
 }
 
+function initClickSelectMenu() {
+    const selects = document.querySelectorAll('.select');
+    if (!selects.length) return;
+
+    const closeAll = (except) => {
+        selects.forEach((select) => {
+            if (select === except) return;
+            select.classList.remove('is-open');
+            const selected = select.querySelector('.selected');
+            if (selected instanceof HTMLElement) {
+                selected.setAttribute('aria-expanded', 'false');
+            }
+        });
+    };
+
+    selects.forEach((select) => {
+        const selected = select.querySelector('.selected');
+        if (!(selected instanceof HTMLElement)) return;
+
+        selected.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const willOpen = !select.classList.contains('is-open');
+            closeAll(select);
+            select.classList.toggle('is-open', willOpen);
+            selected.setAttribute('aria-expanded', willOpen ? 'true' : 'false');
+        });
+
+        select.addEventListener('click', (e) => {
+            e.stopPropagation();
+        });
+    });
+
+    document.addEventListener('click', () => {
+        closeAll(null);
+    });
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+            closeAll(null);
+        }
+    });
+}
+
 function initSmoothAnchorScroll() {
     document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
         anchor.addEventListener('click', function (e) {
