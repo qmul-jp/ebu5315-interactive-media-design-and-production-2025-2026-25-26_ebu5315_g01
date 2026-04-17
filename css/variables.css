@@ -17,6 +17,24 @@
     --gray-700: #334155;
     --gray-800: #1E293B;
     --gray-900: #0F172A;
+    --base-font-size: 16px;
+    --h1-size: 2.5rem;
+    --h2-size: 2rem;
+    --h3-size: 1.5rem;
+    --p-size: 1rem;
+    --small-size: 0.875rem;
+}
+
+body.font-small {
+    --base-font-size: 14px;
+}
+
+body.font-large {
+    --base-font-size: 20px;
+}
+
+html {
+    font-size: var(--base-font-size);
 }
 
 body.dark-mode {

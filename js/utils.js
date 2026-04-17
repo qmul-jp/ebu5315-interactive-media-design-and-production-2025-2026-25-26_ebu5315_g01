@@ -111,6 +111,55 @@ function initLangToggle() {
     });
 }
 
+function getFontSize() {
+    const stored = localStorage.getItem('preferredFontSize');
+    return stored === 'small' || stored === 'large' || stored === 'medium' ? stored : 'medium';
+}
+
+function setFontSize(size, updateUI = true) {
+    const body = document.body;
+    body.classList.remove('font-small', 'font-large');
+    if (size !== 'medium') {
+        body.classList.add(`font-${size}`);
+    }
+    localStorage.setItem('preferredFontSize', size);
+    
+    if (updateUI) {
+        updateFontSizeButtons(size);
+    }
+    
+    document.dispatchEvent(new CustomEvent('circlelearn:fontsizechange', { detail: { size } }));
+}
+
+function updateFontSizeButtons(size) {
+    const buttons = document.querySelectorAll('#fontSmall, #fontMedium, #fontLarge');
+    buttons.forEach(btn => {
+        btn.classList.remove('active');
+        if (btn.id === 'fontSmall' && size === 'small') {
+            btn.classList.add('active');
+        } else if (btn.id === 'fontMedium' && size === 'medium') {
+            btn.classList.add('active');
+        } else if (btn.id === 'fontLarge' && size === 'large') {
+            btn.classList.add('active');
+        }
+    });
+}
+
+function initFontSize() {
+    const fontSmall = document.getElementById('fontSmall');
+    const fontMedium = document.getElementById('fontMedium');
+    const fontLarge = document.getElementById('fontLarge');
+    
+    if (!fontSmall || !fontMedium || !fontLarge) return;
+    
+    const currentSize = getFontSize();
+    setFontSize(currentSize, true);
+    
+    fontSmall.addEventListener('click', () => setFontSize('small'));
+    fontMedium.addEventListener('click', () => setFontSize('medium'));
+    fontLarge.addEventListener('click', () => setFontSize('large'));
+}
+
 function initSettingsMenu() {
     const dropdown = document.querySelector('.settings-dropdown');
     const settingsToggle = document.getElementById('settingsToggle');

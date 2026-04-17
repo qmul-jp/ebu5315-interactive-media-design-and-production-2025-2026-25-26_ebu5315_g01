@@ -21,7 +21,8 @@ project/
 ├─ index.html                 # 首页（站点入口）
 ├─ README.md
 ├─ Architecture_Guide_CN.md # 本文件（中文架构说明）
-├─ Architecture_Guide_EN.md   # 英文架构说明（若存在）
+├─ Architecture_Guide_EN.md   # 英文架构说明
+├─ I18N_Development_Standard.md # 国际化开发标准
 │
 ├─ game/
 │  └─ game.html               # 游戏模块页面
@@ -31,6 +32,9 @@ project/
 │
 ├─ contact/
 │  └─ contact.html            # 联系页面
+│
+├─ learn_more/
+│  └─ learn_more.html         # 学习资料页面
 │
 ├─ css/
 │  ├─ reset.css               # 清除浏览器默认样式
@@ -46,7 +50,12 @@ project/
 │     ├─ home.css             # 首页专属
 │     ├─ game.css             # 游戏页专属
 │     ├─ quiz.css             # 测验页专属（含测验仪表盘补充样式）
-│     └─ contact.css          # 联系页专属
+│     ├─ contact.css          # 联系页专属
+│     ├─ learn_more.css       # 学习资料页面专属
+│     ├─ pi-sniper.css        # 游戏子模块样式
+│     ├─ gravity-slingshot.css # 游戏子模块样式
+│     ├─ angle-hunter.css     # 游戏子模块样式
+│     └─ chord-breaker.css    # 游戏子模块样式
 │
 ├─ js/
 │  ├─ main.js                 # 全局初始化（设置菜单、主题、语言等）
@@ -54,19 +63,30 @@ project/
 │  ├─ data/
 │  │  ├─ circle-rules.js      # 圆几何规则数据
 │  │  ├─ quiz-questions.js    # 测验题库（供 quiz.js 等使用）
-│  │  ├─ game-i18n.js         # 游戏内文案/国际化数据（若使用）
-│  │  └─ game-audio.js        # 游戏音效相关数据/配置（若使用）
+│  │  ├─ game-i18n.js         # 游戏内文案/国际化数据
+│  │  ├─ game-audio.js        # 游戏音效相关数据/配置
+│  │  ├─ learn-more-manifest.js # 学习资料清单
+│  │  └─ site-i18n.js         # 站点国际化数据
 │  └─ pages/
 │     ├─ home.js              # 首页交互
 │     ├─ game.js              # 游戏主逻辑
 │     ├─ pi-sniper.js         # 游戏子模块（与 game 配合）
 │     ├─ gravity-slingshot.js  # 游戏子模块（与 game 配合）
+│     ├─ angle-hunter.js      # 游戏子模块（与 game 配合）
+│     ├─ chord-breaker.js     # 游戏子模块（与 game 配合）
 │     ├─ quiz.js              # 测验逻辑（挂载 #quizRoot 时渲染题库）
-│     └─ contact.js           # 联系页表单等
+│     ├─ contact.js           # 联系页表单等
+│     └─ learn_more.js        # 学习资料页面逻辑
+│
+├─ scripts/
+│  └─ update-learn-more-manifest.mjs # 学习资料清单更新脚本
 │
 └─ assets/
    └─ images/
-      └─ homepage/            # 首页与展示用图片资源（定理示意图、装饰图等）
+      ├─ homepage/            # 首页与展示用图片资源（定理示意图、装饰图等）
+      └─ learn_more/          # 学习资料页面图片
+         ├─ 进阶/             # 进阶内容图片
+         └─ 更进阶/           # 更进阶内容图片
       # videos/、audio/ 可按需在仓库中补充，当前以 images 为主
 ```
 
@@ -118,6 +138,7 @@ project/
 | `game/game.html` | 游戏模块 |
 | `quiz/quiz.html` | 测验模块 |
 | `contact/contact.html` | 联系页面 |
+| `learn_more/learn_more.html` | 学习资料页面 |
 
 子页面通过 `../css/...`、`../js/...` 引用公共资源；站内链接需注意相对路径层级（例如在 `quiz/` 内指向首页用 `../index.html`）。
 
@@ -168,6 +189,11 @@ project/
 | `game.css`    | 游戏页面样式 |
 | `quiz.css`    | 测验页面样式 |
 | `contact.css` | 联系页面样式 |
+| `learn_more.css` | 学习资料页面样式 |
+| `pi-sniper.css` | 游戏子模块样式 |
+| `gravity-slingshot.css` | 游戏子模块样式 |
+| `angle-hunter.css` | 游戏子模块样式 |
+| `chord-breaker.css` | 游戏子模块样式 |
 
 👉 原则：只写该页面特有样式
 
@@ -192,8 +218,11 @@ project/
 | `game.js`    | 游戏主逻辑 |
 | `pi-sniper.js` | 游戏子模块 |
 | `gravity-slingshot.js` | 游戏子模块 |
+| `angle-hunter.js` | 游戏子模块 |
+| `chord-breaker.js` | 游戏子模块 |
 | `quiz.js`    | 测验逻辑（依赖 `quiz-questions.js` 与页面中的挂载点） |
 | `contact.js` | 表单处理 |
+| `learn_more.js` | 学习资料页面逻辑 |
 
 👉 每个页面逻辑独立，避免互相影响；游戏相关脚本由 `game.html` 按需引入。
 
@@ -207,6 +236,8 @@ project/
 | `quiz-questions.js` | 测验题库      |
 | `game-i18n.js`      | 游戏国际化/文案数据 |
 | `game-audio.js`     | 游戏音效配置或映射 |
+| `learn-more-manifest.js` | 学习资料清单 |
+| `site-i18n.js`      | 站点国际化数据 |
 
 👉 数据与逻辑分离，方便修改与扩展
 
@@ -217,6 +248,9 @@ project/
 | 路径 | 内容 |
 | ---- | ---- |
 | `assets/images/homepage/` | 首页与内容展示用图片（定理图、装饰图等） |
+| `assets/images/learn_more/` | 学习资料页面图片 |
+| `assets/images/learn_more/进阶/` | 进阶内容图片 |
+| `assets/images/learn_more/更进阶/` | 更进阶内容图片 |
 | `assets/videos/`、`assets/audio/` | 可按项目需要增补；当前仓库以图片资源为主 |
 
 ---
@@ -251,6 +285,7 @@ project/
 | A  | 首页（index） |
 | B  | Game      |
 | C  | Quiz      |
+| D  | 学习资料（learn_more） |
 
 各自主要修改：
 

@@ -15,14 +15,14 @@ body.dark-mode .contact-section {
 }
 
 .contact-info-title {
-    font-size: 24px;
+    font-size: 1.5rem;
     font-weight: 700;
     color: var(--text);
     margin-bottom: 24px;
 }
 
 .contact-info-text {
-    font-size: 16px;
+    font-size: 1rem;
     color: var(--text-muted);
     line-height: 1.6;
     margin-bottom: 32px;
@@ -77,14 +77,14 @@ body.dark-mode .contact-item-icon-purple {
 }
 
 .contact-item-title {
-    font-size: 16px;
+    font-size: 1rem;
     font-weight: 600;
     color: var(--text);
     margin-bottom: 4px;
 }
 
 .contact-item-text {
-    font-size: 14px;
+    font-size: 0.875rem;
     color: var(--text-muted);
 }
 

@@ -6,6 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initClickSelectMenu();
     initTheme();
     initLangToggle();
+    initFontSize();
     initSmoothAnchorScroll();
     initNavScrollSpy();
     injectRippleStyles();

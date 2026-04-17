@@ -5,17 +5,51 @@
     const root = document.getElementById('quizRoot');
     if (!root || !window.QUIZ_QUESTIONS || !window.QUIZ_QUESTIONS.length) return;
 
-    // 1. 初始化状态
-    let gameState = {
-        currentLevel: 1,
-        correctInARow: 0,
-        usedIds: new Set(), // 使用 Set 处理去重效率更高
-        wrongCategories: {} // 记录错误分布，实现简单的 AI 分析
-    };
+    // 1. 从localStorage加载状态
+    function loadGameState() {
+        try {
+            const saved = localStorage.getItem('quizGameState');
+            if (saved) {
+                const parsed = JSON.parse(saved);
+                return {
+                    currentLevel: parsed.currentLevel || 1,
+                    correctInARow: parsed.correctInARow || 0,
+                    usedIds: new Set(parsed.usedIds || []),
+                    wrongCategories: parsed.wrongCategories || {}
+                };
+            }
+        } catch (e) {
+            console.error('Failed to load game state:', e);
+        }
+        return {
+            currentLevel: 1,
+            correctInARow: 0,
+            usedIds: new Set(),
+            wrongCategories: {}
+        };
+    }
+
+    // 2. 保存状态到localStorage
+    function saveGameState() {
+        try {
+            const stateToSave = {
+                currentLevel: gameState.currentLevel,
+                correctInARow: gameState.correctInARow,
+                usedIds: Array.from(gameState.usedIds),
+                wrongCategories: gameState.wrongCategories
+            };
+            localStorage.setItem('quizGameState', JSON.stringify(stateToSave));
+        } catch (e) {
+            console.error('Failed to save game state:', e);
+        }
+    }
+
+    // 3. 初始化状态
+    let gameState = loadGameState();
 
     let currentQuestion = null;
-    let answeredCount = 0;
-    let totalCorrect = 0;
+    let answeredCount = localStorage.getItem('quizAnsweredCount') ? parseInt(localStorage.getItem('quizAnsweredCount')) : 0;
+    let totalCorrect = localStorage.getItem('quizTotalCorrect') ? parseInt(localStorage.getItem('quizTotalCorrect')) : 0;
 
     // 2. 智能抽题逻辑 (AI: Avoid Repetitions)
     function getNextSmartQuestion() {
@@ -60,6 +94,11 @@
             // 记录弱点
             gameState.wrongCategories[category] = (gameState.wrongCategories[category] || 0) + 1;
         }
+
+        // 保存状态
+        saveGameState();
+        localStorage.setItem('quizAnsweredCount', answeredCount.toString());
+        localStorage.setItem('quizTotalCorrect', totalCorrect.toString());
 
         updateUI(); // 更新等级显示、进度条等
         return isCorrect;
@@ -106,6 +145,13 @@
         }
     }
 
+    // 4. 获取当前语言
+    function getCurrentLang() {
+        const lang = localStorage.getItem('lang');
+        return lang === 'zh' ? 'zh' : 'en';
+    }
+
+    // 5. 渲染题目
     function renderQuestion() {
         const q = getNextSmartQuestion();
         if (!q) return;
@@ -124,16 +170,31 @@
         statusCard.style.borderRadius = '12px';
         statusCard.style.border = '1px solid var(--gray-200)';
         statusCard.style.background = 'var(--gray-50)';
+        statusCard.style.color = '#000000';
+        
+        // 检查是否为深色模式
+        if (document.body.classList.contains('dark-mode')) {
+            statusCard.style.color = '#FFFFFF';
+            statusCard.style.background = '#1E4A2D';
+            statusCard.style.border = '1px solid #2E5A3D';
+        }
+        
+        const lang = getCurrentLang();
+        const levelText = lang === 'zh' ? '当前等级：' : 'Current Level: ';
+        const streakText = lang === 'zh' ? '连对：' : 'Streak: ';
+        const accuracyText = lang === 'zh' ? '正确率：' : 'Accuracy: ';
+        const weakText = lang === 'zh' ? '薄弱知识点：' : 'Weak topics: ';
+
         statusCard.innerHTML = `
             <div style="display:flex;gap:16px;flex-wrap:wrap;align-items:center;justify-content:space-between;margin-bottom:8px;">
-                <span><strong>Current Level:</strong> <span id="currentLevel">L1</span></span>
-                <span><strong>Streak:</strong> <span id="correctStreak">0</span>/3</span>
-                <span><strong>Accuracy:</strong> <span id="accuracyRate">0%</span></span>
+                <span><strong>${levelText}</strong> <span id="currentLevel">L1</span></span>
+                <span><strong>${streakText}</strong> <span id="correctStreak">0</span>/3</span>
+                <span><strong>${accuracyText}</strong> <span id="accuracyRate">0%</span></span>
             </div>
             <div style="height:8px;background:var(--gray-200);border-radius:999px;overflow:hidden;margin-bottom:8px;">
                 <div id="levelProgressBar" style="width:0%;height:100%;background:var(--primary);transition:width .25s ease;"></div>
             </div>
-            <div><strong>Weak topics:</strong> <span id="weakTags">None</span></div>
+            <div><strong>${weakText}</strong> <span id="weakTags">None</span></div>
         `;
 
         root.appendChild(statusCard);
@@ -160,9 +221,12 @@
                 feedback.classList.add('show');
                 feedback.classList.remove('correct', 'wrong');
                 feedback.classList.add(correct ? 'correct' : 'wrong');
+                
+                const correctText = lang === 'zh' ? '正确！' : 'Correct! ';
+                const wrongText = lang === 'zh' ? '不对哦。' : 'Not quite. ';
                 feedback.textContent = correct
-                    ? `Correct! ${q.explanation}`
-                    : `Not quite. ${q.explanation}`;
+                    ? `${correctText} ${q.explanation}`
+                    : `${wrongText} ${q.explanation}`;
 
                 const oldNext = root.querySelector('#quizNextBtn');
                 if (oldNext) oldNext.remove();
@@ -172,7 +236,7 @@
                 next.type = 'button';
                 next.className = 'btn btn-primary';
                 next.style.marginTop = '24px';
-                next.textContent = 'Next question';
+                next.textContent = lang === 'zh' ? '下一题' : 'Next question';
                 next.addEventListener('click', () => {
                     renderQuestion();
                 });
@@ -185,6 +249,116 @@
         root.appendChild(feedback);
         updateUI();
     }
+
+    // 6. 监听语言切换事件
+    document.addEventListener('circlelearn:langchange', () => {
+        // 保存当前状态
+        saveGameState();
+        localStorage.setItem('quizAnsweredCount', answeredCount.toString());
+        localStorage.setItem('quizTotalCorrect', totalCorrect.toString());
+        
+        // 重新渲染当前题目，保持当前题目不变
+        if (currentQuestion) {
+            // 保存当前题目信息
+            const currentQ = currentQuestion;
+            const currentAnsweredCount = answeredCount;
+            
+            // 重新渲染
+            root.innerHTML = '';
+            
+            const title = document.createElement('p');
+            title.className = 'quiz-question';
+            title.textContent = `${currentAnsweredCount}. ${currentQ.question}`;
+
+            const statusCard = document.createElement('div');
+            statusCard.style.marginBottom = '16px';
+            statusCard.style.padding = '12px';
+            statusCard.style.borderRadius = '12px';
+            statusCard.style.border = '1px solid var(--gray-200)';
+            statusCard.style.background = 'var(--gray-50)';
+            statusCard.style.color = '#000000';
+            
+            // 检查是否为深色模式
+            if (document.body.classList.contains('dark-mode')) {
+                statusCard.style.color = '#FFFFFF';
+                statusCard.style.background = '#1E4A2D';
+                statusCard.style.border = '1px solid #2E5A3D';
+            }
+            
+            const lang = getCurrentLang();
+            const levelText = lang === 'zh' ? '当前等级：' : 'Current Level: ';
+            const streakText = lang === 'zh' ? '连对：' : 'Streak: ';
+            const accuracyText = lang === 'zh' ? '正确率：' : 'Accuracy: ';
+            const weakText = lang === 'zh' ? '薄弱知识点：' : 'Weak topics: ';
+
+            statusCard.innerHTML = `
+                <div style="display:flex;gap:16px;flex-wrap:wrap;align-items:center;justify-content:space-between;margin-bottom:8px;">
+                    <span><strong>${levelText}</strong> <span id="currentLevel">L1</span></span>
+                    <span><strong>${streakText}</strong> <span id="correctStreak">0</span>/3</span>
+                    <span><strong>${accuracyText}</strong> <span id="accuracyRate">0%</span></span>
+                </div>
+                <div style="height:8px;background:var(--gray-200);border-radius:999px;overflow:hidden;margin-bottom:8px;">
+                    <div id="levelProgressBar" style="width:0%;height:100%;background:var(--primary);transition:width .25s ease;"></div>
+                </div>
+                <div><strong>${weakText}</strong> <span id="weakTags">None</span></div>
+            `;
+
+            root.appendChild(statusCard);
+            root.appendChild(title);
+
+            const opts = document.createElement('div');
+            opts.className = 'quiz-options';
+
+            const feedback = document.createElement('div');
+            feedback.className = 'quiz-feedback';
+            feedback.id = 'quizFeedback';
+
+            currentQ.options.forEach((text, i) => {
+                const b = document.createElement('button');
+                b.type = 'button';
+                b.className = 'quiz-option-btn';
+                b.textContent = text;
+                b.addEventListener('click', () => {
+                    opts.querySelectorAll('button').forEach((btn) => {
+                        btn.disabled = true;
+                    });
+
+                    const correct = handleUserAnswer(i, currentQ.correctIndex, currentQ.category || 'general');
+                    feedback.classList.add('show');
+                    feedback.classList.remove('correct', 'wrong');
+                    feedback.classList.add(correct ? 'correct' : 'wrong');
+                    
+                    const correctText = lang === 'zh' ? '正确！' : 'Correct! ';
+                    const wrongText = lang === 'zh' ? '不对哦。' : 'Not quite. ';
+                    feedback.textContent = correct
+                        ? `${correctText} ${currentQ.explanation}`
+                        : `${wrongText} ${currentQ.explanation}`;
+
+                    const oldNext = root.querySelector('#quizNextBtn');
+                    if (oldNext) oldNext.remove();
+
+                    const next = document.createElement('button');
+                    next.id = 'quizNextBtn';
+                    next.type = 'button';
+                    next.className = 'btn btn-primary';
+                    next.style.marginTop = '24px';
+                    next.textContent = lang === 'zh' ? '下一题' : 'Next question';
+                    next.addEventListener('click', () => {
+                        renderQuestion();
+                    });
+                    root.appendChild(next);
+                });
+                opts.appendChild(b);
+            });
+
+            root.appendChild(opts);
+            root.appendChild(feedback);
+            updateUI();
+        } else {
+            // 如果没有当前题目，渲染新题目
+            renderQuestion();
+        }
+    });
 
     renderQuestion();
 })();

@@ -10,8 +10,8 @@
 }
 
 body.dark-mode .header {
-    background-color: var(--gray-900);
-    border-bottom-color: var(--gray-800);
+    background-color: #0F2A17;
+    border-bottom-color: #1E3A27;
 }
 
 .nav {
@@ -42,7 +42,7 @@ body.dark-mode .header {
 
 .logo-text {
     font-weight: 700;
-    font-size: 20px;
+    font-size: 1.25rem;
     color: var(--text);
 }
 
@@ -51,7 +51,7 @@ body.dark-mode .header {
     left: 50px;
     display: flex;
     gap: 32px;
-    font-size: 20px;
+    font-size: 1.25rem;
     
 }
 
@@ -115,12 +115,59 @@ body.dark-mode .settings-menu {
     padding: 10px 12px;
     border-radius: 8px;
     cursor: pointer;
-    font-size: 14px;
+    font-size: 0.875rem;
     text-decoration: none;
 }
 
 .settings-item:hover {
     background-color: var(--gray-100);
+}
+
+body.dark-mode .font-controls button {
+    background: var(--gray-800);
+    border-color: var(--gray-600);
+    color: var(--text);
+}
+
+.font-controls button {
+    width: 32px;
+    height: 32px;
+    border: 1px solid var(--gray-200);
+    border-radius: 6px;
+    background: var(--gray-50);
+    color: var(--text);
+    font-size: 0.875rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+body.dark-mode .font-controls button {
+    background: var(--gray-800);
+    border-color: var(--gray-600);
+    color: var(--text);
+}
+
+.font-controls button:hover {
+    border-color: var(--primary);
+    color: var(--primary);
+}
+
+.font-controls button.active {
+    background: var(--primary);
+    border-color: var(--primary);
+    color: white;
+}
+
+body.dark-mode .settings-item:hover {
+    background-color: var(--gray-800);
+}
+
+.font-controls {
+    display: flex;
+    gap: 4px;
 }
 
 .settings-link {
@@ -535,14 +582,14 @@ body.dark-mode .select .option:hover {
 }
 
 .section-title {
-    font-size: 32px;
+    font-size: 2rem;
     font-weight: 700;
     color: var(--text);
     margin-bottom: 16px;
 }
 
 .section-subtitle {
-    font-size: 18px;
+    font-size: 1.125rem;
     color: var(--text-muted);
 }
 

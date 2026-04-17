@@ -12,7 +12,6 @@
     <link rel="stylesheet" href="../css/layout.css">
     <link rel="stylesheet" href="../css/components/buttons.css">
     <link rel="stylesheet" href="../css/pages/game.css">
-    <!-- 游戏子页面样式（按需加载） -->
     <link rel="stylesheet" href="../css/pages/pi-sniper.css">
     <link rel="stylesheet" href="../css/pages/gravity-slingshot.css">
     <link rel="stylesheet" href="../css/pages/angle-hunter.css">
@@ -102,7 +101,6 @@
         </div>
     </header>
 
-    <!-- ===== 游戏选择视图 ===== -->
     <section class="page-subhero" id="gameMenuHero">
         <div class="container">
             <h1 class="page-subhero-title" data-game-i18n="game.select.title">Choose a Game</h1>
@@ -114,7 +112,6 @@
     <main class="page-content" id="gameMenuMain">
         <div class="container">
             <div class="game-grid">
-                <!-- 引力弹弓 -->
                 <div class="game-card" id="cardSlingshot">
                     <div class="game-card-preview">
                         <canvas id="previewSlingshot"></canvas>
@@ -136,7 +133,6 @@
                     </div>
                 </div>
 
-                <!-- 圆周狙击 -->
                 <div class="game-card" id="cardSniper">
                     <div class="game-card-preview">
                         <canvas id="previewSniper"></canvas>
@@ -158,30 +154,6 @@
                     </div>
                 </div>
 
-                <!-- 角度猎人 -->
-                <!--
-                <div class="game-card" id="cardHunter">
-                    <div class="game-card-preview">
-                        <canvas id="previewHunter"></canvas>
-                        <span class="game-card-tag" data-game-i18n="game.hunter.tag">Angle Puzzle</span>
-                    </div>
-                    <div class="game-card-info">
-                        <h3 data-game-i18n="game.hunter.name">Angle Hunter</h3>
-                        <p data-game-i18n="game.hunter.desc">Drag vertices on the circle to discover hidden angles!
-                            Master Thales' theorem, inscribed angles, and cyclic quadrilateral properties.</p>
-                        <div class="game-knowledge-tags">
-                            <span class="knowledge-tag">Thales' Theorem</span>
-                            <span class="knowledge-tag">Inscribed Angle</span>
-                            <span class="knowledge-tag">Cyclic Quad</span>
-                            <span class="knowledge-tag">Same Arc</span>
-                        </div>
-                        <button type="button" class="btn btn-primary btn-primary-full game-play-btn" id="btnPlayHunter"
-                            data-game-i18n="game.play">Play Now</button>
-                    </div>
-                </div>
-                -->
-
-                <!-- 弦之裂变 -->
                 <div class="game-card" id="cardChord">
                     <div class="game-card-preview">
                         <canvas id="previewChord"></canvas>
@@ -205,7 +177,6 @@
         </div>
     </main>
 
-    <!-- ===== 圆周狙击游戏视图 ===== -->
     <div class="game-page-view" id="sniperView" style="display:none;">
         <div class="game-header-bar">
             <div class="game-header-left">
@@ -264,7 +235,6 @@
         </div>
     </div>
 
-    <!-- ===== 引力弹弓游戏视图 ===== -->
     <div class="game-page-view" id="slingshotView" style="display:none;">
         <div class="game-header-bar">
             <div class="game-header-left">
@@ -314,7 +284,6 @@
         </div>
     </div>
 
-    <!-- ===== 角度猎人游戏视图 ===== -->
     <div class="game-page-view" id="hunterView" style="display:none;">
         <div class="game-header-bar">
             <div class="game-header-left">
@@ -371,7 +340,6 @@
         </div>
     </div>
 
-    <!-- ===== 弦之裂变游戏视图 ===== -->
     <div class="game-page-view" id="chordView" style="display:none;">
         <div class="game-header-bar">
             <div class="game-header-left">
