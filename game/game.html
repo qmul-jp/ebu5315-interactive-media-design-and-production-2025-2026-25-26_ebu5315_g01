@@ -226,10 +226,23 @@
                 <p class="game-record-badge" id="sniperRecordBadge" style="display:none;"
                     data-game-i18n="sniper.newRecord">New Record!</p>
                 <div class="game-overlay-buttons">
+                    <button type="button" class="btn btn-primary" id="sniperReportBtn"
+                        data-game-i18n="sniper.report.viewReport">View Report</button>
                     <button type="button" class="btn btn-primary" id="sniperRestartBtn"
                         data-game-i18n="sniper.restart">Restart</button>
                     <button type="button" class="btn btn-outline" id="sniperMenuBtn"
                         data-game-i18n="sniper.backToMenu">Back to Menu</button>
+                </div>
+            </div>
+        </div>
+        <!-- 练习报告弹窗 -->
+        <div class="game-overlay" id="sniperReportOverlay" style="display:none;">
+            <div class="game-overlay-panel" style="max-width:420px;text-align:left;">
+                <h2 data-game-i18n="sniper.report.title" style="text-align:center;margin-bottom:16px;">Session Report</h2>
+                <div id="sniperReportContent" style="font-size:14px;line-height:1.8;color:#CBD5E1;"></div>
+                <div class="game-overlay-buttons" style="margin-top:16px;">
+                    <button type="button" class="btn btn-primary" id="sniperReportCloseBtn"
+                        data-game-i18n="sniper.report.close">Close</button>
                 </div>
             </div>
         </div>
