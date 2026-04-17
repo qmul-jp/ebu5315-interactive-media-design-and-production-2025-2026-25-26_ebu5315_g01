@@ -92,6 +92,71 @@
                 });
             }
         });
+
+        // 练习报告按钮
+        const reportBtn = document.getElementById('sniperReportBtn');
+        if (reportBtn) {
+            reportBtn.addEventListener('click', () => {
+                GameAudio.playClick();
+                const endOverlay = document.getElementById('sniperEndOverlay');
+                const reportOverlay = document.getElementById('sniperReportOverlay');
+                if (endOverlay) endOverlay.style.display = 'none';
+                if (reportOverlay) reportOverlay.style.display = 'flex';
+                // 填充报告内容
+                const reportContent = document.getElementById('sniperReportContent');
+                if (reportContent && window.piSniperReport) {
+                    const r = window.piSniperReport;
+                    const lang = GameI18N.getLang();
+                    const t = GameI18N.t.bind(GameI18N);
+                    let html = '';
+                    html += `<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;">`;
+                    html += `<div style="background:rgba(30,41,59,0.8);padding:8px 12px;border-radius:6px;"><span style="color:#94A3B8;">${t('sniper.report.hitRate')}</span><br><strong style="color:#F8FAFC;font-size:18px;">${r.hitRate}%</strong></div>`;
+                    html += `<div style="background:rgba(30,41,59,0.8);padding:8px 12px;border-radius:6px;"><span style="color:#94A3B8;">${t('sniper.report.maxCombo')}</span><br><strong style="color:#F8FAFC;font-size:18px;">${r.maxCombo}</strong></div>`;
+                    html += `</div>`;
+                    html += `<div style="display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-bottom:12px;">`;
+                    const grades = [
+                        { label: t('sniper.report.perfectCount'), value: r.stats.perfects, color: '#F59E0B' },
+                        { label: t('sniper.report.excellentCount'), value: r.stats.excellents, color: '#22C55E' },
+                        { label: t('sniper.report.goodCount'), value: r.stats.goods, color: '#60A5FA' },
+                        { label: t('sniper.report.hitCount'), value: r.stats.hits, color: '#94A3B8' },
+                        { label: t('sniper.report.missCount'), value: r.stats.misses, color: '#EF4444' },
+                    ];
+                    grades.forEach(g => {
+                        html += `<div style="background:rgba(30,41,59,0.8);padding:6px;border-radius:6px;text-align:center;">`;
+                        html += `<div style="color:${g.color};font-size:16px;font-weight:bold;">${g.value}</div>`;
+                        html += `<div style="color:#94A3B8;font-size:11px;">${g.label}</div>`;
+                        html += `</div>`;
+                    });
+                    html += `</div>`;
+                    html += `<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;">`;
+                    html += `<div style="background:rgba(30,41,59,0.8);padding:8px 12px;border-radius:6px;"><span style="color:#94A3B8;">${t('sniper.report.frenzyCount')}</span><br><strong style="color:#F59E0B;">${r.stats.frenzyCount}</strong></div>`;
+                    html += `<div style="background:rgba(30,41,59,0.8);padding:8px 12px;border-radius:6px;"><span style="color:#94A3B8;">${t('sniper.report.bossDefeated')}</span><br><strong style="color:#A78BFA;">${r.stats.bossDefeated}</strong></div>`;
+                    html += `</div>`;
+                    // 薄弱角度区间
+                    if (r.weakRanges && r.weakRanges.length > 0) {
+                        html += `<div style="background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);border-radius:6px;padding:10px;margin-top:8px;">`;
+                        html += `<div style="color:#FCA5A5;font-weight:bold;margin-bottom:6px;">⚠ ${t('sniper.report.weakAngles')}</div>`;
+                        r.weakRanges.forEach(w => {
+                            html += `<div style="color:#FECACA;font-size:13px;">${w.range}: ${w.rate}% ${t('sniper.report.practiceMore')}</div>`;
+                        });
+                        html += `</div>`;
+                    }
+                    reportContent.innerHTML = html;
+                }
+            });
+        }
+
+        // 关闭报告按钮
+        const reportCloseBtn = document.getElementById('sniperReportCloseBtn');
+        if (reportCloseBtn) {
+            reportCloseBtn.addEventListener('click', () => {
+                GameAudio.playClick();
+                const reportOverlay = document.getElementById('sniperReportOverlay');
+                const endOverlay = document.getElementById('sniperEndOverlay');
+                if (reportOverlay) reportOverlay.style.display = 'none';
+                if (endOverlay) endOverlay.style.display = 'flex';
+            });
+        }
     }
 
     // ===== 预览动画 =====

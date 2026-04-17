@@ -157,6 +157,60 @@ const GameAudio = (() => {
         playTone(311, 'sine', 0.5, 0.2, 0.4);
     }
 
+    // ===== 圆周狙击 - Boss战音效 =====
+    function playBossWarning() {
+        for (let i = 0; i < 4; i++) {
+            playTone(220, 'square', 0.15, 0.2, i * 0.12);
+            playTone(330, 'square', 0.15, 0.15, i * 0.12 + 0.06);
+        }
+    }
+
+    function playBossShieldBreak() {
+        playNoise(0.15, 0.25);
+        playTone(600, 'sawtooth', 0.1, 0.2);
+        playTone(900, 'sawtooth', 0.15, 0.15, 0.05);
+    }
+
+    function playBossDefeated() {
+        playTone(523, 'sine', 0.2, 0.3, 0);
+        playTone(659, 'sine', 0.2, 0.3, 0.1);
+        playTone(784, 'sine', 0.2, 0.3, 0.2);
+        playTone(1047, 'sine', 0.4, 0.35, 0.3);
+        playTone(1319, 'sine', 0.5, 0.3, 0.45);
+    }
+
+    function playBossHit() {
+        playTone(440, 'sine', 0.1, 0.2);
+        playTone(550, 'sine', 0.1, 0.15, 0.05);
+    }
+
+    // ===== 圆周狙击 - 道具音效 =====
+    function playPowerupSpawn() {
+        playTone(880, 'sine', 0.08, 0.15);
+        playTone(1100, 'sine', 0.08, 0.12, 0.04);
+        playTone(1320, 'sine', 0.1, 0.1, 0.08);
+    }
+
+    function playPowerupPickup() {
+        playTone(660, 'sine', 0.1, 0.2);
+        playTone(880, 'sine', 0.1, 0.2, 0.06);
+        playTone(1100, 'sine', 0.15, 0.2, 0.12);
+    }
+
+    function playPowerupActivate() {
+        playTone(523, 'sine', 0.15, 0.25);
+        playTone(784, 'sine', 0.15, 0.25, 0.08);
+        playTone(1047, 'sine', 0.2, 0.2, 0.16);
+    }
+
+    // ===== 圆周狙击 - 成就音效 =====
+    function playAchievement() {
+        playTone(784, 'sine', 0.15, 0.2, 0);
+        playTone(988, 'sine', 0.15, 0.2, 0.1);
+        playTone(1175, 'sine', 0.15, 0.2, 0.2);
+        playTone(1568, 'sine', 0.3, 0.25, 0.3);
+    }
+
     // ===== 通用 =====
     function playClick() {
         playTone(600, 'sine', 0.05, 0.1);
@@ -188,6 +242,9 @@ const GameAudio = (() => {
         init, resume,
         playLaunch, playHitWormhole, playCollision, playStarRating,
         playShoot, playPerfect, playExcellent, playGood, playMiss, playCombo, playFrenzy, playTick, playGameOver,
+        playBossWarning, playBossShieldBreak, playBossDefeated, playBossHit,
+        playPowerupSpawn, playPowerupPickup, playPowerupActivate,
+        playAchievement,
         playClick,
         setVolume, getVolume, setEnabled, isEnabled, initSettings
     };
