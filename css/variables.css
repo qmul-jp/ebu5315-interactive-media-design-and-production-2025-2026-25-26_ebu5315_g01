@@ -2,6 +2,10 @@
 :root {
     --primary: #2563EB;
     --secondary: #22C55E;
+    --accent-warm: #D97706;
+    --accent-warm-2: #EA580C;
+    --accent-warm-soft: #FDE3A7;
+    --accent-warm-deep: #7C2D12;
     --background: #F8FAFC;
     --text: #0F172A;
     --text-muted: #64748B;

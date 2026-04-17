@@ -188,6 +188,270 @@ body.dark-mode .theorem-icon {
     gap: 12px;
 }
 
+/* 首页定理卡：点击翻转（保留 hover 抬升） */
+.theorem-card--flip {
+    position: relative;
+    padding: 0;
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    perspective: 1100px;
+    min-height: 268px;
+    cursor: pointer;
+    overflow: visible;
+}
+
+.theorem-card-spotlight .theorem-card--flip {
+    min-height: 268px;
+}
+
+.theorem-card--flip:focus-visible {
+    outline: 3px solid rgba(245, 158, 11, 0.55);
+    outline-offset: 3px;
+}
+
+.theorem-card--flip .theorem-card-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    min-height: inherit;
+    transform-style: preserve-3d;
+    transition: transform 0.82s cubic-bezier(0.22, 0.86, 0.3, 1.04);
+}
+
+.theorem-card--flip.is-flipped .theorem-card-inner {
+    transform: rotateY(180deg);
+}
+
+.theorem-card--flip .theorem-card-face {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    border-radius: 12px;
+    border: 1px solid var(--gray-200);
+    padding: 24px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    overflow: hidden;
+    transition:
+        border-color 0.42s ease,
+        box-shadow 0.42s ease,
+        background 0.42s ease,
+        color 0.42s ease;
+}
+
+.theorem-card--flip .theorem-card-front {
+    background-color: #FAF5F2;
+    transform: translateZ(1px);
+}
+
+body.dark-mode .theorem-card--flip .theorem-card-front {
+    background-color: var(--gray-800);
+    border-color: var(--gray-700);
+}
+
+.theorem-card--flip .theorem-card-back {
+    justify-content: flex-start;
+    gap: 10px;
+    --flip-glow: rgba(255, 255, 255, 0.28);
+    --flip-glow-pos: 92% 10%;
+    --flip-grad-angle: 138deg;
+    --flip-c1: var(--accent-warm-soft);
+    --flip-c2: #f4c777;
+    --flip-c3: #eb9a4a;
+    --flip-c4: var(--accent-warm-2);
+    background:
+        radial-gradient(circle at var(--flip-glow-pos), var(--flip-glow), transparent 34%),
+        linear-gradient(var(--flip-grad-angle), var(--flip-c1) 0%, var(--flip-c2) 40%, var(--flip-c3) 70%, var(--flip-c4) 100%);
+    border-color: rgba(217, 119, 6, 0.42);
+    color: var(--accent-warm-deep);
+    transform: rotateY(180deg) translateZ(1px);
+}
+
+body.dark-mode .theorem-card--flip .theorem-card-back {
+    --flip-glow: rgba(255, 255, 255, 0.2);
+    --flip-c1: #7c2d12;
+    --flip-c2: #9a3412;
+    --flip-c3: #c2410c;
+    --flip-c4: #f97316;
+    border-color: rgba(251, 146, 60, 0.55);
+    color: #ffedd5;
+}
+
+.theorem-card--flip .theorem-card-back.theorem-card-back--v1 {
+    background:
+        radial-gradient(circle at 86% 10%, rgba(255, 250, 230, 0.4), transparent 33%),
+        radial-gradient(circle at 18% 76%, rgba(255, 240, 190, 0.22), transparent 30%),
+        linear-gradient(136deg, #faeccd 0%, #f7d58f 36%, #e89c49 70%, #d1731f 100%);
+    border-color: rgba(201, 103, 22, 0.45);
+}
+
+.theorem-card--flip .theorem-card-back.theorem-card-back--v2 {
+    background:
+        radial-gradient(circle at 16% 16%, rgba(255, 255, 255, 0.5), transparent 23%),
+        radial-gradient(circle at 85% 78%, rgba(255, 215, 120, 0.3), transparent 34%),
+        linear-gradient(92deg, #f7e7c4 0%, #f3c97f 32%, #df8934 65%, #b75512 100%);
+    border-color: rgba(191, 93, 19, 0.45);
+}
+
+.theorem-card--flip .theorem-card-back.theorem-card-back--v3 {
+    background:
+        radial-gradient(circle at 80% 76%, rgba(255, 238, 194, 0.26), transparent 28%),
+        radial-gradient(circle at 18% 18%, rgba(255, 255, 240, 0.2), transparent 26%),
+        linear-gradient(158deg, #efd89f 0%, #e4ab5c 39%, #cd6f23 67%, #a54610 100%);
+    border-color: rgba(182, 83, 18, 0.45);
+}
+
+.theorem-card--flip .theorem-card-back.theorem-card-back--v4 {
+    background:
+        radial-gradient(circle at 76% 12%, rgba(255, 255, 255, 0.42), transparent 24%),
+        radial-gradient(circle at 18% 74%, rgba(255, 189, 140, 0.24), transparent 33%),
+        linear-gradient(178deg, #fbeacf 0%, #f2c57d 38%, #d98034 67%, #a3450f 100%);
+    border-color: rgba(174, 71, 14, 0.45);
+}
+
+.theorem-card--flip .theorem-card-back.theorem-card-back--v5 {
+    background:
+        radial-gradient(circle at 22% 11%, rgba(255, 247, 218, 0.36), transparent 32%),
+        radial-gradient(circle at 84% 84%, rgba(255, 218, 132, 0.17), transparent 33%),
+        linear-gradient(146deg, #f4d8a6 0%, #e8aa55 34%, #d1732a 80%, #a94a0f 100%);
+    border-color: rgba(168, 68, 14, 0.45);
+}
+
+.theorem-card--flip .theorem-card-back.theorem-card-back--v6 {
+    background:
+        radial-gradient(circle at 83% 24%, rgba(255, 255, 255, 0.45), transparent 22%),
+        radial-gradient(circle at 20% 12%, rgba(255, 166, 120, 0.24), transparent 30%),
+        linear-gradient(270deg, #f8e8c5 0%, #efbc73 37%, #cf7328 70%, #963f0d 100%);
+    border-color: rgba(178, 79, 16, 0.45);
+}
+
+.theorem-card--flip .theorem-card-back.theorem-card-back--v7 {
+    background:
+        radial-gradient(circle at 18% 73%, rgba(255, 243, 206, 0.34), transparent 31%),
+        radial-gradient(circle at 86% 14%, rgba(255, 229, 160, 0.2), transparent 29%),
+        linear-gradient(168deg, #f0d79b 0%, #e2a454 39%, #c96d24 67%, #96410d 100%);
+    border-color: rgba(159, 61, 12, 0.45);
+}
+
+.theorem-card--flip .theorem-card-back.theorem-card-back--v8 {
+    background:
+        radial-gradient(circle at 84% 13%, rgba(255, 255, 255, 0.4), transparent 25%),
+        radial-gradient(circle at 13% 78%, rgba(255, 130, 160, 0.15), transparent 31%),
+        linear-gradient(8deg, #f9e8c8 0%, #f1c17a 42%, #d67f34 68%, #a64c12 100%);
+    border-color: rgba(171, 74, 16, 0.45);
+}
+
+body.dark-mode .theorem-card--flip .theorem-card-back.theorem-card-back--v1 {
+    background:
+        radial-gradient(circle at 88% 11%, rgba(255, 228, 185, 0.16), transparent 32%),
+        linear-gradient(136deg, #68270e 0%, #7e2f10 36%, #a74214 71%, #d46a1a 100%);
+}
+
+body.dark-mode .theorem-card--flip .theorem-card-back.theorem-card-back--v2 {
+    background:
+        radial-gradient(circle at 16% 16%, rgba(255, 240, 206, 0.2), transparent 23%),
+        radial-gradient(circle at 85% 78%, rgba(255, 156, 66, 0.18), transparent 34%),
+        linear-gradient(92deg, #5b220d 0%, #7a2d10 34%, #aa4316 66%, #d46a1d 100%);
+}
+
+body.dark-mode .theorem-card--flip .theorem-card-back.theorem-card-back--v3 {
+    background:
+        radial-gradient(circle at 80% 76%, rgba(255, 220, 170, 0.14), transparent 30%),
+        linear-gradient(158deg, #54200c 0%, #6d2a0f 38%, #973d14 67%, #bd5618 100%);
+}
+
+body.dark-mode .theorem-card--flip .theorem-card-back.theorem-card-back--v4 {
+    background:
+        radial-gradient(circle at 76% 12%, rgba(255, 236, 192, 0.19), transparent 24%),
+        radial-gradient(circle at 18% 74%, rgba(255, 132, 83, 0.14), transparent 32%),
+        linear-gradient(178deg, #56210c 0%, #742c0f 38%, #a64216 68%, #dc751f 100%);
+}
+
+body.dark-mode .theorem-card--flip .theorem-card-back.theorem-card-back--v5 {
+    background:
+        radial-gradient(circle at 24% 11%, rgba(255, 227, 181, 0.15), transparent 32%),
+        linear-gradient(146deg, #4f1e0b 0%, #68280e 34%, #923913 69%, #b94f17 100%);
+}
+
+body.dark-mode .theorem-card--flip .theorem-card-back.theorem-card-back--v6 {
+    background:
+        radial-gradient(circle at 83% 24%, rgba(255, 240, 208, 0.2), transparent 22%),
+        radial-gradient(circle at 20% 12%, rgba(255, 123, 78, 0.14), transparent 30%),
+        linear-gradient(270deg, #57220d 0%, #793011 37%, #a94718 70%, #dd7622 100%);
+}
+
+body.dark-mode .theorem-card--flip .theorem-card-back.theorem-card-back--v7 {
+    background:
+        radial-gradient(circle at 18% 73%, rgba(255, 218, 164, 0.14), transparent 30%),
+        linear-gradient(168deg, #4a1b0a 0%, #62240d 40%, #8e3512 67%, #b84d17 100%);
+}
+
+body.dark-mode .theorem-card--flip .theorem-card-back.theorem-card-back--v8 {
+    background:
+        radial-gradient(circle at 84% 13%, rgba(255, 236, 199, 0.18), transparent 25%),
+        radial-gradient(circle at 13% 78%, rgba(255, 92, 120, 0.12), transparent 30%),
+        linear-gradient(8deg, #5a220d 0%, #7a3011 40%, #aa4a19 68%, #d36d22 100%);
+}
+
+.theorem-card--flip .theorem-title--back {
+    margin: 0 0 10px;
+    font-size: 19px;
+    color: inherit;
+}
+
+.theorem-card--flip .theorem-back-text {
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.6;
+    color: inherit;
+    display: -webkit-box;
+    line-clamp: 5;
+    -webkit-line-clamp: 5;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.theorem-card--flip .theorem-back-hint {
+    margin-top: auto;
+    display: inline-flex;
+    align-items: center;
+    align-self: flex-start;
+    padding: 5px 9px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.01em;
+    border: 1px solid rgba(154, 52, 18, 0.25);
+    background: rgba(255, 255, 255, 0.45);
+    color: inherit;
+}
+
+body.dark-mode .theorem-card--flip .theorem-back-hint {
+    border-color: rgba(255, 237, 213, 0.35);
+    background: rgba(0, 0, 0, 0.2);
+}
+
+.theorem-card--flip:hover {
+    transform: translateY(-4px);
+}
+
+.theorem-card--flip:hover .theorem-card-face {
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
+}
+
+body.dark-mode .theorem-card--flip:hover .theorem-card-face {
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.26);
+}
+
+.theorem-card--flip:not(.is-flipped):hover .theorem-icon {
+    background-color: var(--primary);
+    color: #fff;
+    transform: scale(1.1);
+}
+
 .features-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);

@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="../css/base.css">
     <link rel="stylesheet" href="../css/layout.css">
     <link rel="stylesheet" href="../css/components/buttons.css">
-    <link rel="stylesheet" href="../css/pages/learn_more.css">
+    <link rel="stylesheet" href="../css/pages/learn_more.css"
 </head>
 <body class="learn-more-page">
     <header class="header">
@@ -80,25 +80,9 @@
                                 ></path>
                             </svg>
                         </button>
-                        <div class="settings-menu" id="navContactSelectOptions" role="menu" aria-label="Settings menu">
-                            <button type="button" class="settings-item" id="menuLangToggle" role="menuitem">
-                                <span data-i18n="settings.language">语言</span>
-                                <span class="settings-value" id="menuLangValue">EN</span>
-                            </button>
-                            <button type="button" class="settings-item" id="menuThemeToggle" role="menuitem">
-                                <span data-i18n="settings.theme">护眼模式</span>
-                                <span class="settings-value" id="menuThemeValue">关</span>
-                            </button>
-                            <div class="settings-item" role="menuitem">
-                                <span data-i18n="settings.fontSize">字体大小</span>
-                                <div class="font-controls">
-                                    <button type="button" id="fontSmall" aria-label="Small font">A-</button>
-                                    <button type="button" id="fontMedium" aria-label="Medium font">A</button>
-                                    <button type="button" id="fontLarge" aria-label="Large font">A+</button>
-                                </div>
-                            </div>
-                            <a href="../contact/contact.html" class="settings-item settings-link" role="menuitem" data-i18n="settings.contact">Contact Us</a>
-                            <a href="../index.html#support-us" class="settings-item settings-link option-support" role="menuitem" data-i18n="settings.support">Support Us</a>
+                        <div class="options" id="navContactSelectOptions">
+                            <a href="../contact/contact.html" class="option" data-i18n="settings.contact">Contact Us</a>
+                            <a href="../index.html#support-us" class="option option-support" data-i18n="settings.support">Support Us</a>
                         </div>
                     </div>
                 </div>
@@ -194,6 +178,7 @@
                     <span class="learn-sections-tier-badge" title="基础定理" data-i18n="learn.tier.basic.badge">Basic</span>
                     <div class="learn-sections-intro-copy">
                         <h2 class="learn-sections-tier-heading"><span class="learn-sections-tier-heading-en" data-i18n="learn.tier.basic.heading">The following 8 theorems belong to the basic theorems</span></h2>
+                        
                     </div>
                 </div>
             </header>
@@ -208,6 +193,7 @@
                         <h2 class="learn-theorem-title" data-i18n="learn.basic.angleCentre.title">Angle at the Centre</h2>
                         <p class="learn-theorem-statement" data-i18n="learn.basic.angleCentre.statement">The angle subtended at the centre of a circle is twice the angle subtended at any point on the circumference, from the same arc.</p>
                         <p class="learn-theorem-detail" data-i18n="learn.basic.angleCentre.detail">If two chords from the same arc meet at the centre and at the rim, the central angle is the larger one. This links inscribed angles to arc geometry and is a foundation for many circle proofs.</p>
+                        
                     </div>
                     <div class="learn-theorem-visual">
                         <img src="../assets/images/homepage/Angle at the Centre.png" alt="Diagram: angle at the centre and angle at the circumference">
@@ -225,6 +211,7 @@
                         <h2 class="learn-theorem-title" data-i18n="learn.basic.anglesSemicircle.title">Angles in a Semicircle</h2>
                         <p class="learn-theorem-statement" data-i18n="learn.basic.anglesSemicircle.statement">Any angle inscribed in a semicircle is a right angle (90°).</p>
                         <p class="learn-theorem-detail" data-i18n="learn.basic.anglesSemicircle.detail">The diameter is the chord across the flat side of the semicircle. This is the special case of the angle-at-centre rule when the central angle is 180°.</p>
+                        
                     </div>
                     <div class="learn-theorem-visual">
                         <img src="../assets/images/homepage/Angles in Semicircle.png" alt="Diagram: right angle in a semicircle">
@@ -326,6 +313,7 @@
                         <h2 class="learn-theorem-title" data-i18n="learn.basic.tangentsPoint2.title">Tangents from a Point (II)</h2>
                         <p class="learn-theorem-statement" data-i18n="learn.basic.tangentsPoint2.statement">The line from the external point to the centre bisects the angle between the two tangents, and bisects the angle between the two radii to the contact points.</p>
                         <p class="learn-theorem-detail" data-i18n="learn.basic.tangentsPoint2.detail">Symmetry about the line through the external point and centre creates matched angles and distances. This is useful in loci and structured geometry proofs.</p>
+                        
                     </div>
                     <div class="learn-theorem-visual">
                         <img src="../assets/images/homepage/Tangents from a Point to a Circle II.png" alt="Diagram: symmetry of tangents and centre line">
@@ -368,11 +356,211 @@
                     <div class="learn-theorem-body">
                         <div class="learn-theorem-badges">
                             <span class="learn-theorem-tier"><span class="learn-theorem-tier-en" data-i18n="learn.tier.advanced.badge">Advanced</span></span>
+                            <span class="learn-theorem-index"><span data-i18n="learn.theoremIndexPrefix">Theorem</span> 1</span>
                         </div>
+                        <h2 class="learn-theorem-title" data-i18n="learn.advPerpendicularDiameter.title">Perpendicular Diameter Theorem</h2>
+                        <p class="learn-theorem-statement" data-i18n="learn.advPerpendicularDiameter.statement">A diameter perpendicular to a chord bisects the chord and also bisects the two arcs subtended by that chord.</p>
+                        <p class="learn-theorem-detail" data-i18n="learn.advPerpendicularDiameter.detail">If a diameter meets chord AB at a right angle at point M, then AM = MB. By symmetry about that diameter, the minor arc AB is split into two equal arcs, and the corresponding major arc is also split into two equal arcs.</p>
+                        <div class="learn-theorem-tip">
+                            <span class="learn-theorem-tip-icon">!</span>
+                            <span><strong data-i18n="learn.advPerpendicularDiameter.tipStrong">Note:</strong> <span data-i18n="learn.advPerpendicularDiameter.tip">In proofs, mark the 90° first, then show the midpoint on the chord, and finally state equal arcs. This order is usually the clearest and earns method marks reliably.</span></span>
                         </div>
+                    </div>
+                    <div class="learn-theorem-visual">
+                        <img src="../assets/images/learn_more/进阶/Perpendicular Diameter Theorem.png" alt="Perpendicular Diameter Theorem diagram">
+                    </div>
+                </div>
+            </article>
+
+            <article id="adv-secant" class="learn-theorem learn-theorem--advanced" data-theorem-tier="advanced">
+                <div class="learn-theorem-inner">
+                    <div class="learn-theorem-body">
+                        <div class="learn-theorem-badges">
+                            <span class="learn-theorem-tier"><span class="learn-theorem-tier-en" data-i18n="learn.tier.advanced.badge">Advanced</span></span>
+                            <span class="learn-theorem-index"><span data-i18n="learn.theoremIndexPrefix">Theorem</span> 2</span>
+                        </div>
+                        <h2 class="learn-theorem-title" data-i18n="learn.advSecant.title">Secant Theorem</h2>
+                        <p class="learn-theorem-statement" data-i18n="learn.advSecant.statement">When two secant lines are drawn from a point outside a circle, the product of the distances from that point to the two intersection points on one secant equals the same product on the other secant.</p>
+                        <p class="learn-theorem-detail" data-i18n="learn.advSecant.detail">Each secant meets the circle twice; multiply the two segments from the external point along that line. Those two products match—this is the “power of a point” for secants and often appears in length problems.</p>
+                        <div class="learn-theorem-tip">
+                            <span class="learn-theorem-tip-icon">!</span>
+                            <span><strong data-i18n="learn.advSecant.tipStrong">Note:</strong> <span data-i18n="learn.advSecant.tip">Write the four segments in order from the external point along each line; check you are not pairing the wrong chords before multiplying.</span></span>
+                        </div>
+                    </div>
+                    <div class="learn-theorem-visual">
+                        <img src="../assets/images/learn_more/进阶/Secant Theorem.png" alt="Secant Theorem diagram">
+                    </div>
+                </div>
+            </article>
+
+            <article id="adv-intersecting-chords" class="learn-theorem learn-theorem--advanced" data-theorem-tier="advanced">
+                <div class="learn-theorem-inner">
+                    <div class="learn-theorem-body">
+                        <div class="learn-theorem-badges">
+                            <span class="learn-theorem-tier"><span class="learn-theorem-tier-en" data-i18n="learn.tier.advanced.badge">Advanced</span></span>
+                            <span class="learn-theorem-index"><span data-i18n="learn.theoremIndexPrefix">Theorem</span> 3</span>
+                        </div>
+                        <h2 class="learn-theorem-title" data-i18n="learn.advIntersectingChords.title">Intersecting Chords Theorem</h2>
+                        <p class="learn-theorem-statement" data-i18n="learn.advIntersectingChords.statement">For two chords intersecting inside a circle, the products of the lengths of the two segments on each chord are equal.</p>
+                        <p class="learn-theorem-detail" data-i18n="learn.advIntersectingChords.detail">If chords AB and CD meet at point P inside the circle, then AP * PB = CP * PD. This comes from equal angles in similar triangles formed by the intersecting chords, and it is a standard way to find unknown segment lengths.</p>
+                        
+                    </div>
+                    <div class="learn-theorem-visual">
+                        <img src="../assets/images/learn_more/进阶/Intersecting Chords Theorem.png" alt="Intersecting Chords Theorem diagram">
+                    </div>
+                </div>
+            </article>
+
+            <article id="adv-tangent-secant" class="learn-theorem learn-theorem--advanced" data-theorem-tier="advanced">
+                <div class="learn-theorem-inner">
+                    <div class="learn-theorem-body">
+                        <div class="learn-theorem-badges">
+                            <span class="learn-theorem-tier"><span class="learn-theorem-tier-en" data-i18n="learn.tier.advanced.badge">Advanced</span></span>
+                            <span class="learn-theorem-index"><span data-i18n="learn.theoremIndexPrefix">Theorem</span> 4</span>
+                        </div>
+                        <h2 class="learn-theorem-title" data-i18n="learn.advTangentSecant.title">Tangent–Secant Theorem</h2>
+                        <p class="learn-theorem-statement" data-i18n="learn.advTangentSecant.statement">From a point outside a circle, if a tangent and a secant are drawn, the tangent length is the mean proportional of the two secant segments from that point to the circle intersections.</p>
+                        <p class="learn-theorem-detail" data-i18n="learn.advTangentSecant.detail">Let P be the external point, PT the tangent, and the secant meet the circle at A and B (A nearer to P). Then PT^2 = PA * PB. So the tangent length is the geometric mean of the two secant lengths, which is a standard setup for length-solving questions.</p>
+                        
+                    </div>
+                    <div class="learn-theorem-visual">
+                        <img src="../assets/images/learn_more/进阶/Tangent–Secant Theorem.png" alt="Tangent–Secant Theorem diagram">
+                    </div>
+                </div>
+            </article>
+
+            <header class="learn-sections-intro learn-sections-intro--more-advanced" id="more-advanced-theorems">
+                <div class="learn-sections-intro-inner">
+                    <span class="learn-sections-tier-badge" data-i18n="learn.tier.moreAdvanced.badge">更进阶</span>
+                    <div class="learn-sections-intro-copy">
+                        <h2 class="learn-sections-tier-heading"><span data-i18n="learn.tier.moreAdvanced.heading">Further advanced theorems (placeholder copy for each card)</span></h2>
+                    </div>
+                </div>
+            </header>
+
+            <article id="more-tangency-1" class="learn-theorem learn-theorem--more-advanced" data-theorem-tier="more-advanced">
+                <div class="learn-theorem-inner">
+                    <div class="learn-theorem-body">
+                        <div class="learn-theorem-badges">
+                            <span class="learn-theorem-tier"><span class="learn-theorem-tier-en" data-i18n="learn.tier.moreAdvanced.badge">Further Advanced</span></span>
+                            <span class="learn-theorem-index"><span data-i18n="learn.theoremIndexPrefix">Theorem</span> 1</span>
+                        </div>
+                        <h2 class="learn-theorem-title" data-i18n="learn.moreTangency1.title">Point of Tangency 1</h2>
+                        <p class="learn-theorem-statement" data-i18n="learn.moreTangency1.statement">If ∠MNT + ∠PQT = ∠MTP and T lies on both circles, then T is the common point of tangency of the two circles.</p>
+                        <p class="learn-theorem-detail" data-i18n="learn.moreTangency1.detail">The angle condition links the two circle configurations and forces the contact at T to be tangential rather than crossing. Since T is on both circles and the angle sum matches ∠MTP, the shared tangent direction at T is consistent for both circles, so T is their common tangency point.</p>
+                        
+                    </div>
+                    <div class="learn-theorem-visual">
+                        <img src="../assets/images/learn_more/更进阶/Point of Tangency 1.png" alt="Point of Tangency 1 diagram">
+                    </div>
+                </div>
+            </article>
+
+            <article id="more-tangency-2" class="learn-theorem learn-theorem--more-advanced" data-theorem-tier="more-advanced">
+                <div class="learn-theorem-inner">
+                    <div class="learn-theorem-body">
+                        <div class="learn-theorem-badges">
+                            <span class="learn-theorem-tier"><span class="learn-theorem-tier-en" data-i18n="learn.tier.moreAdvanced.badge">Further Advanced</span></span>
+                            <span class="learn-theorem-index"><span data-i18n="learn.theoremIndexPrefix">Theorem</span> 2</span>
+                        </div>
+                        <h2 class="learn-theorem-title" data-i18n="learn.moreTangency2.title">Point of Tangency 2</h2>
+                        <p class="learn-theorem-statement" data-i18n="learn.moreTangency2.statement">If T is a common tangency point of circles O₁ and O₂, then ∠ATB = ∠CTD; conversely, if ∠ATB = ∠CTD, then T is a common tangency point.</p>
+                        <p class="learn-theorem-detail" data-i18n="learn.moreTangency2.detail">This is an equivalence theorem: the common-tangent condition at T and the angle equality condition determine each other. In one direction, tangency gives equal angle relations around T; in the reverse direction, the given angle equality forces the local geometry at T to match the tangency configuration of circles O₁ and O₂.</p>
+                        <div class="learn-theorem-tip">
+                            <span class="learn-theorem-tip-icon">!</span>
+                            <span><strong data-i18n="learn.moreTangency2.tipStrong">Note:</strong> <span data-i18n="learn.moreTangency2.tip">For “if and only if” questions, present both directions separately: first prove tangent => angle equality, then angle equality => tangent. Writing each implication clearly usually gains full method marks.</span></span>
+                        </div>
+                    </div>
+                    <div class="learn-theorem-visual">
+                        <img src="../assets/images/learn_more/更进阶/Point of Tangency 2.png" alt="Point of Tangency 2 diagram">
+                    </div>
+                </div>
+            </article>
+
+            <article id="more-zhangjiao" class="learn-theorem learn-theorem--more-advanced" data-theorem-tier="more-advanced">
+                <div class="learn-theorem-inner">
+                    <div class="learn-theorem-body">
+                        <div class="learn-theorem-badges">
+                            <span class="learn-theorem-tier"><span class="learn-theorem-tier-en" data-i18n="learn.tier.moreAdvanced.badge">Further Advanced</span></span>
+                            <span class="learn-theorem-index"><span data-i18n="learn.theoremIndexPrefix">Theorem</span> 3</span>
+                        </div>
+                        <h2 class="learn-theorem-title" data-i18n="learn.moreZhangjiao.title">Zhangjiao Theorem</h2>
+                        <p class="learn-theorem-statement" data-i18n="learn.moreZhangjiao.statement">∠BAC=α，∠DAC=β，则有：ABsinβ+ADsinα=ACsin(α+β)。</p>
+                        <p class="learn-theorem-detail" data-i18n="learn.moreZhangjiao.detail">This identity can be proved using the Cyclic Quadrilateral theorem together with the Sine Rule.</p>
+                        <div class="learn-theorem-tip">
+                            <span class="learn-theorem-tip-icon">!</span>
+                            <span><strong data-i18n="learn.moreZhangjiao.tipStrong">Note:</strong> <span data-i18n="learn.moreZhangjiao.tip">When applying the formula, define α and β from the exact diagram first, then substitute lengths and angles in one consistent unit mode. Keep angle symbols on your working to avoid swapping α and β.</span></span>
+                        </div>
+                    </div>
+                    <div class="learn-theorem-visual">
+                        <img src="../assets/images/learn_more/更进阶/张角定理.png" alt="张角定理 diagram">
+                    </div>
+                </div>
+            </article>
+
+            <article id="more-reim" class="learn-theorem learn-theorem--more-advanced" data-theorem-tier="more-advanced">
+                <div class="learn-theorem-inner">
+                    <div class="learn-theorem-body">
+                        <div class="learn-theorem-badges">
+                            <span class="learn-theorem-tier"><span class="learn-theorem-tier-en" data-i18n="learn.tier.moreAdvanced.badge">Further Advanced</span></span>
+                            <span class="learn-theorem-index"><span data-i18n="learn.theoremIndexPrefix">Theorem</span> 4</span>
+                        </div>
+                        <h2 class="learn-theorem-title" data-i18n="learn.moreReim.title">Reim Theorem</h2>
+                        <p class="learn-theorem-statement" data-i18n="learn.moreReim.statement">AB is the common chord of two circles. MN is a chord of circle R. MA meets circle S again at P, and NB meets circle S again at Q. Then MN // PQ.</p>
+                        <p class="learn-theorem-detail" data-i18n="learn.moreReim.detail">Proof: ∠NMA = ∠ABQ = 180° - ∠APQ, hence MN // PQ.</p>
+                    </div>
+                    <div class="learn-theorem-visual">
+                        <img src="../assets/images/learn_more/更进阶/Reim Theorem.png" alt="Reim Theorem diagram">
+                    </div>
+                </div>
+            </article>
+
+            <article id="more-simson" class="learn-theorem learn-theorem--more-advanced" data-theorem-tier="more-advanced">
+                <div class="learn-theorem-inner">
+                    <div class="learn-theorem-body">
+                        <div class="learn-theorem-badges">
+                            <span class="learn-theorem-tier"><span class="learn-theorem-tier-en" data-i18n="learn.tier.moreAdvanced.badge">Further Advanced</span></span>
+                            <span class="learn-theorem-index"><span data-i18n="learn.theoremIndexPrefix">Theorem</span> 5</span>
+                        </div>
+                        <h2 class="learn-theorem-title" data-i18n="learn.moreSimson.title">Simson Theorem</h2>
+                        <p class="learn-theorem-statement" data-i18n="learn.moreSimson.statement">From any point on the circumcircle of a triangle (other than the triangle’s vertices), draw perpendiculars to the three sides or their extensions; the three feet are collinear. This line is called the Simson line.</p>
+                        <p class="learn-theorem-detail" data-i18n="learn.moreSimson.detail">Proof: ∠PAC = ∠PBC, and ∠PAB = 180° - ∠PCA = ∠PBA, so ∠PAC + ∠PAB = 180°, hence the corresponding points are collinear.</p>
+                        <div class="learn-theorem-tip">
+                            <span class="learn-theorem-tip-icon">!</span>
+                            <span><strong data-i18n="learn.moreSimson.tipStrong">Note:</strong> <span data-i18n="learn.moreSimson.tip">In proofs, mark each right angle at the feet first, then convert to equal/supplementary angle relations around point P. A clean angle-chasing chain usually gives the fastest route to collinearity.</span></span>
+                        </div>
+                    </div>
+                    <div class="learn-theorem-visual">
+                        <img src="../assets/images/learn_more/更进阶/Simson Theorem.png" alt="Simson Theorem diagram">
+                    </div>
                 </div>
             </article>
         </div>
     </div>
+
+    <footer class="footer learn-more-footer">
+        <div class="container">
+            <div class="footer-bottom learn-more-footer-bottom">
+                <p class="footer-copyright learn-more-footer-copy">
+                    © 2026 CircleLearn.
+                    <a href="../index.html#home">Home</a> ·
+                    <a href="../game/game.html">Game</a> ·
+                    <a href="../quiz/quiz.html">Quiz</a>
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <button type="button" class="learn-back-to-top" id="learnBackToTop" aria-label="回到顶部" title="回到顶部">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" aria-hidden="true">
+            <polyline points="18 14 12 8 6 14"></polyline>
+        </svg>
+        <span data-i18n="learn.back.to.top">回到顶部</span>
+    </button>
+
+    <script src="../js/data/site-i18n.js"></script>
+    <script src="../js/utils.js"></script>
+    <script src="../js/main.js"></script>
+    <script src="../js/pages/learn_more.js"></script>
 </body>
 </html>

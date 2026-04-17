@@ -1,8 +1,40 @@
 /* 首页：Hero、各区块背景与动效 */
+body:not(.dark-mode) {
+    background-color: #f8fbff;
+    background-image:
+        radial-gradient(44rem 32rem at 8% 8%, rgba(255, 255, 255, 0.85) 0%, rgba(255, 255, 255, 0) 62%),
+        radial-gradient(36rem 26rem at 88% 20%, rgba(240, 246, 255, 0.68) 0%, rgba(240, 246, 255, 0) 65%),
+        radial-gradient(30rem 24rem at 22% 72%, rgba(255, 255, 255, 0.52) 0%, rgba(255, 255, 255, 0) 64%),
+        radial-gradient(28rem 22rem at 80% 84%, rgba(229, 231, 235, 0.4) 0%, rgba(229, 231, 235, 0) 66%),
+        linear-gradient(160deg, #f8fbff 0%, #eff6ff 40%, #e7f0ff 68%, #f5f9ff 100%);
+    background-attachment: fixed;
+}
+
 .hero {
+    position: relative;
     background: linear-gradient(135deg, #EFF6FF 0%, #E0E7FF 100%);
     overflow: hidden;
     transition: background 0.3s ease;
+    height: calc(100vh - 50px);
+}
+
+body:not(.dark-mode) .hero::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 140px;
+    pointer-events: none;
+    /* Hero 底部蓝白 → Explore（theorems）纯白 的衔接带 */
+    background: linear-gradient(
+        to bottom,
+        rgba(224, 231, 255, 0) 0%,
+        rgba(224, 231, 255, 0.42) 32%,
+        rgba(226, 236, 255, 0.72) 58%,
+        rgba(245, 248, 255, 0.92) 84%,
+        #ffffff 100%
+    );
 }
 
 html.hero-intro-play .hero {
@@ -11,16 +43,6 @@ html.hero-intro-play .hero {
 
 html.hero-intro-play .hero-grid {
     position: relative;
-}
-
-html.hero-intro-play .hero-content {
-    position: relative;
-    z-index: 3;
-}
-
-html.hero-intro-play .hero-visual {
-    position: relative;
-    z-index: 1;
 }
 
 html.hero-intro-play .circle-animation {
@@ -45,6 +67,16 @@ html.hero-intro-play .hero-content .animate-fade-in-delay-2 {
     animation: none;
     opacity: 1;
     transform: none;
+}
+
+/* 入场动画播放期间：线稿不可点，避免误触粒子环（需压过轮播态下的 pointer-events:auto） */
+html.hero-intro-play .inner-circle-diagram {
+    pointer-events: none !important;
+    cursor: default;
+}
+
+html.hero-intro-play .inner-circle:hover {
+    cursor: default;
 }
 
 @keyframes heroCircleIntro {
@@ -114,11 +146,11 @@ html.hero-intro-play .hero-content .animate-fade-in-delay-2 {
 @keyframes heroContentIntro {
     0% {
         opacity: 0;
-        transform: translate(170px, 5px);
+        transform: translate3d(170px, 5px, 0);
     }
     100% {
         opacity: 1;
-        transform: none;
+        transform: translate3d(0, 0, 0);
     }
 }
 
@@ -155,6 +187,8 @@ body.dark-mode .hero {
 }
 
 .hero-content {
+    position: relative;
+    z-index: 3;
     display: flex;
     flex-direction: column;
     gap: 24px;
@@ -181,6 +215,7 @@ body.dark-mode .hero {
 
 .hero-visual {
     position: relative;
+    z-index: 1;
     height: 500px;
     display: flex;
     align-items: center;
@@ -329,6 +364,186 @@ body.dark-mode .hero-visual-arrow:hover:not(:disabled) {
     animation: pulse-scale 3s ease-in-out infinite;
 }
 
+/* 环激活时允许画布大于 circle-animation，避免粒子被裁切 */
+.hero--particle-ring {
+    /* 避免粒子激活后把页面横向撑出，产生底部滚动条 */
+    overflow-x: hidden;
+    overflow-y: visible;
+}
+
+.hero--particle-ring .hero-visual {
+    overflow: visible;
+}
+
+.circle-animation.is-particle-ring-active {
+    overflow: visible;
+}
+
+.circle-animation::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 250px;
+    height: 250px;
+    border-radius: 50%;
+    transform: translate(-50%, -50%) scale(0.92);
+    opacity: 0;
+    pointer-events: none;
+    z-index: 2;
+    background:
+        radial-gradient(
+            circle at 50% 50%,
+            rgba(255, 245, 196, 0.88) 0%,
+            rgba(255, 240, 176, 0.66) 28%,
+            rgba(233, 243, 255, 0.5) 58%,
+            rgba(207, 229, 252, 0.34) 80%,
+            rgba(207, 229, 252, 0) 100%
+        );
+    box-shadow: 0 18px 46px rgba(191, 219, 254, 0.12);
+    transition:
+        opacity 0.55s cubic-bezier(0.28, 0.84, 0.38, 1),
+        transform 0.55s cubic-bezier(0.28, 0.84, 0.38, 1);
+}
+
+.circle-animation.is-particle-ring-active::after {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+}
+
+.circle-animation.is-particle-ring-active.is-particle-ring-retract::after {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.96);
+    transition-duration: 0.88s;
+    transition-timing-function: cubic-bezier(0.28, 0.82, 0.36, 1);
+}
+
+.hero-particle-ring-canvas {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 3;
+    opacity: 0;
+    transition: opacity 0.6s cubic-bezier(0.28, 0.84, 0.38, 1);
+}
+
+.circle-animation.is-particle-ring-active .hero-particle-ring-canvas {
+    opacity: 1;
+}
+
+/* 粒子环模式：装饰图从环心同步弹出（z-index 高于粒子画布；具体 z-index 由 JS 按层设置） */
+.hero-ring-popout {
+    position: absolute;
+    width: 0;
+    height: 0;
+    pointer-events: none;
+    transform: translateZ(0);
+}
+
+.hero-ring-popout__inner {
+    will-change: transform;
+}
+
+.hero-ring-popout__inner img {
+    display: block;
+    /* 宽度由 home.js 各层 imgWidthPx 内联设置；此处仅作无 JS 时的回退 */
+    width: 260px;
+    height: auto;
+    user-select: none;
+    -webkit-user-drag: none;
+    filter: drop-shadow(0 20px 38px rgba(15, 23, 42, 0.2));
+}
+
+body.dark-mode .hero-ring-popout__inner img {
+    filter: drop-shadow(0 20px 44px rgba(0, 0, 0, 0.5));
+}
+
+/* 弹出结束后：呼吸缩放（振幅大于主圆 pulse-scale，仅作用于装饰图） */
+.hero-ring-popout__inner.is-settled img {
+    transform-origin: center center;
+    animation: pulse-scale-ring-popout 3s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .hero-ring-popout__inner.is-settled img {
+        animation: none;
+    }
+}
+
+.circle-animation.is-particle-ring-active .main-circle {
+    opacity: 0;
+    transform: scale(0.9);
+    visibility: hidden;
+    pointer-events: none;
+    animation: none;
+    box-shadow: none;
+    transition:
+        opacity 0.65s cubic-bezier(0.26, 0.88, 0.34, 1),
+        transform 0.65s cubic-bezier(0.26, 0.88, 0.34, 1),
+        box-shadow 0.55s ease,
+        visibility 0s linear 0.6s;
+}
+
+/* 收回：主圆与线稿丝滑回到视野，与粒子/钟表收回重叠进行 */
+.circle-animation.is-particle-ring-active.is-particle-ring-retract .main-circle {
+    visibility: visible !important;
+    pointer-events: auto;
+    opacity: 1;
+    transform: scale(1);
+    box-shadow: 0 20px 60px rgba(59, 130, 246, 0.3);
+    animation: none;
+    transition:
+        opacity 0.88s cubic-bezier(0.28, 0.82, 0.36, 1),
+        transform 0.88s cubic-bezier(0.28, 0.82, 0.36, 1),
+        box-shadow 0.75s ease,
+        visibility 0s;
+}
+
+body.dark-mode .circle-animation.is-particle-ring-active.is-particle-ring-retract .main-circle {
+    box-shadow: 0 18px 48px rgba(30, 41, 59, 0.55);
+}
+
+body.dark-mode .circle-animation::after {
+    background:
+        radial-gradient(
+            circle at 50% 50%,
+            rgba(186, 230, 253, 0.26) 0%,
+            rgba(125, 211, 252, 0.22) 36%,
+            rgba(96, 165, 250, 0.18) 56%,
+            rgba(217, 119, 6, 0.12) 78%,
+            rgba(217, 119, 6, 0) 100%
+        );
+    box-shadow: 0 12px 34px rgba(56, 189, 248, 0.16);
+}
+
+.hero-ring-center-hit {
+    position: absolute;
+    z-index: 5;
+    width: 252px;
+    height: 252px;
+    padding: 0;
+    border: none;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    background: transparent;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.hero-ring-center-hit:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 3px;
+}
+
+.circle-animation.is-particle-ring-active .hero-visual-arrow {
+    opacity: 0 !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+}
+
 .inner-circle {
     position: relative;
     width: 280px;
@@ -346,6 +561,9 @@ body.dark-mode .inner-circle {
     background-color: var(--gray-800);
 }
 
+.inner-circle:hover {
+    cursor: pointer;
+}
 .inner-circle-image {
     position: absolute;
     inset: 0;
@@ -523,6 +741,11 @@ body.dark-mode .inner-circle {
     50% { transform: scale(1.05); }
 }
 
+@keyframes pulse-scale-ring-popout {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+}
+
 @keyframes float-1 {
     0%, 100% { transform: translate(0, 0); }
     50% { transform: translate(10px, -20px); }
@@ -676,3 +899,298 @@ body.dark-mode .usp-section {
 body.dark-mode .premium-section {
     background-color: var(--gray-900);
 }
+
+
+/* From Uiverse.io by Galahhad */
+/*护眼模式样式*/ 
+.theme-switch {
+    --toggle-size: 10px;
+    /* the size is adjusted using font-size,
+       this is not transform scale,
+       so you can choose any size */
+    --container-width: 5.625em;
+    --container-height: 2.5em;
+    --container-radius: 6.25em;
+    /* radius 0 - minecraft mode :) */
+    --container-light-bg: #3D7EAE;
+    --container-night-bg: #1D1F2C;
+    --circle-container-diameter: 3.375em;
+    --sun-moon-diameter: 2.125em;
+    --sun-bg: #ECCA2F;
+    --moon-bg: #C4C9D1;
+    --spot-color: #959DB1;
+    --circle-container-offset: calc((var(--circle-container-diameter) - var(--container-height)) / 2 * -1);
+    --stars-color: #fff;
+    --clouds-color: #F3FDFF;
+    --back-clouds-color: #AACADF;
+    --transition: .5s cubic-bezier(0, -0.02, 0.4, 1.25);
+    --circle-transition: .3s cubic-bezier(0, -0.02, 0.35, 1.17);
+  }
+  
+  .theme-switch, .theme-switch *, .theme-switch *::before, .theme-switch *::after {
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-size: var(--toggle-size);
+  }
+  
+  .theme-switch__container {
+    width: var(--container-width);
+    height: var(--container-height);
+    background-color: var(--container-light-bg);
+    border-radius: var(--container-radius);
+    overflow: hidden;
+    cursor: pointer;
+    -webkit-box-shadow: 0em -0.062em 0.062em rgba(0, 0, 0, 0.25), 0em 0.062em 0.125em rgba(255, 255, 255, 0.94);
+    box-shadow: 0em -0.062em 0.062em rgba(0, 0, 0, 0.25), 0em 0.062em 0.125em rgba(255, 255, 255, 0.94);
+    -webkit-transition: var(--transition);
+    -o-transition: var(--transition);
+    transition: var(--transition);
+    position: relative;
+  }
+  
+  .theme-switch__container::before {
+    content: "";
+    position: absolute;
+    z-index: 1;
+    inset: 0;
+    -webkit-box-shadow: 0em 0.05em 0.187em rgba(0, 0, 0, 0.25) inset, 0em 0.05em 0.187em rgba(0, 0, 0, 0.25) inset;
+    box-shadow: 0em 0.05em 0.187em rgba(0, 0, 0, 0.25) inset, 0em 0.05em 0.187em rgba(0, 0, 0, 0.25) inset;
+    border-radius: var(--container-radius)
+  }
+  
+  .theme-switch__checkbox {
+    display: none;
+  }
+  
+  .theme-switch__circle-container {
+    width: var(--circle-container-diameter);
+    height: var(--circle-container-diameter);
+    background-color: rgba(255, 255, 255, 0.1);
+    position: absolute;
+    left: var(--circle-container-offset);
+    top: var(--circle-container-offset);
+    border-radius: var(--container-radius);
+    -webkit-box-shadow: inset 0 0 0 3.375em rgba(255, 255, 255, 0.1), inset 0 0 0 3.375em rgba(255, 255, 255, 0.1), 0 0 0 0.625em rgba(255, 255, 255, 0.1), 0 0 0 1.25em rgba(255, 255, 255, 0.1);
+    box-shadow: inset 0 0 0 3.375em rgba(255, 255, 255, 0.1), inset 0 0 0 3.375em rgba(255, 255, 255, 0.1), 0 0 0 0.625em rgba(255, 255, 255, 0.1), 0 0 0 1.25em rgba(255, 255, 255, 0.1);
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-transition: var(--circle-transition);
+    -o-transition: var(--circle-transition);
+    transition: var(--circle-transition);
+    pointer-events: none;
+  }
+  
+  .theme-switch__sun-moon-container {
+    pointer-events: auto;
+    position: relative;
+    z-index: 2;
+    width: var(--sun-moon-diameter);
+    height: var(--sun-moon-diameter);
+    margin: auto;
+    border-radius: var(--container-radius);
+    background-color: var(--sun-bg);
+    -webkit-box-shadow: 0.062em 0.062em 0.062em 0em rgba(254, 255, 239, 0.61) inset, 0em -0.062em 0.062em 0em #a1872a inset;
+    box-shadow: 0.062em 0.062em 0.062em 0em rgba(254, 255, 239, 0.61) inset, 0em -0.062em 0.062em 0em #a1872a inset;
+    -webkit-filter: drop-shadow(0.062em 0.125em 0.125em rgba(0, 0, 0, 0.25)) drop-shadow(0em 0.062em 0.125em rgba(0, 0, 0, 0.25));
+    filter: drop-shadow(0.062em 0.125em 0.125em rgba(0, 0, 0, 0.25)) drop-shadow(0em 0.062em 0.125em rgba(0, 0, 0, 0.25));
+    overflow: hidden;
+    -webkit-transition: var(--transition);
+    -o-transition: var(--transition);
+    transition: var(--transition);
+  }
+  
+  .theme-switch__moon {
+    -webkit-transform: translateX(100%);
+    -ms-transform: translateX(100%);
+    transform: translateX(100%);
+    width: 100%;
+    height: 100%;
+    background-color: var(--moon-bg);
+    border-radius: inherit;
+    -webkit-box-shadow: 0.062em 0.062em 0.062em 0em rgba(254, 255, 239, 0.61) inset, 0em -0.062em 0.062em 0em #969696 inset;
+    box-shadow: 0.062em 0.062em 0.062em 0em rgba(254, 255, 239, 0.61) inset, 0em -0.062em 0.062em 0em #969696 inset;
+    -webkit-transition: var(--transition);
+    -o-transition: var(--transition);
+    transition: var(--transition);
+    position: relative;
+  }
+  
+  .theme-switch__spot {
+    position: absolute;
+    top: 0.75em;
+    left: 0.312em;
+    width: 0.75em;
+    height: 0.75em;
+    border-radius: var(--container-radius);
+    background-color: var(--spot-color);
+    -webkit-box-shadow: 0em 0.0312em 0.062em rgba(0, 0, 0, 0.25) inset;
+    box-shadow: 0em 0.0312em 0.062em rgba(0, 0, 0, 0.25) inset;
+  }
+  
+  .theme-switch__spot:nth-of-type(2) {
+    width: 0.375em;
+    height: 0.375em;
+    top: 0.937em;
+    left: 1.375em;
+  }
+  
+  .theme-switch__spot:nth-last-of-type(3) {
+    width: 0.25em;
+    height: 0.25em;
+    top: 0.312em;
+    left: 0.812em;
+  }
+  
+  .theme-switch__clouds {
+    width: 1.25em;
+    height: 1.25em;
+    background-color: var(--clouds-color);
+    border-radius: var(--container-radius);
+    position: absolute;
+    bottom: -0.625em;
+    left: 0.312em;
+    -webkit-box-shadow: 0.937em 0.312em var(--clouds-color), -0.312em -0.312em var(--back-clouds-color), 1.437em 0.375em var(--clouds-color), 0.5em -0.125em var(--back-clouds-color), 2.187em 0 var(--clouds-color), 1.25em -0.062em var(--back-clouds-color), 2.937em 0.312em var(--clouds-color), 2em -0.312em var(--back-clouds-color), 3.625em -0.062em var(--clouds-color), 2.625em 0em var(--back-clouds-color), 4.5em -0.312em var(--clouds-color), 3.375em -0.437em var(--back-clouds-color), 4.625em -1.75em 0 0.437em var(--clouds-color), 4em -0.625em var(--back-clouds-color), 4.125em -2.125em 0 0.437em var(--back-clouds-color);
+    box-shadow: 0.937em 0.312em var(--clouds-color), -0.312em -0.312em var(--back-clouds-color), 1.437em 0.375em var(--clouds-color), 0.5em -0.125em var(--back-clouds-color), 2.187em 0 var(--clouds-color), 1.25em -0.062em var(--back-clouds-color), 2.937em 0.312em var(--clouds-color), 2em -0.312em var(--back-clouds-color), 3.625em -0.062em var(--clouds-color), 2.625em 0em var(--back-clouds-color), 4.5em -0.312em var(--clouds-color), 3.375em -0.437em var(--back-clouds-color), 4.625em -1.75em 0 0.437em var(--clouds-color), 4em -0.625em var(--back-clouds-color), 4.125em -2.125em 0 0.437em var(--back-clouds-color);
+    -webkit-transition: 0.5s cubic-bezier(0, -0.02, 0.4, 1.25);
+    -o-transition: 0.5s cubic-bezier(0, -0.02, 0.4, 1.25);
+    transition: 0.5s cubic-bezier(0, -0.02, 0.4, 1.25);
+  }
+  
+  .theme-switch__stars-container {
+    position: absolute;
+    color: var(--stars-color);
+    top: -100%;
+    left: 0.312em;
+    width: 2.75em;
+    height: auto;
+    -webkit-transition: var(--transition);
+    -o-transition: var(--transition);
+    transition: var(--transition);
+  }
+  
+  /* actions */
+  
+  .theme-switch__checkbox:checked + .theme-switch__container {
+    background-color: var(--container-night-bg);
+  }
+  
+  .theme-switch__checkbox:checked + .theme-switch__container .theme-switch__circle-container {
+    left: calc(100% - var(--circle-container-offset) - var(--circle-container-diameter));
+  }
+  
+  .theme-switch__checkbox:checked + .theme-switch__container .theme-switch__circle-container:hover {
+    left: calc(100% - var(--circle-container-offset) - var(--circle-container-diameter) - 0.187em)
+  }
+  
+  .theme-switch__circle-container:hover {
+    left: calc(var(--circle-container-offset) + 0.187em);
+  }
+  
+  .theme-switch__checkbox:checked + .theme-switch__container .theme-switch__moon {
+    -webkit-transform: translate(0);
+    -ms-transform: translate(0);
+    transform: translate(0);
+  }
+  
+  .theme-switch__checkbox:checked + .theme-switch__container .theme-switch__clouds {
+    bottom: -4.062em;
+  }
+  
+  .theme-switch__checkbox:checked + .theme-switch__container .theme-switch__stars-container {
+    top: 50%;
+    -webkit-transform: translateY(-50%);
+    -ms-transform: translateY(-50%);
+    transform: translateY(-50%);
+  }
+
+
+  /*中英文切换*/
+  .glass-radio-group {
+    --bg: rgba(255, 255, 255, 0.06);
+    --text: #334155;
+  
+    display: flex;
+    position: relative;
+    background: var(--bg);
+    border-radius: 0.75rem;
+    backdrop-filter: blur(12px);
+    box-shadow:
+      inset 1px 1px 4px rgba(255, 255, 255, 0.2),
+      inset -1px -1px 6px rgba(0, 0, 0, 0.3),
+      0 4px 12px rgba(0, 0, 0, 0.15);
+    overflow: hidden;
+    width: fit-content;
+  }
+  
+  .glass-radio-group input {
+    display: none;
+  }
+  
+  .glass-radio-group label {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 78px;
+    font-size: 12px;
+    padding: 0.38rem 0.65rem;
+    cursor: pointer;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+    color: var(--text);
+    position: relative;
+    z-index: 2;
+    transition: color 0.3s ease-in-out;
+  }
+  
+  .glass-radio-group label:hover {
+    color: #0f172a;
+  }
+  
+  .glass-radio-group input:checked + label {
+    color: #0f172a;
+  }
+  
+  .glass-glider {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: calc(100% / 2);
+    border-radius: 0.75rem;
+    z-index: 1;
+    transition:
+      transform 0.5s cubic-bezier(0.37, 1.95, 0.66, 0.56),
+      background 0.4s ease-in-out,
+      box-shadow 0.4s ease-in-out;
+  }
+  
+  /* English（左侧） */
+  #glass-lang-en:checked ~ .glass-glider {
+    transform: translateX(0%);
+    background: linear-gradient(135deg, #ffd70055, #ffcc00);
+    box-shadow:
+    0 0 18px rgba(255, 215, 0, 0.5),
+    0 0 10px rgba(255, 235, 150, 0.4) inset;
+  }
+
+  /* 简体中文（右侧） */
+  #glass-lang-zh:checked ~ .glass-glider {
+    transform: translateX(100%);
+    background: linear-gradient(135deg, #d0e7ff55, #a0d8ff);
+    box-shadow:
+    0 0 18px rgba(160, 216, 255, 0.5),
+    0 0 10px rgba(200, 240, 255, 0.4) inset;
+  }
+
+  body.dark-mode .glass-radio-group {
+    --text: #cbd5e1;
+  }
+
+  body.dark-mode .glass-radio-group label:hover,
+  body.dark-mode .glass-radio-group input:checked + label {
+    color: #ffffff;
+  }
+  
