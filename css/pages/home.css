@@ -1,12 +1,12 @@
 /* 首页：Hero、各区块背景与动效 */
 body:not(.dark-mode) {
-    background-color: #fff9dc;
+    background-color: #f8fbff;
     background-image:
         radial-gradient(44rem 32rem at 8% 8%, rgba(255, 255, 255, 0.85) 0%, rgba(255, 255, 255, 0) 62%),
-        radial-gradient(36rem 26rem at 88% 20%, rgba(245, 245, 245, 0.68) 0%, rgba(245, 245, 245, 0) 65%),
+        radial-gradient(36rem 26rem at 88% 20%, rgba(240, 246, 255, 0.68) 0%, rgba(240, 246, 255, 0) 65%),
         radial-gradient(30rem 24rem at 22% 72%, rgba(255, 255, 255, 0.52) 0%, rgba(255, 255, 255, 0) 64%),
         radial-gradient(28rem 22rem at 80% 84%, rgba(229, 231, 235, 0.4) 0%, rgba(229, 231, 235, 0) 66%),
-        linear-gradient(160deg, #fffbe7 0%, #fff4c2 38%, #ffefad 65%, #fff7d6 100%);
+        linear-gradient(160deg, #f8fbff 0%, #eff6ff 40%, #e7f0ff 68%, #f5f9ff 100%);
     background-attachment: fixed;
 }
 
@@ -24,17 +24,17 @@ body:not(.dark-mode) .hero::after {
     left: 0;
     right: 0;
     bottom: 0;
-    height: 142px;
+    height: 140px;
     pointer-events: none;
-    background:
-        radial-gradient(120% 95% at 50% 100%, rgba(255, 251, 235, 0.36) 0%, rgba(255, 251, 235, 0) 68%),
-        linear-gradient(
-            to bottom,
-            rgba(224, 231, 255, 0) 0%,
-            rgba(238, 242, 239, 0.24) 46%,
-            rgba(249, 248, 232, 0.6) 74%,
-            rgba(255, 251, 229, 0.99) 100%
-        );
+    /* Hero 底部蓝白 → Explore（theorems）纯白 的衔接带 */
+    background: linear-gradient(
+        to bottom,
+        rgba(224, 231, 255, 0) 0%,
+        rgba(224, 231, 255, 0.42) 32%,
+        rgba(226, 236, 255, 0.72) 58%,
+        rgba(245, 248, 255, 0.92) 84%,
+        #ffffff 100%
+    );
 }
 
 html.hero-intro-play .hero {
@@ -825,7 +825,7 @@ body.dark-mode .inner-circle {
 }
 
 .theorems-section {
-    background-color: rgba(255, 255, 248, 0.74);
+    background-color: white;
 }
 
 body.dark-mode .theorems-section {
@@ -833,7 +833,7 @@ body.dark-mode .theorems-section {
 }
 
 .features-section {
-    background-color: rgba(255, 248, 222, 0.58);
+    background-color: var(--gray-50);
 }
 
 body.dark-mode .features-section {
@@ -841,7 +841,7 @@ body.dark-mode .features-section {
 }
 
 .ai-section {
-    background-color: rgba(255, 255, 246, 0.7);
+    background-color: white;
 }
 
 body.dark-mode .ai-section {
@@ -849,7 +849,7 @@ body.dark-mode .ai-section {
 }
 
 .usp-section {
-    background-color: rgba(255, 247, 214, 0.56);
+    background-color: var(--gray-50);
 }
 
 body.dark-mode .usp-section {
@@ -893,7 +893,7 @@ body.dark-mode .usp-section {
 }
 
 .premium-section {
-    background-color: rgba(255, 255, 246, 0.7);
+    background-color: white;
 }
 
 body.dark-mode .premium-section {
