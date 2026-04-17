@@ -35,11 +35,7 @@
         <div class="container">
             <nav class="nav">
                 <a href="#home" class="logo" aria-label="CircleLearn Home">
-                    <div class="logo-icon">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                            <circle cx="12" cy="12" r="10"/>
-                        </svg>
-                    </div>
+                    <img src="assets/images/homepage/icon.png" alt="CircleLearn Logo" width="40" height="40"></img>
                     <span class="logo-text">GEOMETRY CHALLENGER</span>
                 </a>
 
@@ -49,14 +45,53 @@
                     <a href="quiz/quiz.html" class="nav-link" data-i18n="nav.quiz">Quiz</a>
                 </div>
 
-                <div class="nav-actions">
-                    <div class="settings-dropdown">
-                        <button type="button" class="btn-icon" id="settingsToggle" aria-label="Open settings" aria-expanded="false" aria-haspopup="true">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <circle cx="12" cy="12" r="3"></circle>
-                                <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33h.01a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51h.01a1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82v.01a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+                <div class="nav-actions nav-settings-inline">
+                    <div class="glass-radio-group">
+                        <input type="radio" name="langPlan" id="glass-lang-en" checked="" />
+                        <label for="glass-lang-en">English</label>
+
+                        <input type="radio" name="langPlan" id="glass-lang-zh" />
+                        <label for="glass-lang-zh">简体中文</label>
+                      
+                        <div class="glass-glider"></div>
+                    </div>
+                      
+                    <label class="theme-switch">
+                        <input type="checkbox" class="theme-switch__checkbox">
+                        <div class="theme-switch__container">
+                            <div class="theme-switch__clouds"></div>
+                            <div class="theme-switch__stars-container">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 144 55" fill="none">
+                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M135.831 3.00688C135.055 3.85027 134.111 4.29946 133 4.35447C134.111 4.40947 135.055 4.85867 135.831 5.71123C136.607 6.55462 136.996 7.56303 136.996 8.72727C136.996 7.95722 137.172 7.25134 137.525 6.59129C137.886 5.93124 138.372 5.39954 138.98 5.00535C139.598 4.60199 140.268 4.39114 141 4.35447C139.88 4.2903 138.936 3.85027 138.16 3.00688C137.384 2.16348 136.996 1.16425 136.996 0C136.996 1.16425 136.607 2.16348 135.831 3.00688ZM31 23.3545C32.1114 23.2995 33.0551 22.8503 33.8313 22.0069C34.6075 21.1635 34.9956 20.1642 34.9956 19C34.9956 20.1642 35.3837 21.1635 36.1599 22.0069C36.9361 22.8503 37.8798 23.2903 39 23.3545C38.2679 23.3911 37.5976 23.602 36.9802 24.0053C36.3716 24.3995 35.8864 24.9312 35.5248 25.5913C35.172 26.2513 34.9956 26.9572 34.9956 27.7273C34.9956 26.563 34.6075 25.5546 33.8313 24.7112C33.0551 23.8587 32.1114 23.4095 31 23.3545ZM0 36.3545C1.11136 36.2995 2.05513 35.8503 2.83131 35.0069C3.6075 34.1635 3.99559 33.1642 3.99559 32C3.99559 33.1642 4.38368 34.1635 5.15987 35.0069C5.93605 35.8503 6.87982 36.2903 8 36.3545C7.26792 36.3911 6.59757 36.602 5.98015 37.0053C5.37155 37.3995 4.88644 37.9312 4.52481 38.5913C4.172 39.2513 3.99559 39.9572 3.99559 40.7273C3.99559 39.563 3.6075 38.5546 2.83131 37.7112C2.05513 36.8587 1.11136 36.4095 0 36.3545ZM56.8313 24.0069C56.0551 24.8503 55.1114 25.2995 54 25.3545C55.1114 25.4095 56.0551 25.8587 56.8313 26.7112C57.6075 27.5546 57.9956 28.563 57.9956 29.7273C57.9956 28.9572 58.172 28.2513 58.5248 27.5913C58.8864 26.9312 59.3716 26.3995 59.9802 26.0053C60.5976 25.602 61.2679 25.3911 62 25.3545C60.8798 25.2903 59.9361 24.8503 59.1599 24.0069C58.3837 23.1635 57.9956 22.1642 57.9956 21C57.9956 22.1642 57.6075 23.1635 56.8313 24.0069ZM81 25.3545C82.1114 25.2995 83.0551 24.8503 83.8313 24.0069C84.6075 23.1635 84.9956 22.1642 84.9956 21C84.9956 22.1642 85.3837 23.1635 86.1599 24.0069C86.9361 24.8503 87.8798 25.2903 89 25.3545C88.2679 25.3911 87.5976 25.602 86.9802 26.0053C86.3716 26.3995 85.8864 26.9312 85.5248 27.5913C85.172 28.2513 84.9956 28.9572 84.9956 29.7273C84.9956 28.563 84.6075 27.5546 83.8313 26.7112C83.0551 25.8587 82.1114 25.4095 81 25.3545ZM136 36.3545C137.111 36.2995 138.055 35.8503 138.831 35.0069C139.607 34.1635 139.996 33.1642 139.996 32C139.996 33.1642 140.384 34.1635 141.16 35.0069C141.936 35.8503 142.88 36.2903 144 36.3545C143.268 36.3911 142.598 36.602 141.98 37.0053C141.372 37.3995 140.886 37.9312 140.525 38.5913C140.172 39.2513 139.996 39.9572 139.996 40.7273C139.996 39.563 139.607 38.5546 138.831 37.7112C138.055 36.8587 137.111 36.4095 136 36.3545ZM101.831 49.0069C101.055 49.8503 100.111 50.2995 99 50.3545C100.111 50.4095 101.055 50.8587 101.831 51.7112C102.607 52.5546 102.996 53.563 102.996 54.7273C102.996 53.9572 103.172 53.2513 103.525 52.5913C103.886 51.9312 104.372 51.3995 104.98 51.0053C105.598 50.602 106.268 50.3911 107 50.3545C105.88 50.2903 104.936 49.8503 104.16 49.0069C103.384 48.1635 102.996 47.1642 102.996 46C102.996 47.1642 102.607 48.1635 101.831 49.0069Z" fill="currentColor"></path>
+                                </svg>
+                            </div>
+                            <div class="theme-switch__circle-container">
+                                <div class="theme-switch__sun-moon-container">
+                                    <div class="theme-switch__moon">
+                                        <div class="theme-switch__spot"></div>
+                                        <div class="theme-switch__spot"></div>
+                                        <div class="theme-switch__spot"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </label>
+
+                    <div class="select nav-contact-select" id="navContactSelect">
+                        <button
+                            type="button"
+                            class="selected"
+                            id="navContactSelectToggle"
+                            aria-haspopup="true"
+                            aria-expanded="false"
+                            aria-controls="settingsMenu"
+                        >
+                            <span data-i18n="settings.about">About</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 512 512" class="arrow" aria-hidden="true">
+                                <path d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z"></path>
                             </svg>
                         </button>
+
                         <div class="settings-menu" id="settingsMenu" role="menu" aria-label="Settings menu">
                             <button type="button" class="settings-item" id="menuLangToggle" role="menuitem">
                                 <span data-i18n="settings.language">语言</span>
@@ -74,7 +109,9 @@
                                     <button type="button" id="fontLarge" aria-label="Large font">A+</button>
                                 </div>
                             </div>
-                            <a href="contact/contact.html" class="settings-item settings-link" role="menuitem" data-i18n="settings.contact">联系我们</a>
+                            <hr class="menu-divider">
+                            <a href="contact/contact.html" class="settings-item settings-link" role="menuitem" data-i18n="settings.contact">Contact Us</a>
+                            <a href="#support-us" class="settings-item settings-link option-support" role="menuitem" data-i18n="settings.support">Support Us</a>
                         </div>
                     </div>
                 </div>
@@ -114,25 +151,25 @@
                         <div class="main-circle-wrap">
                             <button type="button" class="hero-visual-arrow hero-visual-arrow--prev" aria-label="上一张" title="上一张"></button>
                             <div class="main-circle">
-                            <div class="inner-circle">
-                                <svg class="inner-circle-diagram" width="240" height="240" viewBox="0 0 240 240" aria-hidden="true">
-                                    <circle cx="120" cy="120" r="100" fill="none" stroke="currentColor" stroke-width="2" class="animated-path"/>
-                                    <line x1="120" y1="120" x2="220" y2="120" stroke="currentColor" stroke-width="2" class="animated-line-1"/>
-                                    <line x1="120" y1="120" x2="50" y2="50" stroke="currentColor" stroke-width="2" class="animated-line-2"/>
-                                    <circle cx="120" cy="120" r="4" fill="currentColor" class="animated-dot"/>
-                                </svg>
-                                <img src="assets/images/homepage/pizza.png" alt="Pizza visual" class="inner-circle-image inner-circle-pizza">
-                                <img src="assets/images/homepage/甜甜圈.png" alt="Donut visual" class="inner-circle-image inner-circle-donut">
-                                <img src="assets/images/homepage/月球.png" alt="Moon visual" class="inner-circle-image inner-circle-moon">
-                                <img src="assets/images/homepage/emoji.png" alt="Emoji visual" class="inner-circle-image inner-circle-emoji">
-                                <img src="assets/images/homepage/向日葵.png" alt="Sunflower visual" class="inner-circle-image inner-circle-sunflower">
-                                <img src="assets/images/homepage/奥利奥.png" alt="Oreo visual" class="inner-circle-image inner-circle-oreo">
-                                <img src="assets/images/homepage/小猫.png" alt="Cat visual" class="inner-circle-image inner-circle-cat">
-                                <img src="assets/images/homepage/易拉罐.png" alt="Can visual" class="inner-circle-image inner-circle-can">
-                                <img src="assets/images/homepage/煎蛋.png" alt="Egg visual" class="inner-circle-image inner-circle-egg">
-                                <img src="assets/images/homepage/硬币.png" alt="Coin visual" class="inner-circle-image inner-circle-coin">
-                                <img src="assets/images/homepage/面条.png" alt="Noodles visual" class="inner-circle-image inner-circle-noodles">
-                            </div>
+                                <div class="inner-circle">
+                                    <svg class="inner-circle-diagram" width="240" height="240" viewBox="0 0 240 240" aria-hidden="true">
+                                        <circle cx="120" cy="120" r="100" fill="none" stroke="currentColor" stroke-width="2" class="animated-path"/>
+                                        <line x1="120" y1="120" x2="220" y2="120" stroke="currentColor" stroke-width="2" class="animated-line-1"/>
+                                        <line x1="120" y1="120" x2="50" y2="50" stroke="currentColor" stroke-width="2" class="animated-line-2"/>
+                                        <circle cx="120" cy="120" r="4" fill="currentColor" class="animated-dot"/>
+                                    </svg>
+                                    <img src="assets/images/homepage/pizza.png" alt="Pizza visual" class="inner-circle-image inner-circle-pizza">
+                                    <img src="assets/images/homepage/甜甜圈.png" alt="Donut visual" class="inner-circle-image inner-circle-donut">
+                                    <img src="assets/images/homepage/月球.png" alt="Moon visual" class="inner-circle-image inner-circle-moon">
+                                    <img src="assets/images/homepage/emoji.png" alt="Emoji visual" class="inner-circle-image inner-circle-emoji">
+                                    <img src="assets/images/homepage/向日葵.png" alt="Sunflower visual" class="inner-circle-image inner-circle-sunflower">
+                                    <img src="assets/images/homepage/奥利奥.png" alt="Oreo visual" class="inner-circle-image inner-circle-oreo">
+                                    <img src="assets/images/homepage/小猫.png" alt="Cat visual" class="inner-circle-image inner-circle-cat">
+                                    <img src="assets/images/homepage/易拉罐.png" alt="Can visual" class="inner-circle-image inner-circle-can">
+                                    <img src="assets/images/homepage/煎蛋.png" alt="Egg visual" class="inner-circle-image inner-circle-egg">
+                                    <img src="assets/images/homepage/硬币.png" alt="Coin visual" class="inner-circle-image inner-circle-coin">
+                                    <img src="assets/images/homepage/面条.png" alt="Noodles visual" class="inner-circle-image inner-circle-noodles">
+                                </div>
                             </div>
                             <button type="button" class="hero-visual-arrow hero-visual-arrow--next" aria-label="下一张" title="下一张"></button>
                         </div>
@@ -152,34 +189,61 @@
             </div>
 
             <div class="theorem-grid">
-                <div class="theorem-card">
-                    <div class="theorem-media">
-                        <div class="theorem-icon">⊙</div>
-                        <div class="theorem-image">
-                            <img src="assets/images/homepage/Angle at the Centre.png" alt="Angle at the Centre diagram">
+                <div class="theorem-card theorem-card--flip">
+                    <div class="theorem-card-inner">
+                        <div class="theorem-card-face theorem-card-front">
+                            <div class="theorem-media">
+                                <div class="theorem-icon">⊙</div>
+                                <div class="theorem-image">
+                                    <img src="assets/images/homepage/Angle at the Centre.png" alt="Angle at the Centre diagram">
+                                </div>
+                            </div>
+                            <h3 class="theorem-title">Angle at the Centre</h3>
+                            </div>
+                        <div class="theorem-card-face theorem-card-back theorem-card-back--v1">
+                            <h3 class="theorem-title theorem-title--back">Angle at the Centre</h3>
+                            <p class="theorem-back-text">The central angle is always twice the angle at the rim for the same arc.</p>
+                            <p class="theorem-back-hint">Click again to return</p>
                         </div>
                     </div>
-                    <h3 class="theorem-title">Angle at the Centre</h3>
                 </div>
 
-                <div class="theorem-card">
-                    <div class="theorem-media">
-                        <div class="theorem-icon">◐</div>
-                        <div class="theorem-image">
-                            <img src="assets/images/homepage/Angles in Semicircle.png" alt="Angles in Semicircle diagram">
+                <div class="theorem-card theorem-card--flip">
+                    <div class="theorem-card-inner">
+                        <div class="theorem-card-face theorem-card-front">
+                            <div class="theorem-media">
+                                <div class="theorem-icon">◐</div>
+                                <div class="theorem-image">
+                                    <img src="assets/images/homepage/Angles in Semicircle.png" alt="Angles in Semicircle diagram">
+                                </div>
+                            </div>
+                            <h3 class="theorem-title">Angles in Semicircle</h3>
+                        </div>
+                        <div class="theorem-card-face theorem-card-back theorem-card-back--v2">
+                            <h3 class="theorem-title theorem-title--back">Angles in Semicircle</h3>
+                            <p class="theorem-back-text">Any angle standing on a diameter is a right angle: it is always 90 degrees.</p>
+                            <p class="theorem-back-hint">Click again to return</p>
                         </div>
                     </div>
-                    <h3 class="theorem-title">Angles in Semicircle</h3>
                 </div>
 
-                <div class="theorem-card">
-                    <div class="theorem-media">
-                        <div class="theorem-icon">◯</div>
-                        <div class="theorem-image">
-                            <img src="assets/images/homepage/Cyclic Quadrilateral.png" alt="Cyclic Quadrilateral diagram">
+                <div class="theorem-card theorem-card--flip">
+                    <div class="theorem-card-inner">
+                        <div class="theorem-card-face theorem-card-front">
+                            <div class="theorem-media">
+                                <div class="theorem-icon">◯</div>
+                                <div class="theorem-image">
+                                    <img src="assets/images/homepage/Cyclic Quadrilateral.png" alt="Cyclic Quadrilateral diagram">
+                                </div>
+                            </div>
+                            <h3 class="theorem-title">Cyclic Quadrilateral</h3>
+                        </div>
+                        <div class="theorem-card-face theorem-card-back theorem-card-back--v3">
+                            <h3 class="theorem-title theorem-title--back">Cyclic Quadrilateral</h3>
+                            <p class="theorem-back-text">In a cyclic quadrilateral, opposite angles are supplementary and add to 180 degrees.</p>
+                            <p class="theorem-back-hint">Click again to return</p>
                         </div>
                     </div>
-                    <h3 class="theorem-title">Cyclic Quadrilateral</h3>
                 </div>
 
                 <div class="theorem-card-spotlight">
@@ -190,61 +254,104 @@
                             <polyline points="12 5 19 12 12 19"/>
                         </svg>
                     </a>
-                    <div class="theorem-card" id="theorem-radius-tangent">
-                        <div class="theorem-media">
-                            <div class="theorem-icon">⟂</div>
-                            <div class="theorem-image">
-                                <img src="assets/images/homepage/Radius to a Tangent.png" alt="Radius to a Tangent diagram">
+                    <div class="theorem-card theorem-card--flip" id="theorem-radius-tangent">
+                        <div class="theorem-card-inner">
+                            <div class="theorem-card-face theorem-card-front">
+                                <div class="theorem-media">
+                                    <div class="theorem-icon">⟂</div>
+                                    <div class="theorem-image">
+                                        <img src="assets/images/homepage/Radius to a Tangent.png" alt="Radius to a Tangent diagram">
+                                    </div>
+                                </div>
+                                <h3 class="theorem-title">Radius to a Tangent</h3>
+                            </div>
+                            <div class="theorem-card-face theorem-card-back theorem-card-back--v4">
+                                <h3 class="theorem-title theorem-title--back">Radius to a Tangent</h3>
+                                <p class="theorem-back-text">A radius to the touching point meets the tangent at exactly 90 degrees.</p>
+                                <p class="theorem-back-hint">Click again to return</p>
                             </div>
                         </div>
-                        <h3 class="theorem-title">Radius to a Tangent</h3>
                     </div>
                 </div>
 
-                <div class="theorem-card">
-                    <div class="theorem-media">
-                        <div class="theorem-icon">∠</div>
-                        <div class="theorem-image">
-                            <img src="assets/images/homepage/Angles in the Same Segment.png" alt="Angles in the Same Segment diagram">
+                <div class="theorem-card theorem-card--flip">
+                    <div class="theorem-card-inner">
+                        <div class="theorem-card-face theorem-card-front">
+                            <div class="theorem-media">
+                                <div class="theorem-icon">∠</div>
+                                <div class="theorem-image">
+                                    <img src="assets/images/homepage/Angles in the Same Segment.png" alt="Angles in the Same Segment diagram">
+                                </div>
+                            </div>
+                            <h3 class="theorem-title">Angles in the Same Segment</h3>
+                        </div>
+                        <div class="theorem-card-face theorem-card-back theorem-card-back--v5">
+                            <h3 class="theorem-title theorem-title--back">Same Segment</h3>
+                            <p class="theorem-back-text">Angles subtended by the same chord on the same side are equal.</p>
+                            <p class="theorem-back-hint">Click again to return</p>
                         </div>
                     </div>
-                    <h3 class="theorem-title">Angles in the Same Segment</h3>
                 </div>
 
-                <div class="theorem-card">
-                    <div class="theorem-media">
-                        <div class="theorem-icon">⇄</div>
-                        <div class="theorem-image">
-                            <img src="assets/images/homepage/Tangents from a Point to a Circle.png" alt="Tangents from a Point to a Circle diagram">
+                <div class="theorem-card theorem-card--flip">
+                    <div class="theorem-card-inner">
+                        <div class="theorem-card-face theorem-card-front">
+                            <div class="theorem-media">
+                                <div class="theorem-icon">⇄</div>
+                                <div class="theorem-image">
+                                    <img src="assets/images/homepage/Tangents from a Point to a Circle.png" alt="Tangents from a Point to a Circle diagram">
+                                </div>
+                            </div>
+                            <h3 class="theorem-title">Tangents from a Point to a Circle</h3>
+                        </div>
+                        <div class="theorem-card-face theorem-card-back theorem-card-back--v6">
+                            <h3 class="theorem-title theorem-title--back">Tangents from a Point</h3>
+                            <p class="theorem-back-text">Two tangent segments drawn from one external point always have equal length.</p>
+                            <p class="theorem-back-hint">Click again to return</p>
                         </div>
                     </div>
-                    <h3 class="theorem-title">Tangents from a Point to a Circle</h3>
                 </div>
 
-                <div class="theorem-card">
-                    <div class="theorem-media">
-                        <div class="theorem-icon">∡</div>
-                        <div class="theorem-image">
-                            <img src="assets/images/homepage/Tangents from a Point to a Circle II.png" alt="Tangents from a Point to a Circle 2 diagram">
+                <div class="theorem-card theorem-card--flip">
+                    <div class="theorem-card-inner">
+                        <div class="theorem-card-face theorem-card-front">
+                            <div class="theorem-media">
+                                <div class="theorem-icon">∡</div>
+                                <div class="theorem-image">
+                                    <img src="assets/images/homepage/Tangents from a Point to a Circle II.png" alt="Tangents from a Point to a Circle 2 diagram">
+                                </div>
+                            </div>
+                            <h3 class="theorem-title">Tangents from a Point to a Circle II</h3>
+                        </div>
+                        <div class="theorem-card-face theorem-card-back theorem-card-back--v7">
+                            <h3 class="theorem-title theorem-title--back">Tangents (II)</h3>
+                            <p class="theorem-back-text">The line from centre to the external point bisects the angle between the two tangents.</p>
+                            <p class="theorem-back-hint">Click again to return</p>
                         </div>
                     </div>
-                    <h3 class="theorem-title">Tangents from a Point to a Circle II</h3>
                 </div>
 
-                <div class="theorem-card">
-                    <div class="theorem-media">
-                        <div class="theorem-icon">⊿</div>
-                        <div class="theorem-image">
-                            <img src="assets/images/homepage/Alternate Segment Theorem.png" alt="Alternate Segment Theorem diagram">
+                <div class="theorem-card theorem-card--flip">
+                    <div class="theorem-card-inner">
+                        <div class="theorem-card-face theorem-card-front">
+                            <div class="theorem-media">
+                                <div class="theorem-icon">⊿</div>
+                                <div class="theorem-image">
+                                    <img src="assets/images/homepage/Alternate Segment Theorem.png" alt="Alternate Segment Theorem diagram">
+                                </div>
+                            </div>
+                            <h3 class="theorem-title">Alternate Segment Theorem</h3>
+                        </div>
+                        <div class="theorem-card-face theorem-card-back theorem-card-back--v8">
+                            <h3 class="theorem-title theorem-title--back">Alternate Segment</h3>
+                            <p class="theorem-back-text">The tangent-chord angle equals the angle in the opposite segment of the circle.</p>
+                            <p class="theorem-back-hint">Click again to return</p>
                         </div>
                     </div>
-                    <h3 class="theorem-title">Alternate Segment Theorem</h3>
                 </div>
             </div>
         </div>
     </section>
-
-
 
     <section class="ai-section">
         <div class="container">
@@ -333,7 +440,7 @@
         </div>
     </section>
 
-    <section class="premium-section">
+    <section class="premium-section" id="support-us">
         <div class="container">
             <div class="premium-banner">
                 <div class="premium-bg-circle premium-bg-circle-1"></div>
@@ -344,80 +451,12 @@
                             <svg class="crown-icon" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <path d="M2 8l2 12h16l2-12-6 5-4-9-4 9z"/>
                             </svg>
-                            <span class="premium-badge" data-i18n="home.premium.badge">Premium</span>
+                            <span class="premium-badge">PREMIUM</span>
                         </div>
-                        <h2 class="premium-title" data-i18n="home.premium.title">Upgrade to Premium Practice</h2>
-                        <p class="premium-description" data-i18n="home.premium.desc">
-                            Unlock unlimited quizzes, advanced theorems, personalized learning paths, and detailed analytics. Take your geometry skills to the next level.
-                        </p>
-                    </div>
-                    <div class="premium-action">
-                        <button type="button" class="btn btn-premium">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
-                            </svg>
-                            <span data-i18n="home.premium.cta">Get Premium</span>
-                        </button>
                     </div>
                 </div>
             </div>
         </div>
     </section>
-
-    <footer class="footer">
-        <div class="container">
-            <div class="footer-grid">
-                <div class="footer-brand">
-                    <a href="#home" class="logo">
-                        <div class="logo-icon">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                                <circle cx="12" cy="12" r="10"/>
-                            </svg>
-                        </div>
-                        <span class="logo-text">CircleLearn</span>
-                    </a>
-                    <p class="footer-description">
-                        Master GCSE circle geometry through interactive learning, engaging games, and AI-powered guidance. Make math visual, accessible, and fun.
-                    </p>
-                </div>
-
-                <div class="footer-links-section">
-                    <h4 class="footer-links-title" data-i18n="footer.quickLinks">Quick Links</h4>
-                    <ul class="footer-links">
-                        <li><a href="#home">Home</a></li>
-                        <li><a href="game/game.html">Game</a></li>
-                        <li><a href="quiz/quiz.html">Quiz</a></li>
-                        <li><a href="contact/contact.html" data-i18n="footer.contact">Contact</a></li>
-                    </ul>
-                </div>
-
-                <div class="footer-links-section">
-                    <h4 class="footer-links-title" data-i18n="footer.legal">Legal</h4>
-                    <ul class="footer-links">
-                        <li><a href="#privacy" data-i18n="footer.privacy">Privacy Policy</a></li>
-                        <li><a href="#terms" data-i18n="footer.terms">Terms of Service</a></li>
-                        <li><a href="#accessibility" data-i18n="footer.accessibility">Accessibility</a></li>
-                    </ul>
-                </div>
-            </div>
-
-            <div class="footer-bottom">
-                <p class="footer-copyright" data-i18n="footer.copy">
-                    © 2026 CircleLearn. All rights reserved. Built with care for students worldwide.
-                </p>
-            </div>
-        </div>
-    </footer>
-
-    <button type="button" class="floating-chat-btn" id="floatingChatBtn" aria-label="Open chat">
-        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
-        </svg>
-    </button>
-
-    <script src="js/data/site-i18n.js"></script>
-    <script src="js/utils.js"></script>
-    <script src="js/main.js"></script>
-    <script src="js/pages/home.js"></script>
 </body>
 </html>

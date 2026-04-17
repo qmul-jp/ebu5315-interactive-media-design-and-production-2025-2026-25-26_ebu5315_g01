@@ -17,11 +17,7 @@
         <div class="container">
             <nav class="nav">
                 <a href="../index.html#home" class="logo" aria-label="CircleLearn Home">
-                    <div class="logo-icon">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                            <circle cx="12" cy="12" r="10"/>
-                        </svg>
-                    </div>
+                    <img src="../assets/images/homepage/icon.png" width="40" height="40"></img>
                     <span class="logo-text">GEOMETRY CHALLENGER</span>
                 </a>
 
@@ -31,15 +27,60 @@
                     <a href="../quiz/quiz.html" class="nav-link" data-i18n="nav.quiz">Quiz</a>
                 </div>
 
-                <div class="nav-actions">
-                    <div class="settings-dropdown">
-                        <button type="button" class="btn-icon" id="settingsToggle" aria-label="Open settings" aria-expanded="false" aria-haspopup="true">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <circle cx="12" cy="12" r="3"></circle>
-                                <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33h.01a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51h.01a1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82v.01a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+                <div class="nav-actions nav-settings-inline">
+                    <div class="glass-radio-group">
+                        <input type="radio" name="langPlan" id="glass-lang-en" checked="" />
+                        <label for="glass-lang-en">English</label>
+
+                        <input type="radio" name="langPlan" id="glass-lang-zh" />
+                        <label for="glass-lang-zh">简体中文</label>
+
+                        <div class="glass-glider"></div>
+                    </div>
+
+                    <label class="theme-switch">
+                        <input type="checkbox" class="theme-switch__checkbox">
+                        <div class="theme-switch__container">
+                        <div class="theme-switch__clouds"></div>
+                        <div class="theme-switch__stars-container">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 144 55" fill="none">
+                            <path fill-rule="evenodd" clip-rule="evenodd" d="M135.831 3.00688C135.055 3.85027 134.111 4.29946 133 4.35447C134.111 4.40947 135.055 4.85867 135.831 5.71123C136.607 6.55462 136.996 7.56303 136.996 8.72727C136.996 7.95722 137.172 7.25134 137.525 6.59129C137.886 5.93124 138.372 5.39954 138.98 5.00535C139.598 4.60199 140.268 4.39114 141 4.35447C139.88 4.2903 138.936 3.85027 138.16 3.00688C137.384 2.16348 136.996 1.16425 136.996 0C136.996 1.16425 136.607 2.16348 135.831 3.00688ZM31 23.3545C32.1114 23.2995 33.0551 22.8503 33.8313 22.0069C34.6075 21.1635 34.9956 20.1642 34.9956 19C34.9956 20.1642 35.3837 21.1635 36.1599 22.0069C36.9361 22.8503 37.8798 23.2903 39 23.3545C38.2679 23.3911 37.5976 23.602 36.9802 24.0053C36.3716 24.3995 35.8864 24.9312 35.5248 25.5913C35.172 26.2513 34.9956 26.9572 34.9956 27.7273C34.9956 26.563 34.6075 25.5546 33.8313 24.7112C33.0551 23.8587 32.1114 23.4095 31 23.3545ZM0 36.3545C1.11136 36.2995 2.05513 35.8503 2.83131 35.0069C3.6075 34.1635 3.99559 33.1642 3.99559 32C3.99559 33.1642 4.38368 34.1635 5.15987 35.0069C5.93605 35.8503 6.87982 36.2903 8 36.3545C7.26792 36.3911 6.59757 36.602 5.98015 37.0053C5.37155 37.3995 4.88644 37.9312 4.52481 38.5913C4.172 39.2513 3.99559 39.9572 3.99559 40.7273C3.99559 39.563 3.6075 38.5546 2.83131 37.7112C2.05513 36.8587 1.11136 36.4095 0 36.3545ZM56.8313 24.0069C56.0551 24.8503 55.1114 25.2995 54 25.3545C55.1114 25.4095 56.0551 25.8587 56.8313 26.7112C57.6075 27.5546 57.9956 28.563 57.9956 29.7273C57.9956 28.9572 58.172 28.2513 58.5248 27.5913C58.8864 26.9312 59.3716 26.3995 59.9802 26.0053C60.5976 25.602 61.2679 25.3911 62 25.3545C60.8798 25.2903 59.9361 24.8503 59.1599 24.0069C58.3837 23.1635 57.9956 22.1642 57.9956 21C57.9956 22.1642 57.6075 23.1635 56.8313 24.0069ZM81 25.3545C82.1114 25.2995 83.0551 24.8503 83.8313 24.0069C84.6075 23.1635 84.9956 22.1642 84.9956 21C84.9956 22.1642 85.3837 23.1635 86.1599 24.0069C86.9361 24.8503 87.8798 25.2903 89 25.3545C88.2679 25.3911 87.5976 25.602 86.9802 26.0053C86.3716 26.3995 85.8864 26.9312 85.5248 27.5913C85.172 28.2513 84.9956 28.9572 84.9956 29.7273C84.9956 28.563 84.6075 27.5546 83.8313 26.7112C83.0551 25.8587 82.1114 25.4095 81 25.3545ZM136 36.3545C137.111 36.2995 138.055 35.8503 138.831 35.0069C139.607 34.1635 139.996 33.1642 139.996 32C139.996 33.1642 140.384 34.1635 141.16 35.0069C141.936 35.8503 142.88 36.2903 144 36.3545C143.268 36.3911 142.598 36.602 141.98 37.0053C141.372 37.3995 140.886 37.9312 140.525 38.5913C140.172 39.2513 139.996 39.9572 139.996 40.7273C139.996 39.563 139.607 38.5546 138.831 37.7112C138.055 36.8587 137.111 36.4095 136 36.3545ZM101.831 49.0069C101.055 49.8503 100.111 50.2995 99 50.3545C100.111 50.4095 101.055 50.8587 101.831 51.7112C102.607 52.5546 102.996 53.563 102.996 54.7273C102.996 53.9572 103.172 53.2513 103.525 52.5913C103.886 51.9312 104.372 51.3995 104.98 51.0053C105.598 50.602 106.268 50.3911 107 50.3545C105.88 50.2903 104.936 49.8503 104.16 49.0069C103.384 48.1635 102.996 47.1642 102.996 46C102.996 47.1642 102.607 48.1635 101.831 49.0069Z" fill="currentColor"></path>
+                            </svg>
+                        </div>
+                        <div class="theme-switch__circle-container">
+                            <div class="theme-switch__sun-moon-container">
+                            <div class="theme-switch__moon">
+                                <div class="theme-switch__spot"></div>
+                                <div class="theme-switch__spot"></div>
+                                <div class="theme-switch__spot"></div>
+                            </div>
+                            </div>
+                        </div>
+                        </div>
+                    </label>
+                    <div class="select nav-contact-select" id="navContactSelect">
+                        <button
+                            type="button"
+                            class="selected"
+                            id="navContactSelectToggle"
+                            aria-haspopup="true"
+                            aria-expanded="false"
+                            aria-controls="navContactSelectOptions"
+                        >
+                            <span data-i18n="settings.about">About</span>
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                height="1em"
+                                viewBox="0 0 512 512"
+                                class="arrow"
+                                aria-hidden="true"
+                            >
+                                <path
+                                    d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z"
+                                ></path>
                             </svg>
                         </button>
-                        <div class="settings-menu" id="settingsMenu" role="menu" aria-label="Settings menu">
+                        <div class="settings-menu" id="navContactSelectOptions" role="menu" aria-label="Settings menu">
                             <button type="button" class="settings-item" id="menuLangToggle" role="menuitem">
                                 <span data-i18n="settings.language">语言</span>
                                 <span class="settings-value" id="menuLangValue">EN</span>
@@ -56,7 +97,8 @@
                                     <button type="button" id="fontLarge" aria-label="Large font">A+</button>
                                 </div>
                             </div>
-                            <a href="../contact/contact.html" class="settings-item settings-link" role="menuitem" data-i18n="settings.contact">联系我们</a>
+                            <a href="../contact/contact.html" class="settings-item settings-link" role="menuitem" data-i18n="settings.contact">Contact Us</a>
+                            <a href="../index.html#support-us" class="settings-item settings-link option-support" role="menuitem" data-i18n="settings.support">Support Us</a>
                         </div>
                     </div>
                 </div>
@@ -101,14 +143,14 @@
                     </svg>
                 </button>
                 <div class="learn-toc-menu" id="learnTocMenu" role="menu" hidden>
-                    <a class="learn-toc-link" href="#angle-centre" role="menuitem">Angle at the Centre</a>
-                    <a class="learn-toc-link" href="#angles-semicircle" role="menuitem">Angles in Semicircle</a>
-                    <a class="learn-toc-link" href="#cyclic-quadrilateral" role="menuitem">Cyclic Quadrilateral</a>
-                    <a class="learn-toc-link" href="#radius-tangent" role="menuitem">Radius to a Tangent</a>
-                    <a class="learn-toc-link" href="#same-segment" role="menuitem">Angles in the Same Segment</a>
-                    <a class="learn-toc-link" href="#tangents-point" role="menuitem">Tangents from a Point</a>
-                    <a class="learn-toc-link" href="#tangents-point-ii" role="menuitem">Tangents from a Point (II)</a>
-                    <a class="learn-toc-link" href="#alternate-segment" role="menuitem">Alternate Segment Theorem</a>
+                    <a class="learn-toc-link" href="#angle-centre" role="menuitem" data-i18n="learn.basic.angleCentre.title">Angle at the Centre</a>
+                    <a class="learn-toc-link" href="#angles-semicircle" role="menuitem" data-i18n="learn.basic.anglesSemicircle.title">Angles in Semicircle</a>
+                    <a class="learn-toc-link" href="#cyclic-quadrilateral" role="menuitem" data-i18n="learn.basic.cyclicQuadrilateral.title">Cyclic Quadrilateral</a>
+                    <a class="learn-toc-link" href="#radius-tangent" role="menuitem" data-i18n="learn.basic.radiusTangent.title">Radius to a Tangent</a>
+                    <a class="learn-toc-link" href="#same-segment" role="menuitem" data-i18n="learn.basic.sameSegment.title">Angles in the Same Segment</a>
+                    <a class="learn-toc-link" href="#tangents-point" role="menuitem" data-i18n="learn.basic.tangentsPoint.title">Tangents from a Point to a Circle</a>
+                    <a class="learn-toc-link" href="#tangents-point-ii" role="menuitem" data-i18n="learn.basic.tangentsPoint2.title">Tangents from a Point to a Circle(II)</a>
+                    <a class="learn-toc-link" href="#alternate-segment" role="menuitem" data-i18n="learn.basic.alternateSegment.title">Alternate Segment Theorem</a>
                 </div>
             </div>
             <div class="learn-toc-dropdown">
@@ -121,10 +163,10 @@
                     </svg>
                 </button>
                 <div class="learn-toc-menu" id="learnTocMenuAdvanced" role="menu" hidden>
-                    <a class="learn-toc-link" href="#adv-secant" role="menuitem">Secant Theorem</a>
-                    <a class="learn-toc-link" href="#adv-intersecting-chords" role="menuitem">Intersecting Chords Theorem</a>
-                    <a class="learn-toc-link" href="#adv-tangent-secant" role="menuitem">Tangent–Secant Theorem</a>
-                    <a class="learn-toc-link" href="#adv-perpendicular-diameter" role="menuitem">Perpendicular Diameter Theorem</a>
+                    <a class="learn-toc-link" href="#adv-secant" role="menuitem" data-i18n="learn.advSecant.title">Secant Theorem</a>
+                    <a class="learn-toc-link" href="#adv-intersecting-chords" role="menuitem" data-i18n="learn.advIntersectingChords.title">Intersecting Chords Theorem</a>
+                    <a class="learn-toc-link" href="#adv-tangent-secant" role="menuitem" data-i18n="learn.advTangentSecant.title">Tangent–Secant Theorem</a>
+                    <a class="learn-toc-link" href="#adv-perpendicular-diameter" role="menuitem" data-i18n="learn.advPerpendicularDiameter.title">Perpendicular Diameter Theorem</a>
                 </div>
             </div>
             <div class="learn-toc-dropdown">
@@ -137,11 +179,11 @@
                     </svg>
                 </button>
                 <div class="learn-toc-menu" id="learnTocMenuMoreAdvanced" role="menu" hidden>
-                    <a class="learn-toc-link" href="#more-tangency-1" role="menuitem">Point of Tangency 1</a>
-                    <a class="learn-toc-link" href="#more-tangency-2" role="menuitem">Point of Tangency 2</a>
-                    <a class="learn-toc-link" href="#more-zhangjiao" role="menuitem">张角定理</a>
-                    <a class="learn-toc-link" href="#more-reim" role="menuitem">Reim Theorem</a>
-                    <a class="learn-toc-link" href="#more-simson" role="menuitem">Simson Theorem</a>
+                    <a class="learn-toc-link" href="#more-tangency-1" role="menuitem" data-i18n="learn.moreTangency1.title">Point of Tangency 1</a>
+                    <a class="learn-toc-link" href="#more-tangency-2" role="menuitem" data-i18n="learn.moreTangency2.title">Point of Tangency 2</a>
+                    <a class="learn-toc-link" href="#more-zhangjiao" role="menuitem" data-i18n="learn.moreZhangjiao.title">Zhangjiao Theorem</a>
+                    <a class="learn-toc-link" href="#more-reim" role="menuitem" data-i18n="learn.moreReim.title">Reim Theorem</a>
+                    <a class="learn-toc-link" href="#more-simson" role="menuitem" data-i18n="learn.moreSimson.title">Simson Theorem</a>
                 </div>
             </div>
         </aside>
@@ -149,10 +191,9 @@
         <div class="learn-sections">
             <header class="learn-sections-intro" id="basic-theorems">
                 <div class="learn-sections-intro-inner">
-                    <span class="learn-sections-tier-badge" title="基础定理">Basic</span>
+                    <span class="learn-sections-tier-badge" title="基础定理" data-i18n="learn.tier.basic.badge">Basic</span>
                     <div class="learn-sections-intro-copy">
-                        <h2 class="learn-sections-tier-heading"><span class="learn-sections-tier-heading-en">The following 8 theorems belong to the basic theorems</span></h2>
-                        
+                        <h2 class="learn-sections-tier-heading"><span class="learn-sections-tier-heading-en" data-i18n="learn.tier.basic.heading">The following 8 theorems belong to the basic theorems</span></h2>
                     </div>
                 </div>
             </header>
@@ -161,16 +202,12 @@
                 <div class="learn-theorem-inner">
                     <div class="learn-theorem-body">
                         <div class="learn-theorem-badges">
-                            <span class="learn-theorem-tier"><span class="learn-theorem-tier-en">Basic</span></span>
-                            <span class="learn-theorem-index">Theorem 1</span>
+                            <span class="learn-theorem-tier"><span class="learn-theorem-tier-en" data-i18n="learn.tier.basic.badge">Basic</span></span>
+                            <span class="learn-theorem-index"><span data-i18n="learn.theoremIndexPrefix">Theorem</span> 1</span>
                         </div>
-                        <h2 class="learn-theorem-title">Angle at the Centre</h2>
-                        <p class="learn-theorem-statement">The angle subtended at the centre of a circle is twice the angle subtended at any point on the circumference, from the same arc.</p>
-                        <p class="learn-theorem-detail">If two chords from the same arc meet at the centre and at the rim, the “central” angle is the larger one. This links inscribed angles to the geometry of arcs and is a foundation for many circle proofs.</p>
-                        <div class="learn-theorem-tip">
-                            <span class="learn-theorem-tip-icon">!</span>
-                            <span><strong>Exam tip:</strong> Check that both angles really stand on the <em>same</em> arc; mixing arcs is the usual trap.</span>
-                        </div>
+                        <h2 class="learn-theorem-title" data-i18n="learn.basic.angleCentre.title">Angle at the Centre</h2>
+                        <p class="learn-theorem-statement" data-i18n="learn.basic.angleCentre.statement">The angle subtended at the centre of a circle is twice the angle subtended at any point on the circumference, from the same arc.</p>
+                        <p class="learn-theorem-detail" data-i18n="learn.basic.angleCentre.detail">If two chords from the same arc meet at the centre and at the rim, the central angle is the larger one. This links inscribed angles to arc geometry and is a foundation for many circle proofs.</p>
                     </div>
                     <div class="learn-theorem-visual">
                         <img src="../assets/images/homepage/Angle at the Centre.png" alt="Diagram: angle at the centre and angle at the circumference">
@@ -182,16 +219,12 @@
                 <div class="learn-theorem-inner">
                     <div class="learn-theorem-body">
                         <div class="learn-theorem-badges">
-                            <span class="learn-theorem-tier"><span class="learn-theorem-tier-en">Basic</span> </span>
-                            <span class="learn-theorem-index">Theorem 2</span>
+                            <span class="learn-theorem-tier"><span class="learn-theorem-tier-en" data-i18n="learn.tier.basic.badge">Basic</span> </span>
+                            <span class="learn-theorem-index"><span data-i18n="learn.theoremIndexPrefix">Theorem</span> 2</span>
                         </div>
-                        <h2 class="learn-theorem-title">Angles in a Semicircle</h2>
-                        <p class="learn-theorem-statement">Any angle inscribed in a semicircle is a right angle (90°).</p>
-                        <p class="learn-theorem-detail">The diameter is the chord “across the flat side” of the semicircle. Thales’ theorem is the special case of the angle-at-centre rule when the central angle is 180°.</p>
-                        <div class="learn-theorem-tip">
-                            <span class="learn-theorem-tip-icon">!</span>
-                            <span><strong>Quick check:</strong> If you can draw a diameter as one side of the triangle, the opposite corner touches the circle at a right angle.</span>
-                        </div>
+                        <h2 class="learn-theorem-title" data-i18n="learn.basic.anglesSemicircle.title">Angles in a Semicircle</h2>
+                        <p class="learn-theorem-statement" data-i18n="learn.basic.anglesSemicircle.statement">Any angle inscribed in a semicircle is a right angle (90°).</p>
+                        <p class="learn-theorem-detail" data-i18n="learn.basic.anglesSemicircle.detail">The diameter is the chord across the flat side of the semicircle. This is the special case of the angle-at-centre rule when the central angle is 180°.</p>
                     </div>
                     <div class="learn-theorem-visual">
                         <img src="../assets/images/homepage/Angles in Semicircle.png" alt="Diagram: right angle in a semicircle">
@@ -203,15 +236,15 @@
                 <div class="learn-theorem-inner">
                     <div class="learn-theorem-body">
                         <div class="learn-theorem-badges">
-                            <span class="learn-theorem-tier"><span class="learn-theorem-tier-en">Basic</span> </span>
-                            <span class="learn-theorem-index">Theorem 3</span>
+                            <span class="learn-theorem-tier"><span class="learn-theorem-tier-en" data-i18n="learn.tier.basic.badge">Basic</span> </span>
+                            <span class="learn-theorem-index"><span data-i18n="learn.theoremIndexPrefix">Theorem</span> 3</span>
                         </div>
-                        <h2 class="learn-theorem-title">Cyclic Quadrilateral</h2>
-                        <p class="learn-theorem-statement">Opposite angles of a cyclic quadrilateral sum to 180°.</p>
-                        <p class="learn-theorem-detail">A cyclic quadrilateral has all four vertices on one circle. Pairs of opposite angles are supplementary, which often unlocks angle-chasing in harder diagrams.</p>
+                        <h2 class="learn-theorem-title" data-i18n="learn.basic.cyclicQuadrilateral.title">Cyclic Quadrilateral</h2>
+                        <p class="learn-theorem-statement" data-i18n="learn.basic.cyclicQuadrilateral.statement">Opposite angles of a cyclic quadrilateral sum to 180°.</p>
+                        <p class="learn-theorem-detail" data-i18n="learn.basic.cyclicQuadrilateral.detail">A cyclic quadrilateral has all four vertices on one circle. Opposite angles are supplementary, which often unlocks angle-chasing in harder diagrams.</p>
                         <div class="learn-theorem-tip">
                             <span class="learn-theorem-tip-icon">!</span>
-                            <span><strong>Converse idea:</strong> If a pair of opposite angles add to 180°, the four points may lie on a circle—useful in “prove concyclic” questions.</span>
+                            <span><strong data-i18n="learn.basic.cyclicQuadrilateral.tipStrong">Converse idea:</strong> <span data-i18n="learn.basic.cyclicQuadrilateral.tip">If one pair of opposite angles adds to 180°, the four points may be concyclic.</span></span>
                         </div>
                     </div>
                     <div class="learn-theorem-visual">
@@ -224,15 +257,15 @@
                 <div class="learn-theorem-inner">
                     <div class="learn-theorem-body">
                         <div class="learn-theorem-badges">
-                            <span class="learn-theorem-tier"><span class="learn-theorem-tier-en">Basic</span> </span>
-                            <span class="learn-theorem-index">Theorem 4</span>
+                            <span class="learn-theorem-tier"><span class="learn-theorem-tier-en" data-i18n="learn.tier.basic.badge">Basic</span> </span>
+                            <span class="learn-theorem-index"><span data-i18n="learn.theoremIndexPrefix">Theorem</span> 4</span>
                         </div>
-                        <h2 class="learn-theorem-title">Radius to a Tangent</h2>
-                        <p class="learn-theorem-statement">A radius drawn to the point of contact is perpendicular to the tangent: the angle between them is 90°.</p>
-                        <p class="learn-theorem-detail">Tangents “kiss” the circle once. The radius aims straight at that touching point, so it meets the tangent line at a right angle—key for coordinate geometry and construction problems.</p>
+                        <h2 class="learn-theorem-title" data-i18n="learn.basic.radiusTangent.title">Radius to a Tangent</h2>
+                        <p class="learn-theorem-statement" data-i18n="learn.basic.radiusTangent.statement">A radius drawn to the point of contact is perpendicular to the tangent: the angle between them is 90°.</p>
+                        <p class="learn-theorem-detail" data-i18n="learn.basic.radiusTangent.detail">A tangent touches the circle at exactly one point. The radius to that touching point meets the tangent at a right angle, which is key in construction and coordinate problems.</p>
                         <div class="learn-theorem-tip">
                             <span class="learn-theorem-tip-icon">!</span>
-                            <span><strong>Pair with:</strong> Equal tangent lengths from an external point—often the same diagram uses both facts.</span>
+                            <span><strong data-i18n="learn.basic.radiusTangent.tipStrong">Pair with:</strong> <span data-i18n="learn.basic.radiusTangent.tip">Combine with equal tangent lengths from an external point; many questions use both facts together.</span></span>
                         </div>
                     </div>
                     <div class="learn-theorem-visual">
@@ -245,15 +278,15 @@
                 <div class="learn-theorem-inner">
                     <div class="learn-theorem-body">
                         <div class="learn-theorem-badges">
-                            <span class="learn-theorem-tier"><span class="learn-theorem-tier-en">Basic</span> </span>
-                            <span class="learn-theorem-index">Theorem 5</span>
+                            <span class="learn-theorem-tier"><span class="learn-theorem-tier-en" data-i18n="learn.tier.basic.badge">Basic</span> </span>
+                            <span class="learn-theorem-index"><span data-i18n="learn.theoremIndexPrefix">Theorem</span> 5</span>
                         </div>
-                        <h2 class="learn-theorem-title">Angles in the Same Segment</h2>
-                        <p class="learn-theorem-statement">Angles subtended by the same chord (or arc) at the circumference, on the same side of the chord, are equal.</p>
-                        <p class="learn-theorem-detail">Think of the chord as a “string” cutting the circle: any viewpoint on the same arc sees the same opening angle. Switching segments flips to the supplementary angle pair.</p>
+                        <h2 class="learn-theorem-title" data-i18n="learn.basic.sameSegment.title">Angles in the Same Segment</h2>
+                        <p class="learn-theorem-statement" data-i18n="learn.basic.sameSegment.statement">Angles subtended by the same chord (or arc) at the circumference, on the same side of the chord, are equal.</p>
+                        <p class="learn-theorem-detail" data-i18n="learn.basic.sameSegment.detail">Treat the chord as dividing the circle into two arcs. Any point on the same arc sees the same chord under the same angle; switching arc gives the supplementary angle pair.</p>
                         <div class="learn-theorem-tip">
                             <span class="learn-theorem-tip-icon">!</span>
-                            <span><strong>Label carefully:</strong> “Same segment” means same side of the chord—don’t average angles from opposite arcs.</span>
+                            <span><strong data-i18n="learn.basic.sameSegment.tipStrong">Label carefully:</strong> <span data-i18n="learn.basic.sameSegment.tip">Same segment means same side of the chord; do not mix angles from opposite arcs.</span></span>
                         </div>
                     </div>
                     <div class="learn-theorem-visual">
@@ -266,15 +299,15 @@
                 <div class="learn-theorem-inner">
                     <div class="learn-theorem-body">
                         <div class="learn-theorem-badges">
-                            <span class="learn-theorem-tier"><span class="learn-theorem-tier-en">Basic</span> </span>
-                            <span class="learn-theorem-index">Theorem 6</span>
+                            <span class="learn-theorem-tier"><span class="learn-theorem-tier-en" data-i18n="learn.tier.basic.badge">Basic</span> </span>
+                            <span class="learn-theorem-index"><span data-i18n="learn.theoremIndexPrefix">Theorem</span> 6</span>
                         </div>
-                        <h2 class="learn-theorem-title">Tangents from a Point to a Circle</h2>
-                        <p class="learn-theorem-statement">From an external point, the two tangent segments to a circle have equal lengths.</p>
-                        <p class="learn-theorem-detail">The two tangents form a symmetric “V” with the point outside the circle. Equal lengths often simplify perimeter or power-of-a-point style reasoning.</p>
+                        <h2 class="learn-theorem-title" data-i18n="learn.basic.tangentsPoint.title">Tangents from a Point to a Circle</h2>
+                        <p class="learn-theorem-statement" data-i18n="learn.basic.tangentsPoint.statement">From an external point, the two tangent segments to a circle have equal lengths.</p>
+                        <p class="learn-theorem-detail" data-i18n="learn.basic.tangentsPoint.detail">The two tangents form a symmetric V-shape from the external point. Equal tangent lengths often simplify perimeter and length equations.</p>
                         <div class="learn-theorem-tip">
                             <span class="learn-theorem-tip-icon">!</span>
-                            <span><strong>Construction:</strong> Right angles appear where each radius meets its tangent—combine with Pythagoras if lengths are given.</span>
+                            <span><strong data-i18n="learn.basic.tangentsPoint.tipStrong">Construction:</strong> <span data-i18n="learn.basic.tangentsPoint.tip">Mark the two right angles where radii meet tangents; then combine with Pythagoras when lengths are given.</span></span>
                         </div>
                     </div>
                     <div class="learn-theorem-visual">
@@ -287,16 +320,12 @@
                 <div class="learn-theorem-inner">
                     <div class="learn-theorem-body">
                         <div class="learn-theorem-badges">
-                            <span class="learn-theorem-tier"><span class="learn-theorem-tier-en">Basic</span> </span>
-                            <span class="learn-theorem-index">Theorem 7</span>
+                            <span class="learn-theorem-tier"><span class="learn-theorem-tier-en" data-i18n="learn.tier.basic.badge">Basic</span> </span>
+                            <span class="learn-theorem-index"><span data-i18n="learn.theoremIndexPrefix">Theorem</span> 7</span>
                         </div>
-                        <h2 class="learn-theorem-title">Tangents from a Point (II)</h2>
-                        <p class="learn-theorem-statement">The line from the external point to the centre bisects the angle between the two tangents, and bisects the angle between the two radii to the contact points.</p>
-                        <p class="learn-theorem-detail">Symmetry about the line through the external point and the centre pairs up equal angles and equal distances—useful in locus and proof questions.</p>
-                        <div class="learn-theorem-tip">
-                            <span class="learn-theorem-tip-icon">!</span>
-                            <span><strong>Visual cue:</strong> Mirror symmetry across the “centre line” is the fastest way to remember which angles match.</span>
-                        </div>
+                        <h2 class="learn-theorem-title" data-i18n="learn.basic.tangentsPoint2.title">Tangents from a Point (II)</h2>
+                        <p class="learn-theorem-statement" data-i18n="learn.basic.tangentsPoint2.statement">The line from the external point to the centre bisects the angle between the two tangents, and bisects the angle between the two radii to the contact points.</p>
+                        <p class="learn-theorem-detail" data-i18n="learn.basic.tangentsPoint2.detail">Symmetry about the line through the external point and centre creates matched angles and distances. This is useful in loci and structured geometry proofs.</p>
                     </div>
                     <div class="learn-theorem-visual">
                         <img src="../assets/images/homepage/Tangents from a Point to a Circle II.png" alt="Diagram: symmetry of tangents and centre line">
@@ -308,15 +337,15 @@
                 <div class="learn-theorem-inner">
                     <div class="learn-theorem-body">
                         <div class="learn-theorem-badges">
-                            <span class="learn-theorem-tier"><span class="learn-theorem-tier-en">Basic</span> </span>
-                            <span class="learn-theorem-index">Theorem 8</span>
+                            <span class="learn-theorem-tier"><span class="learn-theorem-tier-en" data-i18n="learn.tier.basic.badge">Basic</span> </span>
+                            <span class="learn-theorem-index"><span data-i18n="learn.theoremIndexPrefix">Theorem</span> 8</span>
                         </div>
-                        <h2 class="learn-theorem-title">Alternate Segment Theorem</h2>
-                        <p class="learn-theorem-statement">The angle between a tangent and a chord through the point of contact equals the angle in the alternate segment (the angle subtended by the chord in the opposite arc).</p>
-                        <p class="learn-theorem-detail">It connects “tangent direction” to “angles sitting in the other part of the circle.” Often appears in tangent–chord angle-chasing.</p>
+                        <h2 class="learn-theorem-title" data-i18n="learn.basic.alternateSegment.title">Alternate Segment Theorem</h2>
+                        <p class="learn-theorem-statement" data-i18n="learn.basic.alternateSegment.statement">The angle between a tangent and a chord through the contact point equals the angle in the alternate segment, subtended by the chord in the opposite arc.</p>
+                        <p class="learn-theorem-detail" data-i18n="learn.basic.alternateSegment.detail">This links tangent direction to an inscribed angle on the opposite arc. It appears frequently in tangent-chord angle-chasing questions.</p>
                         <div class="learn-theorem-tip">
                             <span class="learn-theorem-tip-icon">!</span>
-                            <span><strong>Which segment?</strong> The chord splits the circle into two arcs; the alternate segment is the one <em>not</em> containing the angle you first drew with the tangent.</span>
+                            <span><strong data-i18n="learn.basic.alternateSegment.tipStrong">Which segment?</strong> <span data-i18n="learn.basic.alternateSegment.tip">The alternate segment is the arc opposite the tangent-chord angle, not the arc containing that angle.</span></span>
                         </div>
                     </div>
                     <div class="learn-theorem-visual">
@@ -334,222 +363,16 @@
                 </div>
             </header>
 
-            <article id="adv-secant" class="learn-theorem learn-theorem--advanced" data-theorem-tier="advanced">
-                <div class="learn-theorem-inner">
-                    <div class="learn-theorem-body">
-                        <div class="learn-theorem-badges">
-                            <span class="learn-theorem-tier"><span class="learn-theorem-tier-en" data-i18n="learn.tier.advanced.badge">Advanced</span></span>
-                            <span class="learn-theorem-index">Theorem 1</span>
-                        </div>
-                        <h2 class="learn-theorem-title">Secant Theorem</h2>
-                        <p class="learn-theorem-statement" data-i18n="learn.placeholder.statement">[Placeholder] The official statement for this theorem will be added here.</p>
-                        <p class="learn-theorem-detail" data-i18n="learn.placeholder.detail">[Placeholder] Intuition and a longer explanation will be added here.</p>
-                        <div class="learn-theorem-tip">
-                            <span class="learn-theorem-tip-icon">!</span>
-                            <span><strong data-i18n="learn.placeholder.tipStrong">Note:</strong> <span data-i18n="learn.placeholder.tip">[Placeholder] A short exam tip or reminder will be added here.</span></span>
-                        </div>
-                    </div>
-                    <div class="learn-theorem-visual">
-                        <img src="../assets/images/learn_more/进阶/Secant Theorem.png" alt="Secant Theorem diagram">
-                    </div>
-                </div>
-            </article>
-
-            <article id="adv-intersecting-chords" class="learn-theorem learn-theorem--advanced" data-theorem-tier="advanced">
-                <div class="learn-theorem-inner">
-                    <div class="learn-theorem-body">
-                        <div class="learn-theorem-badges">
-                            <span class="learn-theorem-tier"><span class="learn-theorem-tier-en" data-i18n="learn.tier.advanced.badge">Advanced</span></span>
-                            <span class="learn-theorem-index">Theorem 2</span>
-                        </div>
-                        <h2 class="learn-theorem-title">Intersecting Chords Theorem</h2>
-                        <p class="learn-theorem-statement" data-i18n="learn.placeholder.statement">[Placeholder] The official statement for this theorem will be added here.</p>
-                        <p class="learn-theorem-detail" data-i18n="learn.placeholder.detail">[Placeholder] Intuition and a longer explanation will be added here.</p>
-                        <div class="learn-theorem-tip">
-                            <span class="learn-theorem-tip-icon">!</span>
-                            <span><strong data-i18n="learn.placeholder.tipStrong">Note:</strong> <span data-i18n="learn.placeholder.tip">[Placeholder] A short exam tip or reminder will be added here.</span></span>
-                        </div>
-                    </div>
-                    <div class="learn-theorem-visual">
-                        <img src="../assets/images/learn_more/进阶/Intersecting Chords Theorem.png" alt="Intersecting Chords Theorem diagram">
-                    </div>
-                </div>
-            </article>
-
-            <article id="adv-tangent-secant" class="learn-theorem learn-theorem--advanced" data-theorem-tier="advanced">
-                <div class="learn-theorem-inner">
-                    <div class="learn-theorem-body">
-                        <div class="learn-theorem-badges">
-                            <span class="learn-theorem-tier"><span class="learn-theorem-tier-en" data-i18n="learn.tier.advanced.badge">Advanced</span></span>
-                            <span class="learn-theorem-index">Theorem 3</span>
-                        </div>
-                        <h2 class="learn-theorem-title">Tangent–Secant Theorem</h2>
-                        <p class="learn-theorem-statement" data-i18n="learn.placeholder.statement">[Placeholder] The official statement for this theorem will be added here.</p>
-                        <p class="learn-theorem-detail" data-i18n="learn.placeholder.detail">[Placeholder] Intuition and a longer explanation will be added here.</p>
-                        <div class="learn-theorem-tip">
-                            <span class="learn-theorem-tip-icon">!</span>
-                            <span><strong data-i18n="learn.placeholder.tipStrong">Note:</strong> <span data-i18n="learn.placeholder.tip">[Placeholder] A short exam tip or reminder will be added here.</span></span>
-                        </div>
-                    </div>
-                    <div class="learn-theorem-visual">
-                        <img src="../assets/images/learn_more/进阶/Tangent–Secant Theorem.png" alt="Tangent–Secant Theorem diagram">
-                    </div>
-                </div>
-            </article>
-
             <article id="adv-perpendicular-diameter" class="learn-theorem learn-theorem--advanced" data-theorem-tier="advanced">
                 <div class="learn-theorem-inner">
                     <div class="learn-theorem-body">
                         <div class="learn-theorem-badges">
                             <span class="learn-theorem-tier"><span class="learn-theorem-tier-en" data-i18n="learn.tier.advanced.badge">Advanced</span></span>
-                            <span class="learn-theorem-index">Theorem 4</span>
                         </div>
-                        <h2 class="learn-theorem-title">Perpendicular Diameter Theorem</h2>
-                        <p class="learn-theorem-statement" data-i18n="learn.placeholder.statement">[Placeholder] The official statement for this theorem will be added here.</p>
-                        <p class="learn-theorem-detail" data-i18n="learn.placeholder.detail">[Placeholder] Intuition and a longer explanation will be added here.</p>
-                        <div class="learn-theorem-tip">
-                            <span class="learn-theorem-tip-icon">!</span>
-                            <span><strong data-i18n="learn.placeholder.tipStrong">Note:</strong> <span data-i18n="learn.placeholder.tip">[Placeholder] A short exam tip or reminder will be added here.</span></span>
                         </div>
-                    </div>
-                    <div class="learn-theorem-visual">
-                        <img src="../assets/images/learn_more/进阶/Perpendicular Diameter Theorem.png" alt="Perpendicular Diameter Theorem diagram">
-                    </div>
-                </div>
-            </article>
-
-            <header class="learn-sections-intro learn-sections-intro--more-advanced" id="more-advanced-theorems">
-                <div class="learn-sections-intro-inner">
-                    <span class="learn-sections-tier-badge" data-i18n="learn.tier.moreAdvanced.badge">更进阶</span>
-                    <div class="learn-sections-intro-copy">
-                        <h2 class="learn-sections-tier-heading"><span data-i18n="learn.tier.moreAdvanced.heading">Further advanced theorems (placeholder copy for each card)</span></h2>
-                    </div>
-                </div>
-            </header>
-
-            <article id="more-tangency-1" class="learn-theorem learn-theorem--more-advanced" data-theorem-tier="more-advanced">
-                <div class="learn-theorem-inner">
-                    <div class="learn-theorem-body">
-                        <div class="learn-theorem-badges">
-                            <span class="learn-theorem-tier"><span class="learn-theorem-tier-en" data-i18n="learn.tier.moreAdvanced.badge">Further Advanced</span></span>
-                            <span class="learn-theorem-index">Theorem 1</span>
-                        </div>
-                        <h2 class="learn-theorem-title">Point of Tangency 1</h2>
-                        <p class="learn-theorem-statement" data-i18n="learn.placeholder.statement">[Placeholder] The official statement for this theorem will be added here.</p>
-                        <p class="learn-theorem-detail" data-i18n="learn.placeholder.detail">[Placeholder] Intuition and a longer explanation will be added here.</p>
-                        <div class="learn-theorem-tip">
-                            <span class="learn-theorem-tip-icon">!</span>
-                            <span><strong data-i18n="learn.placeholder.tipStrong">Note:</strong> <span data-i18n="learn.placeholder.tip">[Placeholder] A short exam tip or reminder will be added here.</span></span>
-                        </div>
-                    </div>
-                    <div class="learn-theorem-visual">
-                        <img src="../assets/images/learn_more/更进阶/Point of Tangency 1.png" alt="Point of Tangency 1 diagram">
-                    </div>
-                </div>
-            </article>
-
-            <article id="more-tangency-2" class="learn-theorem learn-theorem--more-advanced" data-theorem-tier="more-advanced">
-                <div class="learn-theorem-inner">
-                    <div class="learn-theorem-body">
-                        <div class="learn-theorem-badges">
-                            <span class="learn-theorem-tier"><span class="learn-theorem-tier-en" data-i18n="learn.tier.moreAdvanced.badge">Further Advanced</span></span>
-                            <span class="learn-theorem-index">Theorem 2</span>
-                        </div>
-                        <h2 class="learn-theorem-title">Point of Tangency 2</h2>
-                        <p class="learn-theorem-statement" data-i18n="learn.placeholder.statement">[Placeholder] The official statement for this theorem will be added here.</p>
-                        <p class="learn-theorem-detail" data-i18n="learn.placeholder.detail">[Placeholder] Intuition and a longer explanation will be added here.</p>
-                        <div class="learn-theorem-tip">
-                            <span class="learn-theorem-tip-icon">!</span>
-                            <span><strong data-i18n="learn.placeholder.tipStrong">Note:</strong> <span data-i18n="learn.placeholder.tip">[Placeholder] A short exam tip or reminder will be added here.</span></span>
-                        </div>
-                    </div>
-                    <div class="learn-theorem-visual">
-                        <img src="../assets/images/learn_more/更进阶/Point of Tangency 2.png" alt="Point of Tangency 2 diagram">
-                    </div>
-                </div>
-            </article>
-
-            <article id="more-zhangjiao" class="learn-theorem learn-theorem--more-advanced" data-theorem-tier="more-advanced">
-                <div class="learn-theorem-inner">
-                    <div class="learn-theorem-body">
-                        <div class="learn-theorem-badges">
-                            <span class="learn-theorem-tier"><span class="learn-theorem-tier-en" data-i18n="learn.tier.moreAdvanced.badge">Further Advanced</span></span>
-                            <span class="learn-theorem-index">Theorem 3</span>
-                        </div>
-                        <h2 class="learn-theorem-title">张角定理</h2>
-                        <p class="learn-theorem-statement" data-i18n="learn.placeholder.statement">[Placeholder] The official statement for this theorem will be added here.</p>
-                        <p class="learn-theorem-detail" data-i18n="learn.placeholder.detail">[Placeholder] Intuition and a longer explanation will be added here.</p>
-                        <div class="learn-theorem-tip">
-                            <span class="learn-theorem-tip-icon">!</span>
-                            <span><strong data-i18n="learn.placeholder.tipStrong">Note:</strong> <span data-i18n="learn.placeholder.tip">[Placeholder] A short exam tip or reminder will be added here.</span></span>
-                        </div>
-                    </div>
-                    <div class="learn-theorem-visual">
-                        <img src="../assets/images/learn_more/更进阶/张角定理.png" alt="张角定理 diagram">
-                    </div>
-                </div>
-            </article>
-
-            <article id="more-reim" class="learn-theorem learn-theorem--more-advanced" data-theorem-tier="more-advanced">
-                <div class="learn-theorem-inner">
-                    <div class="learn-theorem-body">
-                        <div class="learn-theorem-badges">
-                            <span class="learn-theorem-tier"><span class="learn-theorem-tier-en" data-i18n="learn.tier.moreAdvanced.badge">Further Advanced</span></span>
-                            <span class="learn-theorem-index">Theorem 4</span>
-                        </div>
-                        <h2 class="learn-theorem-title">Reim Theorem</h2>
-                        <p class="learn-theorem-statement" data-i18n="learn.placeholder.statement">[Placeholder] The official statement for this theorem will be added here.</p>
-                        <p class="learn-theorem-detail" data-i18n="learn.placeholder.detail">[Placeholder] Intuition and a longer explanation will be added here.</p>
-                        <div class="learn-theorem-tip">
-                            <span class="learn-theorem-tip-icon">!</span>
-                            <span><strong data-i18n="learn.placeholder.tipStrong">Note:</strong> <span data-i18n="learn.placeholder.tip">[Placeholder] A short exam tip or reminder will be added here.</span></span>
-                        </div>
-                    </div>
-                    <div class="learn-theorem-visual">
-                        <img src="../assets/images/learn_more/更进阶/Reim Theorem.png" alt="Reim Theorem diagram">
-                    </div>
-                </div>
-            </article>
-
-            <article id="more-simson" class="learn-theorem learn-theorem--more-advanced" data-theorem-tier="more-advanced">
-                <div class="learn-theorem-inner">
-                    <div class="learn-theorem-body">
-                        <div class="learn-theorem-badges">
-                            <span class="learn-theorem-tier"><span class="learn-theorem-tier-en" data-i18n="learn.tier.moreAdvanced.badge">Further Advanced</span></span>
-                            <span class="learn-theorem-index">Theorem 5</span>
-                        </div>
-                        <h2 class="learn-theorem-title">Simson Theorem</h2>
-                        <p class="learn-theorem-statement" data-i18n="learn.placeholder.statement">[Placeholder] The official statement for this theorem will be added here.</p>
-                        <p class="learn-theorem-detail" data-i18n="learn.placeholder.detail">[Placeholder] Intuition and a longer explanation will be added here.</p>
-                        <div class="learn-theorem-tip">
-                            <span class="learn-theorem-tip-icon">!</span>
-                            <span><strong data-i18n="learn.placeholder.tipStrong">Note:</strong> <span data-i18n="learn.placeholder.tip">[Placeholder] A short exam tip or reminder will be added here.</span></span>
-                        </div>
-                    </div>
-                    <div class="learn-theorem-visual">
-                        <img src="../assets/images/learn_more/更进阶/Simson Theorem.png" alt="Simson Theorem diagram">
-                    </div>
                 </div>
             </article>
         </div>
     </div>
-
-    <footer class="footer learn-more-footer">
-        <div class="container">
-            <div class="footer-bottom learn-more-footer-bottom">
-                <p class="footer-copyright learn-more-footer-copy">
-                    © 2026 CircleLearn.
-                    <a href="../index.html#home">Home</a> ·
-                    <a href="../game/game.html">Game</a> ·
-                    <a href="../quiz/quiz.html">Quiz</a>
-                </p>
-            </div>
-        </div>
-    </footer>
-
-    <script src="../js/data/site-i18n.js"></script>
-    <script src="../js/utils.js"></script>
-    <script src="../js/main.js"></script>
-    <script src="../js/pages/learn_more.js"></script>
 </body>
 </html>
