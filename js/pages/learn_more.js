@@ -101,6 +101,16 @@
         }
     }
 
+    function initBackToTop() {
+        const btn = document.getElementById('learnBackToTop');
+        if (!btn) return;
+        btn.addEventListener('click', () => {
+            const smooth = !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            window.scrollTo({ top: 0, behavior: smooth ? 'smooth' : 'auto' });
+        });
+    }
+
     bindDropdowns();
     initScrollSpy();
+    initBackToTop();
 })();

@@ -3,6 +3,7 @@
  */
 document.addEventListener('DOMContentLoaded', () => {
     initSettingsMenu();
+    initClickSelectMenu();
     initTheme();
     initLangToggle();
     initSmoothAnchorScroll();

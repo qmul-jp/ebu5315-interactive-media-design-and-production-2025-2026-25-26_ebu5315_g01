@@ -153,12 +153,19 @@ body.dark-mode .learn-back-link {
     top: 88px;
     z-index: 5;
     padding: 4px 0;
+    /* 三组下拉同时展开时，侧栏自身可滚，避免底部超出视口后无法访问 */
+    max-height: calc(100vh - 96px);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    scrollbar-gutter: stable;
 }
 
 @media (max-width: 960px) {
     .learn-toc {
         position: relative;
         top: auto;
+        max-height: none;
+        overflow: visible;
     }
 }
 
@@ -311,6 +318,43 @@ body.dark-mode .learn-toc-link.is-active {
     border-color: rgba(96, 165, 250, 0.35);
 }
 
+/* 左侧目录选中项：按分类配色（基础/进阶/更进阶） */
+#learnTocMenu .learn-toc-link.is-active {
+    color: #1d4ed8;
+    background: linear-gradient(135deg, rgba(219, 234, 254, 0.88) 0%, rgba(224, 231, 255, 0.76) 100%);
+    border-color: rgba(37, 99, 235, 0.28);
+}
+
+#learnTocMenuAdvanced .learn-toc-link.is-active {
+    color: #166534;
+    background: linear-gradient(135deg, rgba(220, 252, 231, 0.9) 0%, rgba(187, 247, 208, 0.78) 100%);
+    border-color: rgba(22, 163, 74, 0.3);
+}
+
+#learnTocMenuMoreAdvanced .learn-toc-link.is-active {
+    color: #92400e;
+    background: linear-gradient(135deg, rgba(254, 243, 199, 0.94) 0%, rgba(254, 249, 195, 0.82) 100%);
+    border-color: rgba(217, 119, 6, 0.34);
+}
+
+body.dark-mode #learnTocMenu .learn-toc-link.is-active {
+    color: #bfdbfe;
+    background: linear-gradient(135deg, rgba(30, 58, 138, 0.38) 0%, rgba(49, 46, 129, 0.3) 100%);
+    border-color: rgba(96, 165, 250, 0.4);
+}
+
+body.dark-mode #learnTocMenuAdvanced .learn-toc-link.is-active {
+    color: #bbf7d0;
+    background: linear-gradient(135deg, rgba(20, 83, 45, 0.48) 0%, rgba(21, 128, 61, 0.34) 100%);
+    border-color: rgba(74, 222, 128, 0.4);
+}
+
+body.dark-mode #learnTocMenuMoreAdvanced .learn-toc-link.is-active {
+    color: #fde68a;
+    background: linear-gradient(135deg, rgba(120, 53, 15, 0.5) 0%, rgba(146, 64, 14, 0.34) 100%);
+    border-color: rgba(251, 191, 36, 0.42);
+}
+
 .learn-sections {
     display: flex;
     flex-direction: column;
@@ -423,28 +467,147 @@ body.dark-mode .learn-theorem-tier {
     border-top: 3px solid rgba(245, 158, 11, 0.55);
 }
 
+/* 分类色：tier 与 index */
+.learn-theorem--basic .learn-theorem-tier {
+    color: #1d4ed8;
+    background: linear-gradient(135deg, rgba(219, 234, 254, 0.92) 0%, rgba(224, 231, 255, 0.88) 100%);
+    border-color: rgba(37, 99, 235, 0.24);
+}
+
+.learn-theorem--basic .learn-theorem-index {
+    color: #1d4ed8;
+}
+
+.learn-theorem--advanced .learn-theorem-tier {
+    color: #166534;
+    background: linear-gradient(135deg, rgba(220, 252, 231, 0.92) 0%, rgba(187, 247, 208, 0.88) 100%);
+    border-color: rgba(22, 163, 74, 0.28);
+}
+
+.learn-theorem--advanced .learn-theorem-index {
+    color: #166534;
+}
+
+.learn-theorem--more-advanced .learn-theorem-tier {
+    color: #92400e;
+    background: linear-gradient(135deg, rgba(254, 243, 199, 0.94) 0%, rgba(254, 249, 195, 0.9) 100%);
+    border-color: rgba(217, 119, 6, 0.3);
+}
+
+.learn-theorem--more-advanced .learn-theorem-index {
+    color: #92400e;
+}
+
+body.dark-mode .learn-theorem--basic .learn-theorem-tier {
+    color: #bfdbfe;
+    background: linear-gradient(135deg, rgba(30, 58, 138, 0.36) 0%, rgba(49, 46, 129, 0.32) 100%);
+    border-color: rgba(96, 165, 250, 0.38);
+}
+
+body.dark-mode .learn-theorem--basic .learn-theorem-index {
+    color: #93c5fd;
+}
+
+body.dark-mode .learn-theorem--advanced .learn-theorem-tier {
+    color: #bbf7d0;
+    background: linear-gradient(135deg, rgba(20, 83, 45, 0.5) 0%, rgba(21, 128, 61, 0.36) 100%);
+    border-color: rgba(74, 222, 128, 0.38);
+}
+
+body.dark-mode .learn-theorem--advanced .learn-theorem-index {
+    color: #86efac;
+}
+
+body.dark-mode .learn-theorem--more-advanced .learn-theorem-tier {
+    color: #fde68a;
+    background: linear-gradient(135deg, rgba(120, 53, 15, 0.5) 0%, rgba(146, 64, 14, 0.36) 100%);
+    border-color: rgba(251, 191, 36, 0.38);
+}
+
+body.dark-mode .learn-theorem--more-advanced .learn-theorem-index {
+    color: #fcd34d;
+}
+
+.learn-sections-intro--advanced {
+    background: linear-gradient(135deg, rgba(187, 247, 208, 0.62) 0%, rgba(220, 252, 231, 0.58) 100%);
+    border-color: rgba(34, 197, 94, 0.34);
+}
+
+.learn-sections-intro--advanced .learn-sections-tier-heading {
+    color: #14532d;
+}
+
+.learn-sections-intro--advanced .learn-sections-tier-heading-en {
+    color: rgba(20, 83, 45, 0.82);
+}
+
+body.dark-mode .learn-sections-intro--advanced {
+    background: linear-gradient(135deg, rgba(20, 83, 45, 0.42) 0%, rgba(21, 128, 61, 0.33) 100%);
+    border-color: rgba(74, 222, 128, 0.42);
+}
+
+body.dark-mode .learn-sections-intro--advanced .learn-sections-tier-heading {
+    color: #dcfce7;
+}
+
+body.dark-mode .learn-sections-intro--advanced .learn-sections-tier-heading-en {
+    color: rgba(187, 247, 208, 0.88);
+}
+
 .learn-sections-intro--advanced .learn-sections-tier-badge {
-    background: rgba(34, 197, 94, 0.12);
-    border-color: rgba(34, 197, 94, 0.35);
-    color: #15803d;
+    background: linear-gradient(135deg, #166534 0%, #15803d 52%, #22c55e 100%);
+    border-color: rgba(21, 128, 61, 0.62);
+    color: #fff;
+    box-shadow: 0 8px 20px rgba(22, 101, 52, 0.34);
+    transition: background 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
 }
 
 body.dark-mode .learn-sections-intro--advanced .learn-sections-tier-badge {
-    color: #86efac;
-    background: rgba(34, 197, 94, 0.15);
-    border-color: rgba(74, 222, 128, 0.35);
+    color: #fff;
+    background: linear-gradient(135deg, #14532d 0%, #166534 50%, #22c55e 100%);
+    border-color: rgba(74, 222, 128, 0.48);
+    box-shadow: 0 8px 20px rgba(20, 83, 45, 0.42);
 }
 
 .learn-sections-intro--more-advanced .learn-sections-tier-badge {
-    background: rgba(245, 158, 11, 0.15);
-    border-color: rgba(245, 158, 11, 0.4);
-    color: #b45309;
+    background: linear-gradient(135deg, #92400e 0%, #b45309 50%, #d97706 100%);
+    border-color: rgba(180, 83, 9, 0.62);
+    color: #fff;
+    box-shadow: 0 8px 20px rgba(146, 64, 14, 0.34);
+    transition: background 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
 }
 
 body.dark-mode .learn-sections-intro--more-advanced .learn-sections-tier-badge {
-    color: #fcd34d;
-    background: rgba(245, 158, 11, 0.18);
-    border-color: rgba(251, 191, 36, 0.35);
+    color: #fff;
+    background: linear-gradient(135deg, #78350f 0%, #92400e 50%, #ca8a04 100%);
+    border-color: rgba(251, 191, 36, 0.45);
+    box-shadow: 0 8px 20px rgba(120, 53, 15, 0.42);
+}
+
+.learn-sections-intro--more-advanced {
+    background: linear-gradient(135deg, rgba(254, 243, 199, 0.72) 0%, rgba(254, 249, 195, 0.62) 100%);
+    border-color: rgba(217, 119, 6, 0.34);
+}
+
+.learn-sections-intro--more-advanced .learn-sections-tier-heading {
+    color: #78350f;
+}
+
+.learn-sections-intro--more-advanced .learn-sections-tier-heading-en {
+    color: rgba(120, 53, 15, 0.82);
+}
+
+body.dark-mode .learn-sections-intro--more-advanced {
+    background: linear-gradient(135deg, rgba(120, 53, 15, 0.42) 0%, rgba(146, 64, 14, 0.32) 100%);
+    border-color: rgba(251, 191, 36, 0.38);
+}
+
+body.dark-mode .learn-sections-intro--more-advanced .learn-sections-tier-heading {
+    color: #fef3c7;
+}
+
+body.dark-mode .learn-sections-intro--more-advanced .learn-sections-tier-heading-en {
+    color: rgba(253, 230, 138, 0.9);
 }
 
 .learn-theorem {
@@ -521,6 +684,30 @@ body.dark-mode .learn-theorem:hover {
     border-left: 3px solid var(--primary);
 }
 
+.learn-theorem--basic .learn-theorem-statement {
+    border-left-color: #2563eb;
+}
+
+.learn-theorem--advanced .learn-theorem-statement {
+    border-left-color: #16a34a;
+}
+
+.learn-theorem--more-advanced .learn-theorem-statement {
+    border-left-color: #d97706;
+}
+
+body.dark-mode .learn-theorem--basic .learn-theorem-statement {
+    border-left-color: #60a5fa;
+}
+
+body.dark-mode .learn-theorem--advanced .learn-theorem-statement {
+    border-left-color: #4ade80;
+}
+
+body.dark-mode .learn-theorem--more-advanced .learn-theorem-statement {
+    border-left-color: #fbbf24;
+}
+
 .learn-theorem-detail {
     font-size: 15px;
     line-height: 1.7;
@@ -558,6 +745,61 @@ body.dark-mode .learn-theorem-tip {
     justify-content: center;
     font-size: 14px;
     font-weight: 800;
+}
+
+/* 基础卡片 tip：保持蓝色系（默认样式） */
+.learn-theorem--basic .learn-theorem-tip {
+    background: linear-gradient(135deg, rgba(219, 234, 254, 0.62) 0%, rgba(237, 233, 254, 0.5) 100%);
+    border-color: rgba(37, 99, 235, 0.18);
+}
+
+.learn-theorem--basic .learn-theorem-tip-icon {
+    background: linear-gradient(135deg, #2563eb 0%, #4f46e5 100%);
+}
+
+/* 进阶卡片 tip：绿色系 */
+.learn-theorem--advanced .learn-theorem-tip {
+    background: linear-gradient(135deg, rgba(187, 247, 208, 0.64) 0%, rgba(220, 252, 231, 0.54) 100%);
+    border-color: rgba(22, 163, 74, 0.24);
+}
+
+.learn-theorem--advanced .learn-theorem-tip-icon {
+    background: linear-gradient(135deg, #15803d 0%, #22c55e 100%);
+    box-shadow: 0 6px 14px rgba(21, 128, 61, 0.28);
+}
+
+/* 更进阶卡片 tip：黄色系 */
+.learn-theorem--more-advanced .learn-theorem-tip {
+    background: linear-gradient(135deg, rgba(254, 243, 199, 0.72) 0%, rgba(254, 249, 195, 0.62) 100%);
+    border-color: rgba(217, 119, 6, 0.26);
+}
+
+.learn-theorem--more-advanced .learn-theorem-tip-icon {
+    background: linear-gradient(135deg, #a16207 0%, #d97706 100%);
+    box-shadow: 0 6px 14px rgba(161, 98, 7, 0.3);
+}
+
+body.dark-mode .learn-theorem--basic .learn-theorem-tip {
+    background: linear-gradient(135deg, rgba(30, 58, 138, 0.38) 0%, rgba(49, 46, 129, 0.3) 100%);
+    border-color: rgba(96, 165, 250, 0.28);
+}
+
+body.dark-mode .learn-theorem--advanced .learn-theorem-tip {
+    background: linear-gradient(135deg, rgba(20, 83, 45, 0.45) 0%, rgba(21, 128, 61, 0.32) 100%);
+    border-color: rgba(74, 222, 128, 0.3);
+}
+
+body.dark-mode .learn-theorem--advanced .learn-theorem-tip-icon {
+    background: linear-gradient(135deg, #166534 0%, #22c55e 100%);
+}
+
+body.dark-mode .learn-theorem--more-advanced .learn-theorem-tip {
+    background: linear-gradient(135deg, rgba(120, 53, 15, 0.45) 0%, rgba(146, 64, 14, 0.32) 100%);
+    border-color: rgba(251, 191, 36, 0.32);
+}
+
+body.dark-mode .learn-theorem--more-advanced .learn-theorem-tip-icon {
+    background: linear-gradient(135deg, #92400e 0%, #d97706 100%);
 }
 
 .learn-theorem-visual {
@@ -609,4 +851,80 @@ body.dark-mode .learn-theorem-visual {
 
 .learn-more-footer-copy a:hover {
     text-decoration: underline;
+}
+
+.learn-back-to-top {
+    position: fixed;
+    top: 96px;
+    right: 20px;
+    z-index: 60;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 11px 14px;
+    border: 1px solid rgba(37, 99, 235, 0.32);
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.92);
+    color: var(--primary);
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.01em;
+    cursor: pointer;
+    backdrop-filter: blur(10px);
+    box-shadow:
+        0 10px 26px rgba(15, 23, 42, 0.15),
+        0 2px 8px rgba(15, 23, 42, 0.08);
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease,
+        border-color 0.2s ease,
+        background 0.2s ease,
+        color 0.2s ease;
+}
+
+.learn-back-to-top:hover {
+    transform: translateY(-2px);
+    border-color: rgba(37, 99, 235, 0.62);
+    background: rgba(239, 246, 255, 0.96);
+    box-shadow:
+        0 14px 30px rgba(37, 99, 235, 0.2),
+        0 2px 10px rgba(15, 23, 42, 0.08);
+}
+
+.learn-back-to-top:active {
+    transform: translateY(0);
+}
+
+.learn-back-to-top:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+}
+
+body.dark-mode .learn-back-to-top {
+    border-color: rgba(96, 165, 250, 0.5);
+    background: rgba(15, 23, 42, 0.84);
+    color: #93c5fd;
+    box-shadow:
+        0 12px 28px rgba(0, 0, 0, 0.45),
+        0 2px 8px rgba(0, 0, 0, 0.25);
+}
+
+body.dark-mode .learn-back-to-top:hover {
+    border-color: rgba(147, 197, 253, 0.72);
+    background: rgba(30, 41, 59, 0.95);
+}
+
+@media (max-width: 960px) {
+    .learn-back-to-top {
+        top: auto;
+        bottom: 18px;
+        right: 14px;
+        padding: 10px 12px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .learn-back-to-top {
+        transition: none;
+    }
 }
