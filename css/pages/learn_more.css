@@ -33,7 +33,7 @@ body.dark-mode .learn-hero {
     align-items: center;
     gap: 8px;
     margin-bottom: 14px;
-    font-size: 18px;
+    font-size: 1.125rem;
     color: var(--text-muted);
 }
 
@@ -66,7 +66,7 @@ body.dark-mode .learn-breadcrumb a {
     gap: 8px;
     padding: 8px 14px;
     border-radius: 999px;
-    font-size: 13px;
+    font-size: 0.8125rem;
     font-weight: 600;
     color: var(--primary);
     background: rgba(255, 255, 255, 0.75);
@@ -91,7 +91,7 @@ body.dark-mode .learn-hero-badge {
 }
 
 .learn-hero-lead {
-    font-size: 17px;
+    font-size: 1.0625rem;
     line-height: 1.65;
     color: var(--text-muted);
     max-width: 560px;
@@ -112,7 +112,7 @@ body.dark-mode .learn-hero-badge {
     padding: 12px 20px;
     border-radius: 12px;
     font-weight: 600;
-    font-size: 15px;
+    font-size: 0.9375rem;
     color: var(--text);
     background: rgba(255, 255, 255, 0.85);
     border: 1px solid var(--gray-200);

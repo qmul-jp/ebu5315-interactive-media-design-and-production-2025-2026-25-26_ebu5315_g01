@@ -161,14 +161,14 @@ body.dark-mode .hero {
 }
 
 .hero-title {
-    font-size: 48px;
+    font-size: 3rem;
     font-weight: 700;
     line-height: 1.2;
     color: var(--text);
 }
 
 .hero-subtitle {
-    font-size: 18px;
+    font-size: 1.125rem;
     line-height: 1.7;
     color: var(--text-muted);
 }
@@ -657,14 +657,14 @@ body.dark-mode .usp-section {
 }
 
 .usp-title {
-    font-size: 20px;
+    font-size: 1.25rem;
     font-weight: 700;
     color: var(--text);
     margin-bottom: 12px;
 }
 
 .usp-description {
-    font-size: 16px;
+    font-size: 1rem;
     color: var(--text-muted);
     line-height: 1.6;
 }

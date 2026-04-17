@@ -17,7 +17,7 @@ body.dark-mode .quiz-placeholder-card {
 
 .quiz-placeholder-card p {
     color: var(--text-muted);
-    font-size: 18px;
+    font-size: 1.125rem;
     line-height: 1.7;
     margin-bottom: 24px;
 }
@@ -28,7 +28,7 @@ body.dark-mode .quiz-placeholder-card {
 }
 
 .quiz-question {
-    font-size: 20px;
+    font-size: 1.25rem;
     font-weight: 600;
     color: #000000;
     margin-bottom: 16px;
@@ -50,7 +50,7 @@ body.dark-mode .quiz-question {
     border: 2px solid var(--gray-200);
     background: var(--gray-50);
     color: #000000;
-    font-size: 16px;
+    font-size: 1rem;
     cursor: pointer;
     text-align: left;
     transition: border-color 0.2s, background 0.2s;
@@ -70,7 +70,7 @@ body.dark-mode .quiz-option-btn {
     margin-top: 20px;
     padding: 16px;
     border-radius: 12px;
-    font-size: 16px;
+    font-size: 1rem;
     display: none;
 }
 
@@ -220,6 +220,8 @@ body.dark-mode .card.quiz-container {
     display: flex;
     align-items: center;
     flex-wrap: wrap;
+    text-align: center;
+    justify-content: center;
 }
 
 body.dark-mode .quiz-title {
