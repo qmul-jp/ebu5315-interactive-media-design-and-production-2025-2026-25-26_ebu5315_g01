@@ -170,6 +170,14 @@
         statusCard.style.borderRadius = '12px';
         statusCard.style.border = '1px solid var(--gray-200)';
         statusCard.style.background = 'var(--gray-50)';
+        statusCard.style.color = '#000000';
+        
+        // 检查是否为深色模式
+        if (document.body.classList.contains('dark-mode')) {
+            statusCard.style.color = '#FFFFFF';
+            statusCard.style.background = '#1E4A2D';
+            statusCard.style.border = '1px solid #2E5A3D';
+        }
         
         const lang = getCurrentLang();
         const levelText = lang === 'zh' ? '当前等级：' : 'Current Level: ';
@@ -268,6 +276,14 @@
             statusCard.style.borderRadius = '12px';
             statusCard.style.border = '1px solid var(--gray-200)';
             statusCard.style.background = 'var(--gray-50)';
+            statusCard.style.color = '#000000';
+            
+            // 检查是否为深色模式
+            if (document.body.classList.contains('dark-mode')) {
+                statusCard.style.color = '#FFFFFF';
+                statusCard.style.background = '#1E4A2D';
+                statusCard.style.border = '1px solid #2E5A3D';
+            }
             
             const lang = getCurrentLang();
             const levelText = lang === 'zh' ? '当前等级：' : 'Current Level: ';
