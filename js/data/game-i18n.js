@@ -143,7 +143,7 @@ window.GameI18N = (() => {
         'sniper.formula.sectorAreaDesc': { zh: 'S = ½θr²', en: 'S = ½θr²' },
         'sniper.formula.radianDesc': { zh: '180° = π rad', en: '180° = π rad' },
         'sniper.formula.tapToCycle': { zh: '点击切换', en: 'Tap to cycle' },
-        'sniper.analysis.title': { zh: '解析', en: 'Analysis' },
+        'sniper.analysis.title': { zh: '误差', en: 'Error' },
 
         // ===== 圆周狙击 - 皮肤 =====
         'sniper.skin.crosshair': { zh: '准星样式', en: 'Crosshair Style' },

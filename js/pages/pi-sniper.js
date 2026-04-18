@@ -235,14 +235,13 @@ const PiSniper = (() => {
         const wrapper = canvas.parentElement;
         if (!wrapper) return;
         const rect = wrapper.getBoundingClientRect();
-        const size = Math.min(rect.width - 20, rect.height - 20, 600);
-        canvas.width = size * window.devicePixelRatio;
-        canvas.height = size * window.devicePixelRatio;
-        canvas.style.width = size + 'px';
-        canvas.style.height = size + 'px';
+        canvas.width = rect.width * window.devicePixelRatio;
+        canvas.height = rect.height * window.devicePixelRatio;
+        canvas.style.width = rect.width + 'px';
+        canvas.style.height = rect.height + 'px';
         ctx.setTransform(window.devicePixelRatio, 0, 0, window.devicePixelRatio, 0, 0);
-        W = size;
-        H = size;
+        W = rect.width;
+        H = rect.height;
     }
 
     function bindEvents() {
@@ -409,18 +408,44 @@ const PiSniper = (() => {
             return;
         }
 
+        const MIN_ANGLE_GAP_DEG = 10; // 最小间距（度）
+        const MIN_ANGLE_GAP_RAD = MIN_ANGLE_GAP_DEG * PI / 180;
+        const MAX_ATTEMPTS = 20;
+
         // 生成特殊角度（30°, 45°, 60°, 90° 等）或随机角度
         const specialAngles = [0, 30, 45, 60, 90, 120, 135, 150, 180, 210, 225, 240, 270, 300, 315, 330];
-        const useSpecial = Math.random() < 0.6; // 60%概率出特殊角
-        if (useSpecial) {
-            targetAngle = (specialAngles[Math.floor(Math.random() * specialAngles.length)] * PI / 180);
-        } else {
-            targetAngle = Math.random() * TAU;
-        }
+
+        let newAngle;
+        let attempts = 0;
+
+        do {
+            const useSpecial = Math.random() < 0.6; // 60%概率出特殊角
+            if (useSpecial) {
+                newAngle = (specialAngles[Math.floor(Math.random() * specialAngles.length)] * PI / 180);
+            } else {
+                newAngle = Math.random() * TAU;
+            }
+            attempts++;
+        } while (
+            attempts < MAX_ATTEMPTS &&
+            targetAngle !== 0 && // 首次生成不检查
+            angleDistance(newAngle, targetAngle) < MIN_ANGLE_GAP_RAD
+        );
+
+        targetAngle = newAngle;
         targetPulse = 0;
 
         // 显示知识提示
         showKnowledgeTip();
+    }
+
+    /**
+     * 计算两个角度之间的最短距离（考虑循环）
+     */
+    function angleDistance(a1, a2) {
+        let diff = Math.abs(a1 - a2);
+        if (diff > PI) diff = TAU - diff;
+        return diff;
     }
 
     // ===== 交互 =====
@@ -1350,16 +1375,30 @@ const PiSniper = (() => {
         }
 
         const alpha = Math.min(1, shotAnalysis.timer / 30);
-        const offsetY = (90 - shotAnalysis.timer) * 0.3;
 
         ctx.save();
         ctx.globalAlpha = alpha;
 
-        // 解析面板背景
-        const panelW = 140;
+        // 解析面板背景 - 智能定位算法
+        const panelW = 120;
         const panelH = 68;
-        const panelX = cx + r * 0.5 + 10;
-        const panelY = cy - panelH / 2 + offsetY;
+        const margin = 12;
+
+        // 目标位置：圆的右下角（0°线水平位置）
+        let panelX = cx + r * 1.15;
+        // Y: 在角度卡片下方（角度卡片高度40 + 间距8）
+        let panelY = cy + r * 0.55 + 48;
+
+        // 边界检测：确保不超出canvas边界
+        if (panelX + panelW + margin > W) {
+            panelX = W - panelW - margin;
+        }
+        if (panelY + panelH + margin > H) {
+            panelY = H - panelH - margin;
+        }
+        // 确保不超出左/上边界
+        if (panelX < margin) panelX = margin;
+        if (panelY < margin) panelY = margin;
 
         ctx.fillStyle = 'rgba(30, 41, 59, 0.9)';
         ctx.beginPath();
@@ -1669,18 +1708,109 @@ const PiSniper = (() => {
         }
     }
 
-    // ===== 知识提示 =====
+    // ===== 知识提示（Canvas内绘制） =====
+    let knowledgeTipState = { visible: false, text: '', alpha: 0, timer: 0 };
+
     function showKnowledgeTip() {
-        if (!elKnowledgeTip || !elKnowledgeText) return;
         const tip = knowledgeTips[currentTipIndex % knowledgeTips.length];
-        elKnowledgeText.textContent = tip;
-        elKnowledgeTip.classList.add('visible');
+        knowledgeTipState.text = tip;
+        knowledgeTipState.visible = true;
+        knowledgeTipState.alpha = 0;
+        knowledgeTipState.timer = 240; // 4秒 @60fps
         currentTipIndex++;
 
-        clearTimeout(tipTimer);
-        tipTimer = setTimeout(() => {
-            if (elKnowledgeTip) elKnowledgeTip.classList.remove('visible');
-        }, 4000);
+        // 同时更新DOM（备用）
+        if (elKnowledgeTip && elKnowledgeText) {
+            elKnowledgeText.textContent = tip;
+            elKnowledgeTip.classList.add('visible');
+            clearTimeout(tipTimer);
+            tipTimer = setTimeout(() => {
+                if (elKnowledgeTip) elKnowledgeTip.classList.remove('visible');
+            }, 4000);
+        }
+    }
+
+    function updateKnowledgeTip() {
+        if (!knowledgeTipState.visible) return;
+        if (knowledgeTipState.timer > 0) {
+            knowledgeTipState.timer--;
+            // 淡入
+            if (knowledgeTipState.timer > 210 && knowledgeTipState.alpha < 1) {
+                knowledgeTipState.alpha = Math.min(1, knowledgeTipState.alpha + 0.05);
+            }
+            // 淡出
+            if (knowledgeTipState.timer <= 30) {
+                knowledgeTipState.alpha = Math.max(0, knowledgeTipState.alpha - 0.05);
+            }
+        } else {
+            knowledgeTipState.visible = false;
+        }
+    }
+
+    function drawKnowledgeTip(cx, cy, r) {
+        if (!knowledgeTipState.visible || knowledgeTipState.alpha <= 0) return;
+
+        ctx.save();
+        ctx.globalAlpha = knowledgeTipState.alpha;
+
+        const tipW = Math.min(280, W * 0.7);
+        const margin = 16;
+
+        // 计算多行文字高度
+        ctx.font = '12px Inter, sans-serif';
+        const maxTextW = tipW - 48;
+        const words = knowledgeTipState.text.split('');
+        let lines = [];
+        let currentLine = '';
+        for (const char of words) {
+            const testLine = currentLine + char;
+            if (ctx.measureText(testLine).width > maxTextW && currentLine.length > 0) {
+                lines.push(currentLine);
+                currentLine = char;
+            } else {
+                currentLine = testLine;
+            }
+        }
+        if (currentLine) lines.push(currentLine);
+
+        const lineHeight = 18;
+        const lineCount = lines.length;
+        const paddingV = 14;
+        const tipH = lineCount * lineHeight + paddingV * 2;
+
+        // 位置：圆左下角外侧（确保不进入圆）
+        // let tipX = cx - r - tipW / 2 - r * 0.05;
+        let tipX = cx - 2.15 * r;
+        let tipY = cy + r * 0.7; // 更远离圆心
+
+        // 边界检测：确保在canvas内且不进入圆
+        if (tipX < margin) tipX = margin;
+        if (tipY + tipH + margin > H) tipY = H - tipH - margin;
+
+        // 背景
+        ctx.fillStyle = 'rgba(30, 41, 59, 0.95)';
+        ctx.beginPath();
+        ctx.roundRect(tipX, tipY, tipW, tipH, 10);
+        ctx.fill();
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.08)';
+        ctx.lineWidth = 1;
+        ctx.stroke();
+
+        // 图标
+        ctx.fillStyle = '#FBBF24';
+        ctx.font = '14px sans-serif';
+        ctx.textAlign = 'left';
+        ctx.textBaseline = 'top';
+        ctx.fillText('💡', tipX + 12, tipY + paddingV);
+
+        // 多行文字
+        ctx.fillStyle = '#94A3B8';
+        ctx.font = '12px Inter, sans-serif';
+        for (let i = 0; i < lines.length; i++) {
+            ctx.fillText(lines[i], tipX + 34, tipY + paddingV + i * lineHeight);
+        }
+
+        ctx.restore();
     }
 
     // ===== UI 更新 =====
@@ -1726,6 +1856,9 @@ const PiSniper = (() => {
 
         // Boss警告计时
         if (bossWarningTimer > 0) bossWarningTimer--;
+
+        // 知识提示更新
+        updateKnowledgeTip();
     }
 
     function draw() {
@@ -1793,6 +1926,9 @@ const PiSniper = (() => {
 
         // 绘制双倍得分指示
         if (doubleScoreTimer > 0) drawDoubleScoreIndicator(cx, cy, r);
+
+        // 绘制知识提示（Canvas内绘制）
+        drawKnowledgeTip(cx, cy, r);
     }
 
     function drawUnitCircle(cx, cy, r) {
@@ -2127,11 +2263,20 @@ const PiSniper = (() => {
         const aimDeg = ((aimAngle * DEG) % 360).toFixed(1);
         const aimRad = (aimAngle / PI).toFixed(3);
 
-        // 角度显示框
-        const boxX = cx - 60;
-        const boxY = cy + r + 45;
+        // 角度显示框 - 圆右下角
         const boxW = 120;
         const boxH = 40;
+        const margin = 12;
+
+        // X: 与解析卡片左边缘完全对齐
+        let boxX = cx + r * 1.15;
+        // Y: 圆右下角位置
+        let boxY = cy + r * 0.55;
+
+        // 边界检测
+        if (boxX + boxW + margin > W) boxX = W - boxW - margin;
+        if (boxX < margin) boxX = margin;
+        if (boxY < margin) boxY = margin;
 
         ctx.fillStyle = 'rgba(30, 41, 59, 0.9)';
         ctx.beginPath();
@@ -2141,15 +2286,17 @@ const PiSniper = (() => {
         ctx.lineWidth = 1;
         ctx.stroke();
 
+        // 文字：基于boxX绘制，与解析卡片对齐
+        const textCenterX = boxX + boxW / 2;
         ctx.fillStyle = '#F8FAFC';
         ctx.font = 'bold 16px monospace';
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
-        ctx.fillText(`${aimDeg}\u00B0`, cx, boxY + 14);
+        ctx.fillText(`${aimDeg}\u00B0`, textCenterX, boxY + 14);
 
         ctx.fillStyle = '#94A3B8';
         ctx.font = '11px monospace';
-        ctx.fillText(`${aimRad}\u03C0 rad`, cx, boxY + 30);
+        ctx.fillText(`${aimRad}\u03C0 rad`, textCenterX, boxY + 30);
     }
 
     /**

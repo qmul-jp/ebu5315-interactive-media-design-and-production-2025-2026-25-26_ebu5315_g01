@@ -305,10 +305,10 @@ body:not(.dark-mode) .game-page-view {
     min-width: 120px;
 }
 
-/* ===== 知识提示 ===== */
+/* ===== 知识提示（DOM备用，主要使用Canvas内绘制）===== */
 .game-knowledge-tip {
-    position: fixed;
-    bottom: 20px;
+    position: absolute;
+    bottom: 16px;
     left: 50%;
     transform: translateX(-50%);
     background: rgba(30, 41, 59, 0.95);
@@ -326,6 +326,7 @@ body:not(.dark-mode) .game-page-view {
     opacity: 0;
     transform: translateX(-50%) translateY(20px);
     pointer-events: none;
+    display: none; /* 隐藏：使用Canvas内绘制替代 */
 }
 
 .game-knowledge-tip.visible {
