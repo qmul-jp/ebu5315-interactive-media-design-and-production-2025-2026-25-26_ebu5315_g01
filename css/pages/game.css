@@ -46,6 +46,8 @@ body.dark-mode .game-placeholder-card {
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
     transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
     cursor: pointer;
+    display: flex;
+    flex-direction: column;
 }
 
 body.dark-mode .game-card {
@@ -89,6 +91,9 @@ body.dark-mode .game-card {
 
 .game-card-info {
     padding: 20px 24px 24px;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
 }
 
 .game-card-info h3 {
@@ -103,6 +108,7 @@ body.dark-mode .game-card {
     font-size: 0.875rem;
     line-height: 1.6;
     margin-bottom: 16px;
+    flex-grow: 1;
 }
 
 .game-knowledge-tags {
@@ -110,6 +116,7 @@ body.dark-mode .game-card {
     flex-wrap: wrap;
     gap: 6px;
     margin-bottom: 16px;
+    align-content: flex-start;
 }
 
 .knowledge-tag {
@@ -131,6 +138,7 @@ body.dark-mode .knowledge-tag {
 .game-play-btn {
     display: block;
     width: 100%;
+    margin-top: auto;
 }
 
 /* ===== 游戏页面视图（全屏游戏模式） ===== */
@@ -326,7 +334,8 @@ body:not(.dark-mode) .game-page-view {
     opacity: 0;
     transform: translateX(-50%) translateY(20px);
     pointer-events: none;
-    display: none; /* 隐藏：使用Canvas内绘制替代 */
+    display: none;
+    /* 隐藏：使用Canvas内绘制替代 */
 }
 
 .game-knowledge-tip.visible {
@@ -343,21 +352,27 @@ body:not(.dark-mode) .game-page-view {
     .game-grid {
         grid-template-columns: 1fr;
     }
+
     .game-header-bar {
         padding: 8px 16px;
     }
+
     .game-header-stats {
         gap: 16px;
     }
+
     .game-stat-value {
         font-size: 16px;
     }
+
     .game-overlay-panel {
         padding: 28px 20px;
     }
+
     .game-final-score {
         font-size: 42px;
     }
+
     .game-back-btn span {
         display: none;
     }
@@ -380,9 +395,17 @@ body:not(.dark-mode) .game-page-view {
 }
 
 @keyframes trophy-bounce {
-    0% { transform: scale(0) rotate(-15deg); }
-    50% { transform: scale(1.2) rotate(5deg); }
-    100% { transform: scale(1) rotate(0deg); }
+    0% {
+        transform: scale(0) rotate(-15deg);
+    }
+
+    50% {
+        transform: scale(1.2) rotate(5deg);
+    }
+
+    100% {
+        transform: scale(1) rotate(0deg);
+    }
 }
 
 .game-complete-panel h2 {
@@ -432,15 +455,19 @@ body:not(.dark-mode) .game-page-view {
     .game-complete-panel {
         padding: 32px 24px;
     }
+
     .game-complete-icon {
         font-size: 48px;
     }
+
     .game-complete-panel h2 {
         font-size: 26px;
     }
+
     .game-complete-stats {
         gap: 24px;
     }
+
     .complete-stat-value {
         font-size: 28px;
     }

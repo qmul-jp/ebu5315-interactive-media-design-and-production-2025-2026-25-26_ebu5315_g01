@@ -92,60 +92,83 @@ const PiSniper = (() => {
         background: 'deepSpace', // 'deepSpace'|'ocean'|'forest'|'cyberpunk'
     };
 
+    // 背景装饰动画状态
+    let bgAnimState = {
+        initialized: false,
+        lastW: 0, lastH: 0,
+        deepSpace: { stars: [] },
+        ocean: { bubbles: [], fishes: [] },
+        forest: { fireflies: [], trees: [], cabin: null },
+        cyberpunk: { buildings: [], cars: [] }
+    };
+
     // 成就相关辅助变量
     let consecutivePerfects = 0;
     let hadComboReset = false;
     let lastShotWasPerfect = false;
+    let sessionUnlocked = {};
 
     // ===== 成就定义 =====
     const ACHIEVEMENT_DEFS = {
         firstPerfect: {
             name: 'sniper.achievement.firstPerfect',
             check: (s) => s.stats.perfects >= 1,
+            type: 'once'
         },
         sniper: {
             name: 'sniper.achievement.sniper',
             check: (s) => s.stats.perfects >= 10,
+            type: 'once'
         },
         godlike: {
             name: 'sniper.achievement.godlike',
             check: (s) => s.stats.perfects >= 20,
+            type: 'once'
         },
         zeroError: {
             name: 'sniper.achievement.zeroError',
-            check: (s) => s.consecutivePerfects >= 5,
+            check: (s) => s.consecutivePerfects > 0 && s.consecutivePerfects % 10 === 0,
+            type: 'repeatable'
         },
         combo5: {
             name: 'sniper.achievement.combo5',
             check: (s) => s.combo >= 5,
+            type: 'once'
         },
         combo15: {
             name: 'sniper.achievement.combo15',
             check: (s) => s.combo >= 15,
+            type: 'once'
         },
         combo30: {
             name: 'sniper.achievement.combo30',
             check: (s) => s.combo >= 30,
+            type: 'once'
         },
         bossHunter: {
             name: 'sniper.achievement.bossHunter',
             check: (s) => s.stats.bossDefeated >= 1,
+            type: 'once'
         },
         bossHarvester: {
             name: 'sniper.achievement.bossHarvester',
-            check: (s) => s.stats.bossDefeated >= 2,
+            check: (s) => (s.lt ? (s.lt.totalBossDefeated || 0) : 0) + s.stats.bossDefeated >= 10,
+            type: 'once'
         },
         timeMaster: {
             name: 'sniper.achievement.timeMaster',
             check: (s) => s.timeLeft === 1 && s.lastShotWasPerfect,
+            type: 'once_per_game'
         },
         comeback: {
             name: 'sniper.achievement.comeback',
             check: (s) => s.combo >= 10 && s.hadComboReset,
+            type: 'once'
         },
         frenzyRegular: {
             name: 'sniper.achievement.frenzyRegular',
             check: (s) => s.stats.frenzyCount >= 3,
+            type: 'once'
         },
     };
 
@@ -256,6 +279,86 @@ const PiSniper = (() => {
             startGame();
         });
 
+        // 绑定成就、皮肤、记录面板开关事件
+        const btnAchievement = document.getElementById('sniperAchievementBtn');
+        const btnSkin = document.getElementById('sniperSkinBtn');
+        const btnRecord = document.getElementById('sniperRecordBtn');
+
+        const overlayAchievement = document.getElementById('sniperAchievementOverlay');
+        const overlaySkin = document.getElementById('sniperSkinOverlay');
+        const overlayRecord = document.getElementById('sniperRecordOverlay');
+
+        const closeAchievement = document.getElementById('sniperAchievementCloseBtn');
+        const closeSkin = document.getElementById('sniperSkinCloseBtn');
+        const closeRecord = document.getElementById('sniperRecordCloseBtn');
+
+        if (btnAchievement) btnAchievement.addEventListener('click', () => {
+            if (elStartOverlay) elStartOverlay.style.display = 'none';
+            if (overlayAchievement) {
+                overlayAchievement.style.display = 'flex';
+                renderAchievements();
+            }
+        });
+        if (btnSkin) btnSkin.addEventListener('click', () => {
+            if (elStartOverlay) elStartOverlay.style.display = 'none';
+            if (overlaySkin) {
+                overlaySkin.style.display = 'flex';
+                // 每次打开都重置为第一个 Tab (准星)
+                const skinTabs = document.querySelectorAll('#sniperSkinTabs .skin-tab');
+                if (skinTabs.length > 0) {
+                    skinTabs.forEach(t => t.classList.remove('active'));
+                    skinTabs[0].classList.add('active');
+                    renderSkins(skinTabs[0].dataset.target);
+                } else {
+                    renderSkins('crosshair');
+                }
+            }
+        });
+        if (btnRecord) btnRecord.addEventListener('click', () => {
+            if (elStartOverlay) elStartOverlay.style.display = 'none';
+            if (overlayRecord) {
+                overlayRecord.style.display = 'flex';
+                renderRecords();
+            }
+        });
+
+        if (closeAchievement) closeAchievement.addEventListener('click', () => {
+            if (overlayAchievement) overlayAchievement.style.display = 'none';
+            if (elStartOverlay) elStartOverlay.style.display = 'flex';
+        });
+        if (closeSkin) closeSkin.addEventListener('click', () => {
+            if (overlaySkin) overlaySkin.style.display = 'none';
+            if (elStartOverlay) elStartOverlay.style.display = 'flex';
+        });
+        if (closeRecord) closeRecord.addEventListener('click', () => {
+            if (overlayRecord) overlayRecord.style.display = 'none';
+            if (elStartOverlay) elStartOverlay.style.display = 'flex';
+        });
+
+        // 详情弹窗关闭事件
+        const closeAchievementDetail = document.getElementById('sniperAchievementDetailCloseBtn');
+        const closeSkinDetail = document.getElementById('sniperSkinDetailCloseBtn');
+        if (closeAchievementDetail) closeAchievementDetail.addEventListener('click', () => {
+            document.getElementById('sniperAchievementDetailOverlay').style.display = 'none';
+        });
+        if (closeSkinDetail) closeSkinDetail.addEventListener('click', () => {
+            document.getElementById('sniperSkinDetailOverlay').style.display = 'none';
+            if (skinPreviewAnimId) {
+                cancelAnimationFrame(skinPreviewAnimId);
+                skinPreviewAnimId = null;
+            }
+        });
+
+        // 皮肤分类切换事件
+        const skinTabs = document.querySelectorAll('#sniperSkinTabs .skin-tab');
+        skinTabs.forEach(tab => {
+            tab.addEventListener('click', (e) => {
+                skinTabs.forEach(t => t.classList.remove('active'));
+                e.target.classList.add('active');
+                renderSkins(e.target.dataset.target);
+            });
+        });
+
         // Canvas 交互（统一使用 pointer events）
         if (canvas) {
             canvas.addEventListener('pointerdown', onPointerDown);
@@ -274,6 +377,8 @@ const PiSniper = (() => {
         if (elEndOverlay) elEndOverlay.style.display = 'none';
         // 绘制静态预览
         drawStaticPreview();
+        // 播放背景音乐
+        GameAudio.playBgm(skin.background);
     }
 
     function hide() {
@@ -281,6 +386,8 @@ const PiSniper = (() => {
         stopGame();
         if (animId) cancelAnimationFrame(animId);
         animId = null;
+        // 停止背景音乐
+        GameAudio.stopBgm();
     }
 
     function startGame() {
@@ -324,6 +431,7 @@ const PiSniper = (() => {
         consecutivePerfects = 0;
         hadComboReset = false;
         lastShotWasPerfect = false;
+        sessionUnlocked = {};
 
         // 重置成就通知
         achievementQueue = [];
@@ -641,6 +749,9 @@ const PiSniper = (() => {
         // 记录射击数据
         recordShot(diffDeg, isHit);
 
+        // 维护一些局内最大值用于进度显示
+        stats.maxConsecutivePerfects = Math.max(stats.maxConsecutivePerfects || 0, consecutivePerfects);
+
         // 设置射击解析
         shotAnalysis = {
             diffDeg: diffDeg.toFixed(2),
@@ -696,6 +807,7 @@ const PiSniper = (() => {
      */
     function triggerBoss(type) {
         bossWarningTimer = 120; // 2秒警告
+        GameAudio.playBossWarning(); // 在顶部WARNING刚出来时立刻播放警报
 
         setTimeout(() => {
             if (!running) return;
@@ -734,7 +846,6 @@ const PiSniper = (() => {
                 : GameI18N.t('sniper.boss.anglePhantom') || 'Angle Phantom!';
             feedbackColor = '#EF4444';
             feedbackTimer = 80;
-            GameAudio.playBossWarning();
         }, 2000);
     }
 
@@ -1157,6 +1268,12 @@ const PiSniper = (() => {
             const saved = localStorage.getItem('pi_sniper_achievements');
             if (saved) {
                 achievements = JSON.parse(saved);
+                // 兼容旧数据
+                Object.keys(achievements).forEach(id => {
+                    if (typeof achievements[id].count !== 'number') {
+                        achievements[id].count = 1;
+                    }
+                });
             }
         } catch (e) {
             achievements = {};
@@ -1178,6 +1295,11 @@ const PiSniper = (() => {
      * 检查成就解锁
      */
     function checkAchievements() {
+        let lt = {};
+        try {
+            lt = JSON.parse(localStorage.getItem('pi_sniper_lifetime') || '{}');
+        } catch (e) { }
+
         const state = {
             stats,
             combo,
@@ -1187,10 +1309,28 @@ const PiSniper = (() => {
             hadComboReset,
             lastShotWasPerfect,
             score,
+            lt
         };
 
         Object.keys(ACHIEVEMENT_DEFS).forEach(id => {
-            if (!achievements[id] && ACHIEVEMENT_DEFS[id].check(state)) {
+            const def = ACHIEVEMENT_DEFS[id];
+            let canTrigger = false;
+
+            if (def.type === 'once') {
+                canTrigger = !achievements[id];
+            } else if (def.type === 'once_per_game') {
+                canTrigger = !sessionUnlocked[id];
+            } else if (def.type === 'repeatable') {
+                canTrigger = true; // For repeatable, check function itself must ensure it doesn't spam (e.g. % 10 === 0)
+                // Avoid triggering multiple times for the exact same state (e.g. multiple checks in the same shot)
+                if (sessionUnlocked[id] === state.consecutivePerfects) {
+                    canTrigger = false;
+                }
+            }
+
+            if (canTrigger && def.check(state)) {
+                if (def.type === 'once_per_game') sessionUnlocked[id] = true;
+                if (def.type === 'repeatable') sessionUnlocked[id] = state.consecutivePerfects;
                 unlockAchievement(id);
             }
         });
@@ -1200,10 +1340,15 @@ const PiSniper = (() => {
      * 解锁成就
      */
     function unlockAchievement(id) {
-        achievements[id] = {
-            unlocked: true,
-            time: Date.now(),
-        };
+        if (!achievements[id]) {
+            achievements[id] = {
+                unlocked: true,
+                time: Date.now(),
+                count: 0
+            };
+        }
+        achievements[id].count++;
+        achievements[id].time = Date.now();
         saveAchievements();
 
         // 加入通知队列
@@ -1289,6 +1434,570 @@ const PiSniper = (() => {
         ctx.fillText(GameI18N.t('sniper.achievement.unlocked') || 'Unlocked', notifyX + notifyW - 10, notifyY + notifyH / 2 - 1);
 
         ctx.restore();
+    }
+
+    /**
+     * 计算成就进度
+     */
+    function getAchievementProgress(id, def, lt) {
+        let current = 0;
+        let max = 1;
+
+        switch (id) {
+            case 'firstPerfect': current = lt.totalPerfects || 0; max = 1; break;
+            case 'sniper': current = lt.totalPerfects || 0; max = 10; break;
+            case 'godlike': current = lt.totalPerfects || 0; max = 20; break;
+            case 'zeroError': current = lt.maxConsecutivePerfects || 0; max = 10; break;
+            case 'combo5': current = lt.maxCombo || 0; max = 5; break;
+            case 'combo15': current = lt.maxCombo || 0; max = 15; break;
+            case 'combo30': current = lt.maxCombo || 0; max = 30; break;
+            case 'bossHunter': current = lt.totalBossDefeated || 0; max = 1; break;
+            case 'bossHarvester': current = lt.totalBossDefeated || 0; max = 10; break;
+            case 'timeMaster': current = achievements[id]?.unlocked ? 1 : 0; max = 1; break;
+            case 'comeback': current = achievements[id]?.unlocked ? 1 : 0; max = 1; break;
+            case 'frenzyRegular': current = lt.maxFrenzyPerGame || 0; max = 3; break;
+        }
+
+        current = Math.min(current, max);
+
+        // 如果已解锁且是不可重复成就，进度拉满
+        if (achievements[id]?.unlocked && def.type === 'once') {
+            current = max;
+        }
+
+        return { current, max };
+    }
+
+    /**
+     * 渲染成就面板内容
+     */
+    function renderAchievements() {
+        const container = document.getElementById('sniperAchievementList');
+        if (!container) return;
+
+        const achievementIcons = {
+            firstPerfect: '🎯', sniper: '🎯', godlike: '👑', zeroError: '✨',
+            combo5: '🔥', combo15: '🔥', combo30: '🔥', bossHunter: '⚔️',
+            bossHarvester: '⚔️', timeMaster: '⏱️', comeback: '📈', frenzyRegular: '⚡'
+        };
+
+        let lt = {};
+        try { lt = JSON.parse(localStorage.getItem('pi_sniper_lifetime') || '{}'); } catch (e) { }
+
+        container.innerHTML = Object.keys(ACHIEVEMENT_DEFS).map(id => {
+            const def = ACHIEVEMENT_DEFS[id];
+            const data = achievements[id];
+            const isUnlocked = data && data.unlocked;
+            const icon = achievementIcons[id] || '🏆';
+            const name = GameI18N.t(def.name) || id;
+
+            let badgeHtml = '';
+            if (isUnlocked) {
+                if (def.type === 'repeatable' || def.type === 'once_per_game') {
+                    badgeHtml = `<span class="achievement-badge">x${data.count}</span>`;
+                } else {
+                    badgeHtml = `<span class="achievement-badge">已达成</span>`;
+                }
+            } else {
+                badgeHtml = `<span class="achievement-badge locked-badge">🔒</span>`;
+            }
+
+            return `
+                <div class="achievement-card ${isUnlocked ? '' : 'locked'}" onclick="PiSniper.showAchievementDetail('${id}')">
+                    <div class="achievement-icon">${icon}</div>
+                    <div class="achievement-info">
+                        <div class="achievement-name">${name}</div>
+                        <div class="achievement-desc"></div>
+                    </div>
+                    ${badgeHtml}
+                </div>
+            `;
+        }).join('');
+    }
+
+    /**
+     * 显示成就详情
+     */
+    function showAchievementDetail(id) {
+        const overlay = document.getElementById('sniperAchievementDetailOverlay');
+        if (!overlay) return;
+
+        const def = ACHIEVEMENT_DEFS[id];
+        const data = achievements[id];
+        const isUnlocked = data && data.unlocked;
+
+        const achievementIcons = {
+            firstPerfect: '🎯', sniper: '🎯', godlike: '👑', zeroError: '✨',
+            combo5: '🔥', combo15: '🔥', combo30: '🔥', bossHunter: '⚔️',
+            bossHarvester: '⚔️', timeMaster: '⏱️', comeback: '📈', frenzyRegular: '⚡'
+        };
+
+        let lt = {};
+        try { lt = JSON.parse(localStorage.getItem('pi_sniper_lifetime') || '{}'); } catch (e) { }
+
+        const progress = getAchievementProgress(id, def, lt);
+
+        document.getElementById('sniperAchievementDetailIcon').textContent = achievementIcons[id] || '🏆';
+        document.getElementById('sniperAchievementDetailName').textContent = GameI18N.t(def.name) || id;
+        document.getElementById('sniperAchievementDetailDesc').textContent = GameI18N.t(`${def.name}.desc`) || '???';
+
+        let progressText = `${progress.current}/${progress.max}`;
+        if (isUnlocked && (def.type === 'repeatable' || def.type === 'once_per_game')) {
+            progressText = `已完成 ${data.count} 次 (单次 ${progress.current}/${progress.max})`;
+        }
+        document.getElementById('sniperAchievementDetailProgressText').textContent = progressText;
+
+        const ratio = (progress.current / progress.max) * 100;
+        document.getElementById('sniperAchievementDetailProgressBar').style.width = `${ratio}%`;
+
+        overlay.style.display = 'flex';
+    }
+
+    /**
+     * 渲染皮肤面板内容
+     */
+    function renderSkins(category) {
+        const container = document.getElementById('sniperSkinList');
+        if (!container) return;
+
+        const skins = SKIN_UNLOCK_CONDITIONS[category];
+        if (!skins) return;
+
+        // 获取累计数据用于解锁判定
+        let lt = {};
+        try {
+            lt = JSON.parse(localStorage.getItem('pi_sniper_lifetime') || '{}');
+        } catch (e) { }
+
+        // 判断解锁状态
+        const isUnlocked = (key, conf) => {
+            if (conf.unlocked) return true;
+            switch (conf.condition) {
+                case 'singlePerfect20': return achievements['godlike']?.unlocked;
+                case 'totalPerfect50': return (lt.totalPerfects || 0) >= 50;
+                case 'totalBoss5': return (lt.totalBossDefeated || 0) >= 5;
+                case 'totalScore10000': return (lt.totalScore || 0) >= 10000;
+                case 'firstPerfect': return achievements['firstPerfect']?.unlocked;
+                case 'totalGames10': return (lt.totalGames || 0) >= 10;
+                case 'combo30': return achievements['combo30']?.unlocked;
+                case 'totalBoss3': return (lt.totalBossDefeated || 0) >= 3;
+                case 'totalGames20': return (lt.totalGames || 0) >= 20;
+                default: return false;
+            }
+        };
+
+        const previewRenderers = {
+            crosshair: (k) => `<div style="color:#FFF;">${k === 'circle' ? '⭕' : k === 'laser' ? '⚡' : k === 'bow' ? '🏹' : '➕'}</div>`,
+            lineColor: (k) => `<div style="width:20px;height:20px;border-radius:50%;background:${k === 'rainbow' ? 'linear-gradient(45deg,red,orange,yellow,green,blue,purple)' : 'var(--' + k + ', ' + k + ')'};"></div>`,
+            circleStyle: (k) => `<div style="color:#FFF;">${k === 'neon' ? '✨' : k === 'minimal' ? '⚪' : k === 'retro' ? '🕹️' : '⭕'}</div>`,
+            particle: (k) => `<div style="color:#FFF;">${k === 'star' ? '⭐' : k === 'fire' ? '🔥' : k === 'electric' ? '⚡' : '✨'}</div>`,
+            background: (k) => `<div style="color:#FFF;">${k === 'ocean' ? '🌊' : k === 'forest' ? '🌲' : k === 'cyberpunk' ? '🌃' : '🌌'}</div>`
+        };
+
+        container.innerHTML = Object.keys(skins).map(key => {
+            const conf = skins[key];
+            const unlocked = isUnlocked(key, conf);
+            const isEquipped = skin[category] === key;
+            const name = GameI18N.t(`sniper.skin.${key}`) || key;
+            const desc = conf.desc ? (GameI18N.t(conf.desc) || conf.desc) : '';
+
+            let btnHtml = '';
+            if (unlocked) {
+                if (isEquipped) {
+                    btnHtml = `<button class="btn skin-btn" disabled style="opacity:0.5;cursor:default;">已装备</button>`;
+                } else {
+                    btnHtml = `<button class="btn btn-primary skin-btn" onclick="PiSniper.equipSkin('${category}', '${key}')">穿戴</button>`;
+                }
+            }
+
+            return `
+                <div class="skin-card ${unlocked ? '' : 'locked'}" onclick="PiSniper.showSkinDetail('${category}', '${key}')">
+                    <div class="skin-preview">
+                        ${previewRenderers[category] ? previewRenderers[category](key) : ''}
+                    </div>
+                    <div class="skin-name">${name}</div>
+                    ${btnHtml}
+                    ${!unlocked ? `
+                        <div class="skin-locked-overlay">
+                            <div class="skin-locked-icon">🔒</div>
+                            <div class="skin-locked-desc">${desc}</div>
+                        </div>
+                    ` : ''}
+                </div>
+            `;
+        }).join('');
+    }
+
+    /**
+     * 计算皮肤解锁进度
+     */
+    function getSkinProgress(conf, lt) {
+        let current = 0;
+        let max = 1;
+        if (conf.unlocked) return { current: 1, max: 1 };
+
+        switch (conf.condition) {
+            case 'singlePerfect20': current = lt.maxPerfectsPerGame || 0; max = 20; break;
+            case 'totalPerfect50': current = lt.totalPerfects || 0; max = 50; break;
+            case 'totalBoss5': current = lt.totalBossDefeated || 0; max = 5; break;
+            case 'totalScore10000': current = lt.totalScore || 0; max = 10000; break;
+            case 'firstPerfect': current = lt.totalPerfects || 0; max = 1; break;
+            case 'totalGames10': current = lt.totalGames || 0; max = 10; break;
+            case 'combo30': current = lt.maxCombo || 0; max = 30; break;
+            case 'totalBoss3': current = lt.totalBossDefeated || 0; max = 3; break;
+            case 'totalGames20': current = lt.totalGames || 0; max = 20; break;
+        }
+        current = Math.min(current, max);
+        return { current, max };
+    }
+
+    /**
+     * 穿戴皮肤（暴露给全局以供 onclick 调用）
+     */
+    function equipSkin(category, key) {
+        skin[category] = key;
+        saveSkin();
+        renderSkins(category); // 刷新当前 tab
+
+        // 实时切换背景音乐
+        if (category === 'background' && active) {
+            GameAudio.playBgm(key);
+        }
+    }
+
+    // 预览动画帧控制
+    let skinPreviewAnimId = null;
+
+    /**
+     * 显示皮肤详情
+     */
+    function showSkinDetail(category, key) {
+        const overlay = document.getElementById('sniperSkinDetailOverlay');
+        if (!overlay) return;
+
+        const conf = SKIN_UNLOCK_CONDITIONS[category][key];
+        const name = GameI18N.t(`sniper.skin.${key}`) || key;
+        const desc = conf.desc ? (GameI18N.t(conf.desc) || conf.desc) : '默认解锁';
+
+        let lt = {};
+        try { lt = JSON.parse(localStorage.getItem('pi_sniper_lifetime') || '{}'); } catch (e) { }
+
+        // 判断解锁状态
+        const isUnlockedFn = (k, c) => {
+            if (c.unlocked) return true;
+            switch (c.condition) {
+                case 'singlePerfect20': return achievements['godlike']?.unlocked;
+                case 'totalPerfect50': return (lt.totalPerfects || 0) >= 50;
+                case 'totalBoss5': return (lt.totalBossDefeated || 0) >= 5;
+                case 'totalScore10000': return (lt.totalScore || 0) >= 10000;
+                case 'firstPerfect': return achievements['firstPerfect']?.unlocked;
+                case 'totalGames10': return (lt.totalGames || 0) >= 10;
+                case 'combo30': return achievements['combo30']?.unlocked;
+                case 'totalBoss3': return (lt.totalBossDefeated || 0) >= 3;
+                case 'totalGames20': return (lt.totalGames || 0) >= 20;
+                default: return false;
+            }
+        };
+
+        const unlocked = isUnlockedFn(key, conf);
+        const isEquipped = skin[category] === key;
+        const progress = getSkinProgress(conf, lt);
+
+        document.getElementById('sniperSkinDetailName').textContent = name;
+        document.getElementById('sniperSkinDetailDesc').textContent = desc;
+
+        let progressText = `${progress.current}/${progress.max}`;
+        if (unlocked) progressText = '已解锁';
+        document.getElementById('sniperSkinDetailProgressText').textContent = progressText;
+
+        const ratio = unlocked ? 100 : (progress.current / progress.max) * 100;
+        document.getElementById('sniperSkinDetailProgressBar').style.width = `${ratio}%`;
+
+        const equipBtn = document.getElementById('sniperSkinDetailEquipBtn');
+        const equippedBtn = document.getElementById('sniperSkinDetailEquippedBtn');
+
+        if (unlocked) {
+            if (isEquipped) {
+                equipBtn.style.display = 'none';
+                equippedBtn.style.display = 'block';
+            } else {
+                equipBtn.style.display = 'block';
+                equippedBtn.style.display = 'none';
+                equipBtn.onclick = () => {
+                    equipSkin(category, key);
+                    showSkinDetail(category, key); // 刷新按钮状态
+                };
+            }
+        } else {
+            equipBtn.style.display = 'none';
+            equippedBtn.style.display = 'none';
+        }
+
+        // 开始动画预览
+        startSkinPreview(category, key);
+
+        overlay.style.display = 'flex';
+    }
+
+    function startSkinPreview(category, key) {
+        const previewCanvas = document.getElementById('sniperSkinPreviewCanvas');
+        if (!previewCanvas) return;
+        const pctx = previewCanvas.getContext('2d');
+        const pw = previewCanvas.width;
+        const ph = previewCanvas.height;
+        const pcx = pw / 2;
+        const pcy = ph / 2;
+        const pr = 50;
+
+        if (skinPreviewAnimId) cancelAnimationFrame(skinPreviewAnimId);
+
+        // 模拟一个假的游戏状态用于预览渲染
+        const previewState = {
+            timer: 0,
+            particles: [],
+            lastTime: performance.now()
+        };
+
+        function loop(now) {
+            const dt = (now - previewState.lastTime) / 1000;
+            previewState.lastTime = now;
+            previewState.timer += 0.05; // 旋转/脉冲速度
+
+            pctx.clearRect(0, 0, pw, ph);
+
+            // 绘制背景（如果分类是背景）
+            if (category === 'background') {
+                const stops = getBackgroundGradientForSkin(key, pcx, pcy, pr);
+                if (stops.length > 1) {
+                    const grad = pctx.createRadialGradient(pcx, pcy, 0, pcx, pcy, pr * 2);
+                    stops.forEach(s => grad.addColorStop(s.stop, s.color));
+                    pctx.fillStyle = grad;
+                } else {
+                    pctx.fillStyle = stops[0].color;
+                }
+                pctx.fillRect(0, 0, pw, ph);
+                drawBackgroundDecorations(pctx, pw, ph, key, previewState.timer * 2);
+            }
+
+            // 绘制单位圆（如果分类是单位圆或背景）
+            if (category === 'circleStyle' || category === 'background') {
+                drawUnitCircleForSkin(category === 'circleStyle' ? key : 'standard', pctx, pcx, pcy, pr, previewState.timer);
+            } else {
+                // 默认的辅助圆
+                drawUnitCircleForSkin('standard', pctx, pcx, pcy, pr, 0);
+            }
+
+            // 绘制颜色线条（如果分类是 lineColor）
+            if (category === 'lineColor') {
+                const angle = previewState.timer;
+                const { color, glow } = getLineColorForSkin(key);
+                pctx.save();
+                if (glow) {
+                    pctx.shadowColor = glow;
+                    pctx.shadowBlur = 10;
+                }
+                pctx.beginPath();
+                pctx.moveTo(pcx, pcy);
+                pctx.lineTo(pcx + Math.cos(angle) * pr, pcy - Math.sin(angle) * pr);
+                pctx.strokeStyle = color;
+                pctx.lineWidth = 2;
+                pctx.stroke();
+                pctx.restore();
+            }
+
+            // 绘制准星（如果分类是 crosshair）
+            if (category === 'crosshair') {
+                drawCrosshairForSkin(key, pctx, pcx + Math.cos(PI / 4) * pr, pcy - Math.sin(PI / 4) * pr, PI / 4);
+            }
+
+            // 绘制粒子（如果分类是 particle）
+            if (category === 'particle') {
+                // 每隔一段时间发射粒子
+                if (Math.random() < 0.1) {
+                    const angle = Math.random() * TAU;
+                    const speed = 1 + Math.random() * 2;
+                    previewState.particles.push({
+                        x: pcx, y: pcy,
+                        vx: Math.cos(angle) * speed,
+                        vy: Math.sin(angle) * speed,
+                        life: 1,
+                        color: '#FFF'
+                    });
+                }
+
+                // 更新和绘制粒子
+                for (let i = previewState.particles.length - 1; i >= 0; i--) {
+                    const p = previewState.particles[i];
+                    p.x += p.vx;
+                    p.y += p.vy;
+                    p.life -= 0.02;
+                    if (p.life <= 0) {
+                        previewState.particles.splice(i, 1);
+                        continue;
+                    }
+
+                    pctx.save();
+                    pctx.globalAlpha = p.life;
+                    if (key === 'star') {
+                        drawStarForSkin(pctx, p.x, p.y, 4, p.color);
+                    } else if (key === 'fire') {
+                        pctx.beginPath();
+                        pctx.arc(p.x, p.y, 3 * p.life, 0, TAU);
+                        pctx.fillStyle = '#F97316';
+                        pctx.fill();
+                    } else if (key === 'electric') {
+                        pctx.beginPath();
+                        pctx.moveTo(p.x, p.y);
+                        pctx.lineTo(p.x - p.vx * 2 + (Math.random() - 0.5) * 4, p.y - p.vy * 2 + (Math.random() - 0.5) * 4);
+                        pctx.strokeStyle = '#38BDF8';
+                        pctx.lineWidth = 2;
+                        pctx.stroke();
+                    } else {
+                        // standard
+                        pctx.beginPath();
+                        pctx.arc(p.x, p.y, 2 * p.life, 0, TAU);
+                        pctx.fillStyle = p.color;
+                        pctx.fill();
+                    }
+                    pctx.restore();
+                }
+            }
+
+            skinPreviewAnimId = requestAnimationFrame(loop);
+        }
+        skinPreviewAnimId = requestAnimationFrame(loop);
+    }
+
+    // ===== 供预览使用的独立渲染辅助函数 =====
+    function getBackgroundGradientForSkin(skinKey, cx, cy, r) {
+        switch (skinKey) {
+            case 'cyberpunk': return [{ stop: 0, color: '#2E0249' }, { stop: 1, color: '#0A0014' }];
+            case 'ocean': return [{ stop: 0, color: '#0F2027' }, { stop: 1, color: '#0B131A' }];
+            case 'forest': return [{ stop: 0, color: '#0D2916' }, { stop: 1, color: '#051009' }];
+            case 'deepSpace': return [{ stop: 0, color: '#1A0B2E' }, { stop: 0.5, color: '#140523' }, { stop: 1, color: '#08020F' }];
+            default: return [{ stop: 0, color: '#0F172A' }, { stop: 1, color: '#070C15' }];
+        }
+    }
+
+    function drawUnitCircleForSkin(skinKey, pctx, cx, cy, r, timer) {
+        pctx.save();
+        switch (skinKey) {
+            case 'neon':
+                pctx.beginPath(); pctx.arc(cx, cy, r, 0, TAU);
+                pctx.strokeStyle = '#E879F9'; pctx.lineWidth = 2;
+                pctx.shadowColor = '#E879F9'; pctx.shadowBlur = 15;
+                pctx.stroke();
+                break;
+            case 'minimal':
+                pctx.beginPath(); pctx.arc(cx, cy, r, 0, TAU);
+                pctx.strokeStyle = 'rgba(255, 255, 255, 0.2)'; pctx.lineWidth = 1;
+                pctx.setLineDash([5, 5]); pctx.stroke(); pctx.setLineDash([]);
+                break;
+            case 'retro':
+                pctx.beginPath(); pctx.arc(cx, cy, r, 0, TAU);
+                pctx.strokeStyle = '#4ADE80'; pctx.lineWidth = 2;
+                // pixelated look logic skipped for simplicity, just green line
+                pctx.stroke();
+                break;
+            default:
+                pctx.beginPath(); pctx.arc(cx, cy, r, 0, TAU);
+                pctx.strokeStyle = 'rgba(148, 163, 184, 0.4)'; pctx.lineWidth = 2;
+                pctx.stroke();
+                break;
+        }
+        pctx.restore();
+    }
+
+    function getLineColorForSkin(skinKey) {
+        switch (skinKey) {
+            case 'gold': return { color: '#FBBF24', glow: '#F59E0B' };
+            case 'blue': return { color: '#60A5FA', glow: '#3B82F6' };
+            case 'purple': return { color: '#C084FC', glow: '#A855F7' };
+            case 'rainbow': return { color: `hsl(${(Date.now() / 10) % 360}, 100%, 70%)`, glow: null };
+            default: return { color: '#22C55E', glow: '#16A34A' };
+        }
+    }
+
+    function drawCrosshairForSkin(skinKey, pctx, x, y, angle) {
+        pctx.save();
+        pctx.translate(x, y);
+        pctx.rotate(-angle); // 数学坐标系转回canvas系
+        pctx.strokeStyle = '#F8FAFC';
+        pctx.lineWidth = 2;
+
+        if (skinKey === 'circle') {
+            pctx.beginPath(); pctx.arc(0, 0, 8, 0, TAU); pctx.stroke();
+            pctx.beginPath(); pctx.arc(0, 0, 1, 0, TAU); pctx.fillStyle = '#FFF'; pctx.fill();
+        } else if (skinKey === 'laser') {
+            pctx.beginPath(); pctx.moveTo(-15, 0); pctx.lineTo(15, 0); pctx.strokeStyle = '#EF4444'; pctx.stroke();
+            pctx.beginPath(); pctx.moveTo(0, -15); pctx.lineTo(0, 15); pctx.stroke();
+        } else if (skinKey === 'bow') {
+            pctx.beginPath(); pctx.arc(0, 0, 12, -PI / 3, PI / 3); pctx.stroke();
+            pctx.beginPath(); pctx.moveTo(0, 0); pctx.lineTo(10, 0); pctx.stroke();
+        } else {
+            // default
+            pctx.beginPath(); pctx.moveTo(-10, 0); pctx.lineTo(-4, 0);
+            pctx.moveTo(4, 0); pctx.lineTo(10, 0);
+            pctx.moveTo(0, -10); pctx.lineTo(0, -4);
+            pctx.moveTo(0, 4); pctx.lineTo(0, 10);
+            pctx.stroke();
+        }
+        pctx.restore();
+    }
+
+    function drawStarForSkin(pctx, x, y, size, color) {
+        const spikes = 5;
+        const outerRadius = size;
+        const innerRadius = size * 0.4;
+        pctx.beginPath();
+        for (let i = 0; i < spikes * 2; i++) {
+            const radius = i % 2 === 0 ? outerRadius : innerRadius;
+            const angle = (i / (spikes * 2)) * TAU - PI / 2;
+            pctx.lineTo(x + Math.cos(angle) * radius, y + Math.sin(angle) * radius);
+        }
+        pctx.closePath();
+        pctx.fillStyle = color;
+        pctx.fill();
+    }
+
+    /**
+     * 渲染记录面板内容
+     */
+    function renderRecords() {
+        const container = document.getElementById('sniperRecordGrid');
+        if (!container) return;
+
+        let lt = {};
+        try {
+            lt = JSON.parse(localStorage.getItem('pi_sniper_lifetime') || '{}');
+        } catch (e) { }
+
+        const timeInSeconds = lt.totalPlayTime || 0;
+        let timeStr = `${timeInSeconds}s`;
+        if (timeInSeconds >= 3600) {
+            timeStr = `${(timeInSeconds / 3600).toFixed(1)}h`;
+        } else if (timeInSeconds >= 60) {
+            timeStr = `${(timeInSeconds / 60).toFixed(1)}m`;
+        }
+
+        const data = [
+            { label: '总游玩局数', value: lt.totalGames || 0, icon: '🎮' },
+            { label: '总游玩时间', value: timeStr, icon: '⏱️' },
+            { label: '总击中目标', value: lt.totalHits || 0, icon: '🎯' },
+            { label: '完美射击', value: lt.totalPerfects || 0, icon: '⭐' },
+            { label: '脱靶次数', value: lt.totalMisses || 0, icon: '❌' },
+            { label: '历史最大连击', value: lt.maxCombo || 0, icon: '🔥' },
+            { label: '击败 Boss', value: lt.totalBossDefeated || 0, icon: '⚔️' },
+            { label: '触发 Frenzy', value: lt.totalFrenzyCount || 0, icon: '⚡' },
+        ];
+
+        container.innerHTML = data.map(item => `
+            <div class="record-card">
+                <div class="record-icon">${item.icon}</div>
+                <div class="record-value">${item.value}</div>
+                <div class="record-label">${item.label}</div>
+            </div>
+        `).join('');
     }
 
     /**
@@ -1668,10 +2377,19 @@ const PiSniper = (() => {
         try {
             const lt = JSON.parse(localStorage.getItem('pi_sniper_lifetime') || '{}');
             lt.totalGames = (lt.totalGames || 0) + 1;
+            lt.totalPlayTime = (lt.totalPlayTime || 0) + GAME_DURATION; // 记录总游玩时间（秒）
+            lt.totalHits = (lt.totalHits || 0) + stats.hits + stats.goods + stats.excellents + stats.perfects;
             lt.totalPerfects = (lt.totalPerfects || 0) + stats.perfects;
-            lt.totalBossDefeated = (lt.totalBossDefeated || 0) + stats.bossDefeated;
-            lt.totalScore = (lt.totalScore || 0) + score;
+            lt.totalMisses = (lt.totalMisses || 0) + stats.misses;
             lt.maxCombo = Math.max(lt.maxCombo || 0, maxCombo);
+            lt.totalBossDefeated = (lt.totalBossDefeated || 0) + stats.bossDefeated;
+            lt.totalFrenzyCount = (lt.totalFrenzyCount || 0) + stats.frenzyCount;
+            lt.totalScore = (lt.totalScore || 0) + score;
+            // 额外记录一些极值用于成就和皮肤的进度显示
+            lt.maxPerfectsPerGame = Math.max(lt.maxPerfectsPerGame || 0, stats.perfects);
+            lt.maxConsecutivePerfects = Math.max(lt.maxConsecutivePerfects || 0, stats.maxConsecutivePerfects || 0);
+            lt.maxFrenzyPerGame = Math.max(lt.maxFrenzyPerGame || 0, stats.frenzyCount);
+
             localStorage.setItem('pi_sniper_lifetime', JSON.stringify(lt));
         } catch (e) {
             // 忽略
@@ -1813,6 +2531,388 @@ const PiSniper = (() => {
         ctx.restore();
     }
 
+    // ===== 背景装饰渲染逻辑 =====
+    function initBgAnimState(w, h) {
+        const cx = w / 2;
+        const r = Math.min(w, h) * 0.35;
+
+        // Deep Space: Stars and Planets
+        bgAnimState.deepSpace.stars = Array.from({ length: 50 }, () => ({
+            x: Math.random() * w,
+            y: Math.random() * h,
+            r: Math.random() * 1.5 + 0.5,
+            vy: Math.random() * 0.3 + 0.1
+        }));
+        bgAnimState.deepSpace.planets = [
+            { x: w * 0.85, y: h * 0.2, r: Math.min(w, h) * 0.15, type: 'large', color1: '#E2C892', color2: '#9C7238' },
+            { x: w * 0.15, y: h * 0.7, r: Math.min(w, h) * 0.06, type: 'small', color1: '#F472B6', color2: '#831843' },
+            { x: w * 0.4, y: h * 0.1, r: Math.min(w, h) * 0.03, type: 'small', color1: '#34D399', color2: '#064E3B' }
+        ];
+
+        // Ocean: Bubbles, Fishes and Kelps
+        bgAnimState.ocean.bubbles = Array.from({ length: 25 }, () => ({
+            x: Math.random() * w,
+            y: Math.random() * h,
+            s: Math.random() * 3 + 1,
+            vy: -(Math.random() * 0.8 + 0.2)
+        }));
+        bgAnimState.ocean.fishes = Array.from({ length: 8 }, () => ({
+            x: Math.random() * w,
+            y: h * 0.2 + Math.random() * (h * 0.6),
+            speed: (Math.random() * 1.5 + 0.5) * (Math.random() > 0.5 ? 1 : -1),
+            size: Math.random() * 8 + 8
+        }));
+        bgAnimState.ocean.kelps = [];
+        for (let i = -10; i <= w + 10; i += Math.max(30, w * 0.05)) {
+            bgAnimState.ocean.kelps.push({ x: i, hRatio: 0.6 + Math.random() * 0.4 });
+        }
+
+        // Forest: Fireflies, Trees and Cabin
+        bgAnimState.forest.fireflies = Array.from({ length: 30 }, () => ({
+            x: Math.random() * w,
+            y: h * 0.4 + Math.random() * (h * 0.5),
+            offset: Math.random() * 100,
+            speed: Math.random() * 0.02 + 0.01
+        }));
+        const trees = [];
+        for (let i = -30; i <= w + 30; i += 40) {
+            trees.push({ x: i, th: h * 0.2 + Math.random() * h * 0.1, layer: 'far' });
+        }
+        for (let i = -20; i <= w + 20; i += 60) {
+            let th = h * 0.3 + Math.random() * h * 0.15;
+            if (i < cx - r - 20 || i > cx + r + 20) {
+                th = h * 0.5 + Math.random() * h * 0.3; // 高树分布在两边
+            }
+            trees.push({ x: i, th: th, layer: 'near' });
+        }
+        bgAnimState.forest.trees = trees;
+
+        let cabinX = cx + r + 40;
+        if (cabinX + 120 > w) cabinX = cx - r - 160;
+        if (cabinX < 0) cabinX = w * 0.8;
+        const cy = h / 2;
+        const maxCabinH = Math.max(100, h - (cy + r) - 30);
+        const cabinW = 120;
+        const cabinH = Math.min(140, maxCabinH);
+        bgAnimState.forest.cabin = { x: cabinX, y: h - cabinH, w: cabinW, h: cabinH };
+
+        // Cyberpunk: Buildings and Cars
+        const bWidth = Math.max(40, w / 15);
+        const buildings = [];
+        for (let x = -20; x < w + 20; x += bWidth * (0.8 + Math.random() * 0.4)) {
+            const isOutside = (x + bWidth < cx - r) || (x > cx + r);
+            let bh = h * (0.2 + Math.random() * 0.3);
+            if (isOutside) {
+                bh = h * (0.4 + Math.random() * 0.4);
+            }
+            buildings.push({
+                x: x,
+                w: bWidth * (0.6 + Math.random() * 0.6),
+                h: bh,
+                isOutside: isOutside,
+                windows: Array.from({ length: 15 }, () => ({
+                    wx: Math.random(), wy: Math.random(),
+                    color: ['#F472B6', '#38BDF8', '#FBBF24', '#34D399'][Math.floor(Math.random() * 4)]
+                }))
+            });
+        }
+        bgAnimState.cyberpunk.buildings = buildings;
+        bgAnimState.cyberpunk.cars = Array.from({ length: 10 }, () => ({
+            x: Math.random() * w,
+            y: h * 0.1 + Math.random() * (h * 0.6),
+            speed: (Math.random() * 4 + 2) * (Math.random() > 0.5 ? 1 : -1),
+            color: ['#F472B6', '#38BDF8', '#34D399', '#FEF08A'][Math.floor(Math.random() * 4)]
+        }));
+
+        bgAnimState.lastW = w;
+        bgAnimState.lastH = h;
+        bgAnimState.initialized = true;
+    }
+
+    function drawBackgroundDecorations(ctx, w, h, skinKey, time) {
+        if (!bgAnimState.initialized || bgAnimState.lastW !== w || bgAnimState.lastH !== h) {
+            initBgAnimState(w, h);
+        }
+
+        ctx.save();
+        switch (skinKey) {
+            case 'deepSpace':
+                // Planets
+                bgAnimState.deepSpace.planets.forEach(p => {
+                    // 星环后半部分（在星球下面）
+                    if (p.type === 'large') {
+                        ctx.save();
+                        ctx.translate(p.x, p.y);
+                        ctx.rotate(-Math.PI / 6);
+
+                        // 使用clip限制只画上半部分（后半部分）
+                        ctx.save();
+                        ctx.beginPath();
+                        ctx.rect(-p.r * 3, -p.r * 3, p.r * 6, p.r * 3); // 矩形覆盖上半部分
+                        ctx.clip();
+
+                        // 绘制内环
+                        ctx.beginPath();
+                        ctx.ellipse(0, 0, p.r * 1.8, p.r * 0.4, 0, 0, Math.PI * 2);
+                        ctx.lineWidth = p.r * 0.15;
+                        ctx.strokeStyle = 'rgba(230, 210, 180, 0.4)';
+                        ctx.stroke();
+
+                        // 绘制外环
+                        ctx.beginPath();
+                        ctx.ellipse(0, 0, p.r * 2.2, p.r * 0.5, 0, 0, Math.PI * 2);
+                        ctx.lineWidth = p.r * 0.08;
+                        ctx.strokeStyle = 'rgba(210, 190, 160, 0.2)';
+                        ctx.stroke();
+
+                        ctx.restore(); // 结束后半部分clip
+                        ctx.restore(); // 结束整体变换
+                    }
+
+                    // 星球本体
+                    const grad = ctx.createRadialGradient(p.x - p.r * 0.3, p.y - p.r * 0.3, 0, p.x, p.y, p.r);
+                    grad.addColorStop(0, p.color1);
+                    grad.addColorStop(0.7, p.color2);
+                    grad.addColorStop(1, '#000000'); // 边缘增加阴影感
+
+                    ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+                    ctx.fillStyle = grad;
+                    if (p.type === 'large') {
+                        ctx.shadowColor = p.color1; ctx.shadowBlur = 30;
+                    }
+                    ctx.fill(); ctx.shadowBlur = 0;
+
+                    // 星球大气层/光晕
+                    ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+                    ctx.lineWidth = 2;
+                    ctx.strokeStyle = `rgba(255, 255, 255, 0.2)`;
+                    ctx.stroke();
+
+                    // Planet texture (craters/clouds)
+                    ctx.save();
+                    ctx.clip();
+                    if (p.type === 'large') {
+                        // 气态行星纹理 (土星/木星风格条纹)
+                        for (let i = -0.8; i < 0.8; i += 0.3) {
+                            ctx.fillStyle = `rgba(255,255,255,${0.05 + Math.random() * 0.05})`;
+                            ctx.beginPath();
+                            ctx.ellipse(p.x, p.y + p.r * i, p.r * 1.5, p.r * (0.1 + Math.random() * 0.1), 0, 0, Math.PI * 2);
+                            ctx.fill();
+                        }
+                    } else {
+                        // 岩石行星纹理 (陨石坑)
+                        ctx.fillStyle = 'rgba(0,0,0,0.2)';
+                        ctx.beginPath(); ctx.arc(p.x - p.r * 0.3, p.y + p.r * 0.3, p.r * 0.3, 0, Math.PI * 2); ctx.fill();
+                        ctx.beginPath(); ctx.arc(p.x + p.r * 0.4, p.y - p.r * 0.1, p.r * 0.2, 0, Math.PI * 2); ctx.fill();
+                        ctx.beginPath(); ctx.arc(p.x - p.r * 0.1, p.y - p.r * 0.4, p.r * 0.15, 0, Math.PI * 2); ctx.fill();
+                        // 陨石坑高光
+                        ctx.fillStyle = 'rgba(255,255,255,0.1)';
+                        ctx.beginPath(); ctx.arc(p.x - p.r * 0.35, p.y + p.r * 0.25, p.r * 0.25, 0, Math.PI * 2); ctx.fill();
+                    }
+
+                    // 星球本身的体积阴影(使其更有立体感)
+                    const shadowGrad = ctx.createLinearGradient(p.x - p.r, p.y - p.r, p.x + p.r, p.y + p.r);
+                    shadowGrad.addColorStop(0, 'rgba(0,0,0,0)');
+                    shadowGrad.addColorStop(0.5, 'rgba(0,0,0,0.3)');
+                    shadowGrad.addColorStop(1, 'rgba(0,0,0,0.8)');
+                    ctx.fillStyle = shadowGrad;
+                    ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2); ctx.fill();
+                    ctx.restore();
+
+                    // 星环前半部分（在星球上面）
+                    if (p.type === 'large') {
+                        ctx.save();
+                        ctx.translate(p.x, p.y);
+                        ctx.rotate(-Math.PI / 6);
+
+                        // 使用clip限制只画下半部分（前半部分）
+                        ctx.save();
+                        ctx.beginPath();
+                        ctx.rect(-p.r * 3, 0, p.r * 6, p.r * 3); // 矩形覆盖下半部分
+                        ctx.clip();
+
+                        // 绘制内环
+                        ctx.beginPath();
+                        ctx.ellipse(0, 0, p.r * 1.8, p.r * 0.4, 0, 0, Math.PI * 2);
+                        ctx.lineWidth = p.r * 0.15;
+                        ctx.strokeStyle = 'rgba(230, 210, 180, 0.7)';
+                        ctx.stroke();
+
+                        // 绘制外环
+                        ctx.beginPath();
+                        ctx.ellipse(0, 0, p.r * 2.2, p.r * 0.5, 0, 0, Math.PI * 2);
+                        ctx.lineWidth = p.r * 0.08;
+                        ctx.strokeStyle = 'rgba(210, 190, 160, 0.4)';
+                        ctx.stroke();
+
+                        ctx.restore(); // 结束前半部分clip
+
+                        // 星环在星球表面的投影
+                        ctx.beginPath();
+                        ctx.ellipse(0, p.r * 0.1, p.r * 1.8, p.r * 0.4, 0, Math.PI, Math.PI * 2);
+                        ctx.lineWidth = p.r * 0.1;
+                        ctx.strokeStyle = 'rgba(0, 0, 0, 0.3)';
+                        ctx.globalCompositeOperation = 'source-atop'; // 只在星球范围内显示投影(由于星球已画好，这步其实需要独立处理，这里简单用降低透明度的曲线模拟)
+                        ctx.stroke();
+                        ctx.globalCompositeOperation = 'source-over';
+
+                        ctx.restore(); // 结束整体变换
+                    }
+                });
+
+                // Stars
+                ctx.fillStyle = '#FFF';
+                bgAnimState.deepSpace.stars.forEach(s => {
+                    s.y += s.vy; if (s.y > h) s.y = 0;
+                    ctx.globalAlpha = 0.5 + Math.sin(time * 2 + s.x) * 0.5;
+                    ctx.beginPath(); ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2); ctx.fill();
+                });
+                break;
+
+            case 'ocean':
+                // Bubbles
+                ctx.fillStyle = 'rgba(255,255,255,0.2)';
+                bgAnimState.ocean.bubbles.forEach(b => {
+                    b.y += b.vy; if (b.y < 0) b.y = h;
+                    b.x += Math.sin(time + b.y * 0.05) * 0.5;
+                    ctx.beginPath(); ctx.arc(b.x, b.y, b.s, 0, Math.PI * 2); ctx.fill();
+                });
+
+                // Fishes
+                bgAnimState.ocean.fishes.forEach(f => {
+                    f.x += f.speed;
+                    if (f.speed > 0 && f.x > w + 50) f.x = -50;
+                    if (f.speed < 0 && f.x < -50) f.x = w + 50;
+                    ctx.fillStyle = 'rgba(15, 32, 39, 0.4)';
+                    ctx.beginPath();
+                    const dir = f.speed > 0 ? 1 : -1;
+                    ctx.ellipse(f.x, f.y, f.size, f.size * 0.4, 0, 0, Math.PI * 2);
+                    ctx.moveTo(f.x - dir * f.size * 0.8, f.y);
+                    ctx.lineTo(f.x - dir * f.size * 1.5, f.y - f.size * 0.5);
+                    ctx.lineTo(f.x - dir * f.size * 1.5, f.y + f.size * 0.5);
+                    ctx.fill();
+                });
+
+                // Seaweed (More realistic and limited height)
+                const cy = h / 2;
+                const r = Math.min(w, h) * 0.35;
+                const bottomY = cy + r + 20; // 避免进入单位圆
+                const maxKelpHeight = h - bottomY;
+
+                ctx.strokeStyle = 'rgba(34, 197, 94, 0.6)';
+                ctx.lineCap = 'round';
+                bgAnimState.ocean.kelps.forEach((kelp, index) => {
+                    const kHeight = Math.max(50, maxKelpHeight * kelp.hRatio);
+                    ctx.lineWidth = Math.max(3, w * 0.008);
+                    ctx.beginPath();
+                    ctx.moveTo(kelp.x, h);
+
+                    let curX = kelp.x;
+                    let curY = h;
+                    const segments = 4;
+                    const segH = kHeight / segments;
+                    for (let j = 1; j <= segments; j++) {
+                        const sway = Math.sin(time * 2 + kelp.x + j) * 15 * (j / segments);
+                        const nextX = kelp.x + sway;
+                        const nextY = h - segH * j;
+                        const cpX = curX + (nextX - curX) / 2 + (Math.cos(time * 3 + kelp.x) * 10);
+                        const cpY = curY - segH / 2;
+                        ctx.quadraticCurveTo(cpX, cpY, nextX, nextY);
+                        curX = nextX;
+                        curY = nextY;
+                    }
+                    ctx.stroke();
+                });
+                break;
+
+            case 'forest':
+                // Trees
+                bgAnimState.forest.trees.forEach(t => {
+                    ctx.fillStyle = t.layer === 'far' ? '#022C22' : '#064E3B';
+                    ctx.beginPath();
+                    ctx.moveTo(t.x, h);
+                    ctx.lineTo(t.x + 15, h - t.th * 0.4);
+                    ctx.lineTo(t.x + 5, h - t.th * 0.4);
+                    ctx.lineTo(t.x + 20, h - t.th * 0.7);
+                    ctx.lineTo(t.x + 10, h - t.th * 0.7);
+                    ctx.lineTo(t.x + 25, h - t.th);
+                    ctx.lineTo(t.x + 40, h - t.th * 0.7);
+                    ctx.lineTo(t.x + 30, h - t.th * 0.7);
+                    ctx.lineTo(t.x + 45, h - t.th * 0.4);
+                    ctx.lineTo(t.x + 35, h - t.th * 0.4);
+                    ctx.lineTo(t.x + 50, h);
+                    ctx.fill();
+                });
+
+                // Cabin
+                const cb = bgAnimState.forest.cabin;
+                ctx.fillStyle = '#451A03';
+                ctx.fillRect(cb.x, cb.y, cb.w, cb.h);
+                ctx.fillStyle = '#270e01';
+                ctx.fillRect(cb.x + cb.w * 0.2, cb.y + cb.h * 0.5, cb.w * 0.25, cb.h * 0.5);
+                ctx.fillStyle = '#1e0a00';
+                ctx.beginPath(); ctx.moveTo(cb.x - 10, cb.y); ctx.lineTo(cb.x + cb.w / 2, cb.y - 40); ctx.lineTo(cb.x + cb.w + 10, cb.y); ctx.fill();
+                ctx.fillStyle = '#FEF08A'; ctx.shadowColor = '#FEF08A'; ctx.shadowBlur = 20;
+                ctx.fillRect(cb.x + cb.w * 0.6, cb.y + cb.h * 0.4, cb.w * 0.25, cb.h * 0.25); ctx.shadowBlur = 0;
+                ctx.fillStyle = '#451A03';
+                ctx.fillRect(cb.x + cb.w * 0.6 + cb.w * 0.11, cb.y + cb.h * 0.4, cb.w * 0.03, cb.h * 0.25);
+                ctx.fillRect(cb.x + cb.w * 0.6, cb.y + cb.h * 0.4 + cb.h * 0.11, cb.w * 0.25, cb.h * 0.03);
+
+                // Fireflies
+                ctx.fillStyle = '#FEF08A';
+                bgAnimState.forest.fireflies.forEach(f => {
+                    f.y += Math.sin(time + f.offset) * 0.5;
+                    f.x += Math.cos(time * 0.8 + f.offset) * 0.5;
+                    ctx.globalAlpha = Math.abs(Math.sin(time * 2 + f.offset));
+                    ctx.beginPath(); ctx.arc(f.x, f.y, 2, 0, Math.PI * 2); ctx.fill();
+                });
+                break;
+
+            case 'cyberpunk':
+                // Buildings
+                bgAnimState.cyberpunk.buildings.forEach(b => {
+                    ctx.fillStyle = '#0F172A';
+                    ctx.fillRect(b.x, h - b.h, b.w, b.h);
+
+                    if (b.isOutside) {
+                        ctx.fillStyle = '#1E293B';
+                        ctx.fillRect(b.x + b.w * 0.3, h - b.h - 30, b.w * 0.4, 30);
+                        ctx.fillRect(b.x + b.w * 0.45, h - b.h - 60, b.w * 0.1, 30);
+                        ctx.strokeStyle = b.windows[0].color;
+                        ctx.lineWidth = 2;
+                        ctx.strokeRect(b.x, h - b.h, b.w, b.h);
+                    }
+
+                    ctx.globalAlpha = 0.8;
+                    b.windows.forEach(win => {
+                        ctx.fillStyle = win.color;
+                        if (b.isOutside && Math.random() > 0.5) {
+                            ctx.shadowColor = win.color; ctx.shadowBlur = 5;
+                            ctx.fillRect(b.x + win.wx * (b.w - 12) + 6, h - b.h + win.wy * (b.h - 20) + 10, 6, 12);
+                            ctx.shadowBlur = 0;
+                        } else {
+                            ctx.fillRect(b.x + win.wx * (b.w - 8) + 4, h - b.h + win.wy * (b.h - 8) + 4, 3, 6);
+                        }
+                    });
+                    ctx.globalAlpha = 1;
+                });
+
+                // Flying Cars (Light streaks)
+                bgAnimState.cyberpunk.cars.forEach(c => {
+                    c.x += c.speed;
+                    if (c.speed > 0 && c.x > w + 50) c.x = -50;
+                    if (c.speed < 0 && c.x < -50) c.x = w + 50;
+                    ctx.strokeStyle = c.color;
+                    ctx.lineWidth = 2;
+                    ctx.beginPath(); ctx.moveTo(c.x, c.y); ctx.lineTo(c.x + 40 * (c.speed > 0 ? -1 : 1), c.y);
+                    ctx.shadowColor = c.color; ctx.shadowBlur = 10;
+                    ctx.stroke(); ctx.shadowBlur = 0;
+                });
+                break;
+        }
+        ctx.restore();
+    }
+
     // ===== UI 更新 =====
     function updateUI() {
         if (elScore) elScore.textContent = score;
@@ -1875,6 +2975,9 @@ const PiSniper = (() => {
             ctx.fillStyle = bgStops[0].color;
         }
         ctx.fillRect(0, 0, W, H);
+
+        // 背景装饰动画
+        drawBackgroundDecorations(ctx, W, H, skin.background, Date.now() / 1000);
 
         // Frenzy 背景效果
         if (frenzy) {
@@ -2388,5 +3491,8 @@ const PiSniper = (() => {
         drawUnitCircle(cx, cy, r);
     }
 
-    return { show, hide };
+    return { show, hide, equipSkin, showAchievementDetail, showSkinDetail };
 })();
+
+// 显式挂载到全局作用域供 onclick 事件调用
+window.PiSniper = PiSniper;
