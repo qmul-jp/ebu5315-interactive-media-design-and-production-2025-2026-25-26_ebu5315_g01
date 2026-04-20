@@ -3702,15 +3702,57 @@ const PiSniper = (() => {
 
             case 'cyberpunk':
                 // Buildings
-                bgAnimState.cyberpunk.buildings.forEach(b => {
+                bgAnimState.cyberpunk.buildings.forEach((b, index) => {
                     ctx.fillStyle = '#0F172A';
                     ctx.fillRect(b.x, h - b.h, b.w, b.h);
 
                     if (b.isOutside) {
                         ctx.fillStyle = '#1E293B';
-                        ctx.fillRect(b.x + b.w * 0.3, h - b.h - 30, b.w * 0.4, 30);
-                        ctx.fillRect(b.x + b.w * 0.45, h - b.h - 60, b.w * 0.1, 30);
-                        ctx.strokeStyle = b.windows[0].color;
+
+                        // 绘制直射天际的探照灯/霓虹灯光束
+                        const beamColor = b.windows[0].color; // 使用楼栋窗户的主色调作为光束颜色
+                        ctx.save();
+
+                        // 混合模式：叠加发光效果
+                        ctx.globalCompositeOperation = 'screen';
+
+                        // 创建线性渐变光束（从大楼顶部发出）
+                        const beamStartX = b.x + b.w * 0.5;
+                        const beamStartY = h - b.h;
+                        const beamLength = h * 0.8; // 光束长度
+
+                        // 引入时间变量使光束有轻微的呼吸闪烁效果
+                        const beamAlpha = 0.3 + Math.sin(time * 5 + index) * 0.15;
+
+                        // 左右摇摆的角度 (利用正弦波控制摇摆)
+                        // index 的参与可以让不同大楼的探照灯摇摆节奏错开
+                        const swingAngle = Math.sin(time * 1.5 + index * 0.8) * (Math.PI / 6); // 最大摇摆角度约为 ±30度
+
+                        // 将坐标系平移到光束发射点，方便应用旋转
+                        ctx.translate(beamStartX, beamStartY);
+                        ctx.rotate(swingAngle);
+
+                        // 注意：平移旋转后，原点 (0,0) 就是光束的发射点 (beamStartX, beamStartY)
+                        // 因此绘制和渐变的坐标都需要相对于 (0,0) 来计算
+                        const gradient = ctx.createLinearGradient(0, 0, 0, -beamLength);
+                        gradient.addColorStop(0, beamColor);
+                        gradient.addColorStop(1, 'transparent');
+
+                        ctx.fillStyle = gradient;
+                        ctx.globalAlpha = beamAlpha;
+
+                        // 绘制梯形光束（向上散射）
+                        ctx.beginPath();
+                        ctx.moveTo(-b.w * 0.1, 0); // 底部稍微宽一点，或者用原来的 0.05 也行
+                        ctx.lineTo(b.w * 0.1, 0);
+                        ctx.lineTo(b.w * 0.8, -beamLength);
+                        ctx.lineTo(-b.w * 0.8, -beamLength);
+                        ctx.fill();
+
+                        ctx.restore();
+
+                        // 楼体边缘线
+                        ctx.strokeStyle = beamColor;
                         ctx.lineWidth = 2;
                         ctx.strokeRect(b.x, h - b.h, b.w, b.h);
                     }
