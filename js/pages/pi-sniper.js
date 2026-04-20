@@ -2545,8 +2545,8 @@ const PiSniper = (() => {
         }));
         bgAnimState.deepSpace.planets = [
             { x: w * 0.85, y: h * 0.2, r: Math.min(w, h) * 0.15, type: 'large', color1: '#E2C892', color2: '#9C7238' },
-            { x: w * 0.15, y: h * 0.7, r: Math.min(w, h) * 0.06, type: 'small', color1: '#F472B6', color2: '#831843' },
-            { x: w * 0.4, y: h * 0.1, r: Math.min(w, h) * 0.03, type: 'small', color1: '#34D399', color2: '#064E3B' }
+            { x: w * 0.15, y: h * 0.7, r: Math.min(w, h) * 0.06, type: 'moon', color1: '#67E8F9', color2: '#0284C7', hasSatellite: true },
+            { x: w * 0.4, y: h * 0.1, r: Math.min(w, h) * 0.03, type: 'gas', color1: '#E879F9', color2: '#86198F' }
         ];
 
         // Ocean: Bubbles, Fishes and Kelps
@@ -2629,6 +2629,78 @@ const PiSniper = (() => {
         bgAnimState.initialized = true;
     }
 
+    function drawSatellite(ctx, x, y, r, angle) {
+        ctx.save();
+        ctx.translate(x, y);
+        // 让卫星的朝向与公转角度相关，产生自转或朝向星球的效果
+        ctx.rotate(angle + Math.PI / 4);
+
+        // 太阳能翼板参数
+        const panelWidth = r * 5.5;  // 帆板总跨度
+        const panelHeight = r * 1.2; // 帆板宽度
+        const coreR = r * 0.9; // 核心舱略小于原半径，凸显帆板
+
+        // 1. 绘制太阳能翼板
+        ctx.shadowBlur = 10;
+        ctx.shadowColor = '#06B6D4'; // 亮青色外发光
+        ctx.fillStyle = '#082F49';   // 深邃冰蓝底色
+        ctx.strokeStyle = '#22D3EE'; // 亮青色边框
+        ctx.lineWidth = Math.max(1, r * 0.15); // 保证线宽至少为1
+
+        // 左侧翼板
+        ctx.beginPath();
+        ctx.rect(-panelWidth / 2 - coreR * 0.2, -panelHeight / 2, panelWidth / 2 - coreR * 0.5, panelHeight);
+        ctx.fill();
+        ctx.stroke();
+
+        // 右侧翼板
+        ctx.beginPath();
+        ctx.rect(coreR * 0.7, -panelHeight / 2, panelWidth / 2 - coreR * 0.5, panelHeight);
+        ctx.fill();
+        ctx.stroke();
+
+        // 太阳能板上的网格线（装饰细节）
+        ctx.shadowBlur = 0; // 关闭阴影画细节，避免糊掉
+        ctx.strokeStyle = 'rgba(34, 211, 238, 0.4)';
+        ctx.lineWidth = Math.max(0.5, r * 0.1);
+        const lineCount = 3;
+        const segmentW = (panelWidth / 2 - coreR * 0.5) / (lineCount + 1);
+
+        for (let i = 1; i <= lineCount; i++) {
+            // 左板线
+            let lx = -panelWidth / 2 - coreR * 0.2 + segmentW * i;
+            ctx.beginPath(); ctx.moveTo(lx, -panelHeight / 2); ctx.lineTo(lx, panelHeight / 2); ctx.stroke();
+            // 右板线
+            let rx = coreR * 0.7 + segmentW * i;
+            ctx.beginPath(); ctx.moveTo(rx, -panelHeight / 2); ctx.lineTo(rx, panelHeight / 2); ctx.stroke();
+        }
+
+        // 2. 绘制核心舱 (带金属渐变)
+        const coreGrad = ctx.createRadialGradient(0, 0, 0, 0, 0, coreR);
+        coreGrad.addColorStop(0, '#FFFFFF'); // 银白中心
+        coreGrad.addColorStop(0.4, '#94A3B8'); // 浅灰过渡
+        coreGrad.addColorStop(0.8, '#334155'); // 深灰边缘
+        coreGrad.addColorStop(1, '#0F172A'); // 暗黑轮廓
+
+        ctx.shadowBlur = 15; // 核心舱发光
+        ctx.shadowColor = '#22D3EE';
+
+        ctx.beginPath();
+        ctx.arc(0, 0, coreR, 0, Math.PI * 2);
+        ctx.fillStyle = coreGrad;
+        ctx.fill();
+
+        // 3. 核心舱中心能量点
+        ctx.shadowBlur = 8;
+        ctx.shadowColor = '#FFFFFF';
+        ctx.beginPath();
+        ctx.arc(0, 0, coreR * 0.35, 0, Math.PI * 2);
+        ctx.fillStyle = '#E0F2FE'; // 极亮冰蓝
+        ctx.fill();
+
+        ctx.restore();
+    }
+
     function drawBackgroundDecorations(ctx, w, h, skinKey, time) {
         if (!bgAnimState.initialized || bgAnimState.lastW !== w || bgAnimState.lastH !== h) {
             initBgAnimState(w, h);
@@ -2677,10 +2749,10 @@ const PiSniper = (() => {
 
                     ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
                     ctx.fillStyle = grad;
-                    if (p.type === 'large') {
-                        ctx.shadowColor = p.color1; ctx.shadowBlur = 30;
-                    }
-                    ctx.fill(); ctx.shadowBlur = 0;
+                    ctx.shadowColor = p.color1;
+                    ctx.shadowBlur = p.type === 'large' ? 30 : 15;
+                    ctx.fill();
+                    ctx.shadowBlur = 0;
 
                     // 星球大气层/光晕
                     ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
@@ -2699,25 +2771,107 @@ const PiSniper = (() => {
                             ctx.ellipse(p.x, p.y + p.r * i, p.r * 1.5, p.r * (0.1 + Math.random() * 0.1), 0, 0, Math.PI * 2);
                             ctx.fill();
                         }
-                    } else {
-                        // 岩石行星纹理 (陨石坑)
-                        ctx.fillStyle = 'rgba(0,0,0,0.2)';
-                        ctx.beginPath(); ctx.arc(p.x - p.r * 0.3, p.y + p.r * 0.3, p.r * 0.3, 0, Math.PI * 2); ctx.fill();
-                        ctx.beginPath(); ctx.arc(p.x + p.r * 0.4, p.y - p.r * 0.1, p.r * 0.2, 0, Math.PI * 2); ctx.fill();
-                        ctx.beginPath(); ctx.arc(p.x - p.r * 0.1, p.y - p.r * 0.4, p.r * 0.15, 0, Math.PI * 2); ctx.fill();
-                        // 陨石坑高光
-                        ctx.fillStyle = 'rgba(255,255,255,0.1)';
-                        ctx.beginPath(); ctx.arc(p.x - p.r * 0.35, p.y + p.r * 0.25, p.r * 0.25, 0, Math.PI * 2); ctx.fill();
+                    } else if (p.type === 'moon') {
+                        // 岩石行星纹理 (陨石坑，参考图1)
+                        ctx.fillStyle = 'rgba(0,0,0,0.15)';
+                        // 画几个陨石坑的暗部
+                        ctx.beginPath(); ctx.arc(p.x - p.r * 0.2, p.y - p.r * 0.2, p.r * 0.15, 0, Math.PI * 2); ctx.fill();
+                        ctx.beginPath(); ctx.arc(p.x + p.r * 0.3, p.y + p.r * 0.1, p.r * 0.2, 0, Math.PI * 2); ctx.fill();
+                        ctx.beginPath(); ctx.arc(p.x + p.r * 0.1, p.y + p.r * 0.4, p.r * 0.1, 0, Math.PI * 2); ctx.fill();
+                        ctx.beginPath(); ctx.arc(p.x - p.r * 0.4, p.y + p.r * 0.1, p.r * 0.12, 0, Math.PI * 2); ctx.fill();
+
+                        // 陨石坑边缘受光面高光
+                        ctx.fillStyle = 'rgba(255,255,255,0.2)';
+                        ctx.beginPath(); ctx.arc(p.x - p.r * 0.25, p.y - p.r * 0.25, p.r * 0.12, 0, Math.PI * 2); ctx.fill();
+                        ctx.beginPath(); ctx.arc(p.x + p.r * 0.25, p.y + p.r * 0.05, p.r * 0.15, 0, Math.PI * 2); ctx.fill();
+                        ctx.beginPath(); ctx.arc(p.x + p.r * 0.05, p.y + p.r * 0.35, p.r * 0.08, 0, Math.PI * 2); ctx.fill();
+                        ctx.beginPath(); ctx.arc(p.x - p.r * 0.45, p.y + p.r * 0.05, p.r * 0.1, 0, Math.PI * 2); ctx.fill();
+                    } else if (p.type === 'gas') {
+                        // 气态条纹纹理 (参考图2)
+                        for (let i = -0.8; i < 0.8; i += 0.2) {
+                            ctx.fillStyle = `rgba(255,255,255,${0.03 + Math.random() * 0.1})`;
+                            ctx.beginPath();
+                            ctx.ellipse(p.x, p.y + p.r * i, p.r * 1.5, p.r * (0.05 + Math.random() * 0.1), 0, 0, Math.PI * 2);
+                            ctx.fill();
+                        }
+                        for (let i = -0.6; i < 0.8; i += 0.3) {
+                            ctx.fillStyle = `rgba(0,0,0,${0.05 + Math.random() * 0.1})`;
+                            ctx.beginPath();
+                            ctx.ellipse(p.x, p.y + p.r * i, p.r * 1.5, p.r * (0.04 + Math.random() * 0.08), 0, 0, Math.PI * 2);
+                            ctx.fill();
+                        }
+                        // 气态星球上的小风暴气旋
+                        ctx.fillStyle = 'rgba(0,0,0,0.1)';
+                        ctx.beginPath(); ctx.ellipse(p.x + p.r * 0.3, p.y - p.r * 0.1, p.r * 0.15, p.r * 0.08, 0, 0, Math.PI * 2); ctx.fill();
                     }
 
                     // 星球本身的体积阴影(使其更有立体感)
-                    const shadowGrad = ctx.createLinearGradient(p.x - p.r, p.y - p.r, p.x + p.r, p.y + p.r);
-                    shadowGrad.addColorStop(0, 'rgba(0,0,0,0)');
-                    shadowGrad.addColorStop(0.5, 'rgba(0,0,0,0.3)');
-                    shadowGrad.addColorStop(1, 'rgba(0,0,0,0.8)');
-                    ctx.fillStyle = shadowGrad;
-                    ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2); ctx.fill();
+                    if (p.type === 'moon' || p.type === 'gas') {
+                        // 强烈的光影分割（强烈明暗交界线，右下大面积阴影）
+                        const shadowGrad = ctx.createLinearGradient(p.x - p.r * 0.3, p.y - p.r * 0.3, p.x + p.r * 0.7, p.y + p.r * 0.7);
+                        shadowGrad.addColorStop(0, 'rgba(0,0,0,0)');
+                        shadowGrad.addColorStop(0.35, 'rgba(0,0,0,0.05)');
+                        shadowGrad.addColorStop(0.65, 'rgba(0,0,0,0.85)');
+                        shadowGrad.addColorStop(1, 'rgba(0,0,0,0.98)');
+                        ctx.fillStyle = shadowGrad;
+                        ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2); ctx.fill();
+                    } else {
+                        const shadowGrad = ctx.createLinearGradient(p.x - p.r, p.y - p.r, p.x + p.r, p.y + p.r);
+                        shadowGrad.addColorStop(0, 'rgba(0,0,0,0)');
+                        shadowGrad.addColorStop(0.5, 'rgba(0,0,0,0.3)');
+                        shadowGrad.addColorStop(1, 'rgba(0,0,0,0.8)');
+                        ctx.fillStyle = shadowGrad;
+                        ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2); ctx.fill();
+                    }
                     ctx.restore();
+
+                    // 绘制环绕的小卫星
+                    if (p.hasSatellite) {
+                        ctx.save();
+                        // 轨道平面有一定倾角
+                        ctx.translate(p.x, p.y);
+                        ctx.rotate(-Math.PI / 8);
+
+                        // 卫星轨道参数
+                        const orbitA = p.r * 1.5; // 半长轴
+                        const orbitB = p.r * 0.2; // 半短轴
+                        const satSpeed = 0.5; // 旋转速度
+                        const satAngle = time * satSpeed;
+
+                        // 计算卫星在椭圆轨道上的位置
+                        const satX = Math.cos(satAngle) * orbitA;
+                        const satY = Math.sin(satAngle) * orbitB;
+                        const satR = p.r * 0.12; // 卫星半径
+
+                        // 判断卫星是否在行星背后 (sin(satAngle) < 0 表示在后半圈)
+                        const isBehind = Math.sin(satAngle) < 0;
+
+                        if (!isBehind) {
+                            // 前半圈，直接画在行星上面
+                            drawSatellite(ctx, satX, satY, satR, satAngle);
+                        } else {
+                            // 后半圈，卫星可能会被行星遮挡
+                            // 利用 ctx.clip() 实现真实的物理遮挡，而不是改变透明度或绘制顺序
+                            // 只有当卫星没有被行星圆面完全遮挡时，才绘制未被遮挡的部分
+
+                            // 因为我们在 ctx.translate(p.x, p.y) 的局部坐标系中，行星中心就是 (0, 0)
+                            ctx.save();
+
+                            // 创建一个反向遮罩：只允许在行星（半径为 p.r）的外部区域进行绘制
+                            ctx.beginPath();
+                            // 绘制一个覆盖整个画布的超大矩形（顺时针）
+                            ctx.rect(-p.r * 5, -p.r * 5, p.r * 10, p.r * 10);
+                            // 绘制行星圆面（逆时针，利用奇偶环绕规则挖空中间区域）
+                            ctx.arc(0, 0, p.r, 0, Math.PI * 2, true);
+                            ctx.clip(); // 应用反向遮罩，现在只有行星外部可以画出东西
+
+                            // 绘制卫星，被行星挡住的部分会被 clip 掉，完美解决消失空隙的问题
+                            drawSatellite(ctx, satX, satY, satR, satAngle);
+
+                            ctx.restore();
+                        }
+                        ctx.restore();
+                    }
 
                     // 星环前半部分（在星球上面）
                     if (p.type === 'large') {
