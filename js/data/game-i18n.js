@@ -30,6 +30,7 @@ window.GameI18N = (() => {
         'slingshot.fail': { zh: '未命中！', en: 'Missed!' },
         'slingshot.selectLevel': { zh: '选择关卡', en: 'Select Level' },
         'slingshot.backToMenu': { zh: '返回菜单', en: 'Back to Menu' },
+        'slingshot.start': { zh: '开始', en: 'Start' },
         'slingshot.knowledge.radius': { zh: '半径(r)：行星大小决定引力强度', en: 'Radius (r): Planet size determines gravity strength' },
         'slingshot.knowledge.area': { zh: '面积(A=πr²)：引力场覆盖范围', en: 'Area (A=πr²): Gravity field coverage' },
         'slingshot.knowledge.tangent': { zh: '切线：能量球脱离引力场的方向', en: 'Tangent: Direction of ball escaping gravity' },

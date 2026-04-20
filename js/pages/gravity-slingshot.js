@@ -210,6 +210,24 @@ const GravitySlingshot = (() => {
         const retryBtn = document.getElementById('slingshotRetryBtn');
         if (retryBtn) retryBtn.addEventListener('click', retryLevel);
 
+        const startBtn = document.getElementById('slingshotStartBtn');
+        if (startBtn) {
+            startBtn.addEventListener('click', () => {
+                GameAudio.playClick();
+                document.getElementById('slingshotStartOverlay').style.display = 'none';
+                running = true;
+                loadLevel(0); // 确保从第一关开始
+            });
+        }
+
+        const backFromStartBtn = document.getElementById('slingshotBackFromStartBtn');
+        if (backFromStartBtn) {
+            // 这个事件实际上在 game.js 里统一绑定了，但这里加上防御性关闭逻辑
+            backFromStartBtn.addEventListener('click', () => {
+                document.getElementById('slingshotStartOverlay').style.display = 'none';
+            });
+        }
+
         if (elCompleteBtn) {
             elCompleteBtn.addEventListener('click', () => {
                 GameAudio.playClick();
@@ -234,8 +252,13 @@ const GravitySlingshot = (() => {
         totalStars = 0;
         init();
         resizeCanvas();
-        loadLevel(currentLevel);
         generateStars();
+        
+        // 显示开始卡片，并暂停游戏逻辑
+        const startOverlay = document.getElementById('slingshotStartOverlay');
+        if (startOverlay) startOverlay.style.display = 'flex';
+        running = false;
+
         if (elWinOverlay) elWinOverlay.style.display = 'none';
         if (elCompleteOverlay) elCompleteOverlay.style.display = 'none';
         gameLoop();
@@ -329,7 +352,7 @@ const GravitySlingshot = (() => {
 
     // ===== 交互 =====
     function onPointerDown(e) {
-        if (levelComplete || ballActive) return;
+        if (!running || levelComplete || ballActive) return;
         const rect = canvas.getBoundingClientRect();
         const x = e.clientX - rect.left;
         const y = e.clientY - rect.top;

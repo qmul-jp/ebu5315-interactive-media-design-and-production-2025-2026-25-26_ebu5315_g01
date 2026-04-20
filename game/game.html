@@ -204,7 +204,13 @@
         </div>
         <div class="game-overlay" id="sniperStartOverlay">
             <div class="game-overlay-panel">
-                <h2 data-game-i18n="sniper.title">Pi Sniper</h2>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <h2 data-game-i18n="sniper.title" style="margin: 0;">Pi Sniper</h2>
+                    <button type="button" class="btn btn-outline" id="sniperBackFromStartBtn"
+                        style="padding: 6px 12px; min-width: auto; font-size: 0.9rem; margin-top: -10px; margin-right: -10px;">
+                        ⬅ 返回
+                    </button>
+                </div>
                 <p class="game-overlay-desc" data-game-i18n="game.sniper.desc">Aim precisely at target angles on the
                     unit circle!</p>
                 <button type="button" class="btn btn-primary btn-primary-full" id="sniperStartBtn"
@@ -398,6 +404,21 @@
             <span class="knowledge-tip-label">💡</span>
             <span id="slingshotKnowledgeText">Radius (r): Planet size determines gravity strength</span>
         </div>
+        <div class="game-overlay" id="slingshotStartOverlay">
+            <div class="game-overlay-panel">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <h2 data-game-i18n="slingshot.title" style="margin: 0;">Gravity Slingshot</h2>
+                    <button type="button" class="btn btn-outline" id="slingshotBackFromStartBtn"
+                        style="padding: 6px 12px; min-width: auto; font-size: 0.9rem; margin-top: -10px; margin-right: -10px;">
+                        ⬅ 返回
+                    </button>
+                </div>
+                <p class="game-overlay-desc" data-game-i18n="game.slingshot.desc">Navigate your spaceship through
+                    gravitational fields to reach the target.</p>
+                <button type="button" class="btn btn-primary btn-primary-full" id="slingshotStartBtn"
+                    data-game-i18n="slingshot.start">Start</button>
+            </div>
+        </div>
         <div class="game-overlay" id="slingshotWinOverlay" style="display:none;">
             <div class="game-overlay-panel">
                 <h2 data-game-i18n="slingshot.win">Target Hit!</h2>
@@ -449,7 +470,13 @@
         </div>
         <div class="game-overlay" id="hunterStartOverlay">
             <div class="game-overlay-panel">
-                <h2 data-game-i18n="hunter.title">Angle Hunter</h2>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <h2 data-game-i18n="hunter.title" style="margin: 0;">Angle Hunter</h2>
+                    <button type="button" class="btn btn-outline" id="hunterBackFromStartBtn"
+                        style="padding: 6px 12px; min-width: auto; font-size: 0.9rem; margin-top: -10px; margin-right: -10px;">
+                        ⬅ 返回
+                    </button>
+                </div>
                 <p class="game-overlay-desc" data-game-i18n="game.hunter.desc">Drag vertices on the circle to discover
                     hidden angles!</p>
                 <button type="button" class="btn btn-primary btn-primary-full" id="hunterStartBtn"
@@ -507,7 +534,13 @@
         </div>
         <div class="game-overlay" id="chordStartOverlay">
             <div class="game-overlay-panel">
-                <h2 data-game-i18n="chord.title">Chord Breaker</h2>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <h2 data-game-i18n="chord.title" style="margin: 0;">Chord Breaker</h2>
+                    <button type="button" class="btn btn-outline" id="chordBackFromStartBtn"
+                        style="padding: 6px 12px; min-width: auto; font-size: 0.9rem; margin-top: -10px; margin-right: -10px;">
+                        ⬅ 返回
+                    </button>
+                </div>
                 <p class="game-overlay-desc" data-game-i18n="game.chord.desc">Launch energy balls that bounce inside the
                     circle!</p>
                 <button type="button" class="btn btn-primary btn-primary-full" id="chordStartBtn"
