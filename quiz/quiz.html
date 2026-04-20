@@ -124,13 +124,7 @@
                                 <div class="dot"></div>
                             </div>
 
-                            <div class="quiz-meta-row" style="margin-top: 1rem;">
-                                <span id="questionCounter" data-i18n="questionMeta">Question 1 of 10</span>
-                                <div class="quiz-timer">
-                                    <span data-i18n="timeLabel">Time Remaining:</span>
-                                    <span id="timer">09:45</span>
-                                </div>
-                            </div>
+
                         </div>
 
                         <div class="ai-hint-box" id="aiHintBox">
@@ -217,6 +211,14 @@
     <script src="../js/data/quiz-questions.js"></script>
     <script src="../js/utils.js"></script>
     <script src="../js/main.js"></script>
+    <script>
+        // 检查是否有level参数，如果没有则重定向到quiz-levels.html
+        const urlParams = new URLSearchParams(window.location.search);
+        const levelParam = urlParams.get('level');
+        if (!levelParam) {
+            window.location.href = 'quiz-levels.html';
+        }
+    </script>
     <script src="../js/pages/quiz.js"></script>
 
     <script>

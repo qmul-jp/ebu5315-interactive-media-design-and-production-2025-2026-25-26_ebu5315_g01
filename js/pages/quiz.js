@@ -56,9 +56,15 @@
             }
         },
 
-        // 获取当前等级的题目
+        // 获取当前等级的题目（按id顺序排列）
         getCurrentLevelQuestions() {
-            return window.getQuestionsByLevel(this.currentLevel);
+            const questions = window.getQuestionsByLevel(this.currentLevel);
+            // 按id顺序排序
+            return questions.sort((a, b) => {
+                if (a.id < b.id) return -1;
+                if (a.id > b.id) return 1;
+                return 0;
+            });
         },
 
         // 获取题目状态
@@ -74,16 +80,10 @@
             const question = window.getQuestionById(questionId);
             if (question) {
                 if (correct) {
-                    this.totalCorrect++;
-                    this.score += question.points || 0;
-                    this.correctInARow++;
-                    // 晋升机制：连对 3 题且等级未满
-                    if (this.correctInARow >= 3 && this.currentLevel < 3) {
-                        this.currentLevel++;
-                        this.correctInARow = 0;
-                        this.notifyLevelUp();
-                    }
-                } else {
+                this.totalCorrect++;
+                this.score += question.points || 0;
+                this.correctInARow++;
+            } else {
                     this.correctInARow = 0;
                     // 记录弱点
                     const category = question.category || 'general';
@@ -123,6 +123,23 @@
 
     // 初始化状态
     QuizState.load();
+    
+    // 处理URL参数中的等级设置
+    function handleUrlParams() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const levelParam = urlParams.get('level');
+        if (levelParam) {
+            const level = parseInt(levelParam);
+            if (level >= 1 && level <= 3) {
+                QuizState.currentLevel = level;
+                QuizState.userAnswers = {};
+                QuizState.usedIds.clear();
+                QuizState.correctInARow = 0;
+                QuizState.save();
+            }
+        }
+    }
+    handleUrlParams();
 
     // 智能抽题逻辑 (AI: Avoid Repetitions)
     function getNextSmartQuestion() {
@@ -189,10 +206,10 @@
             breadcrumbLevel.textContent = levelText;
         }
 
-        // 更新标题等级显示
+        // 更新标题，移除等级显示
         const levelDisplay = document.getElementById('levelDisplay');
         if (levelDisplay) {
-            levelDisplay.textContent = `Level ${QuizState.currentLevel}`;
+            levelDisplay.textContent = '';
         }
 
         // 更新进度条
@@ -280,9 +297,23 @@
 
         root.innerHTML = '';
 
+        // 添加选关按钮
+        const levelSelector = document.createElement('div');
+        levelSelector.className = 'level-selector';
+        
+        for (let i = 1; i <= 3; i++) {
+            const levelBtn = document.createElement('button');
+            levelBtn.type = 'button';
+            levelBtn.className = `level-btn ${QuizState.currentLevel === i ? 'active' : ''}`;
+            levelBtn.textContent = `L${i}`;
+            levelBtn.addEventListener('click', () => changeLevel(i));
+            levelSelector.appendChild(levelBtn);
+        }
+        root.appendChild(levelSelector);
+
         const title = document.createElement('p');
         title.className = 'quiz-question';
-        title.textContent = `${QuizState.answeredCount + 1}. ${q.question}`;
+        title.textContent = `${q.id}. ${q.question}`;
 
         const statusCard = document.createElement('div');
         statusCard.style.marginBottom = '16px';
@@ -300,9 +331,6 @@
         }
         
         const lang = getCurrentLang();
-        const levelText = lang === 'zh' ? '当前等级：' : 'Current Level: ';
-        const streakText = lang === 'zh' ? '连对：' : 'Streak: ';
-        const accuracyText = lang === 'zh' ? '正确率：' : 'Accuracy: ';
         const weakText = lang === 'zh' ? '薄弱知识点：' : 'Weak topics: ';
         const scoreText = lang === 'zh' ? '得分：' : 'Score: ';
 
@@ -400,6 +428,18 @@
             renderQuestion();
         }
     });
+
+    // 切换等级函数
+    function changeLevel(level) {
+        if (level < 1 || level > 3) return;
+        QuizState.currentLevel = level;
+        QuizState.userAnswers = {};
+        QuizState.usedIds.clear();
+        QuizState.correctInARow = 0;
+        QuizState.save();
+        renderQuestion();
+    }
+    window.changeLevel = changeLevel;
 
     // 初始化渲染
     renderQuestion();
