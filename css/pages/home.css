@@ -1193,4 +1193,324 @@ body.dark-mode .premium-section {
   body.dark-mode .glass-radio-group input:checked + label {
     color: #ffffff;
   }
-  
+
+/* 首页：入场 + 左手挥手 → 整只右移出屏 → 屏外换揣手图 → 1s 后半头探出再微倾偷看；点击展开全身 */
+.ai-sprite-widget {
+    --ai-peek-tilt: -25deg;
+    --ai-sprite-dock-bottom: 100px;
+    /* 舞台比精灵多留的底部空间；真正防「旋转后底边被裁」主要靠 clip-path 上下扩展 + peek-wrap 上移 */
+    --ai-sprite-stage-extra: 120px;
+    /* 偷看叠层整体上移，给 transform-origin 偏下时的旋转留出舞台内空白 */
+    --ai-sprite-peek-lift: 52px;
+    position: fixed;
+    right: 0;
+    bottom: var(--ai-sprite-dock-bottom);
+    z-index: 45;
+    max-width: min(320px, 92vw);
+    pointer-events: none;
+}
+
+.ai-sprite-widget.is-visible {
+    pointer-events: auto;
+}
+
+/* 固定在精灵上方（精灵高度由 JS 写入 --ai-sprite-h）；与精灵同方向从屏外右侧滑入 */
+.ai-sprite-widget__bubble {
+    position: fixed;
+    right: 24px;
+    bottom: calc(
+        var(--ai-sprite-dock-bottom) + var(--ai-sprite-h, 200px) + var(--ai-sprite-peek-lift, 0px) + 12px
+    );
+    z-index: 46;
+    margin: 0;
+    padding: 12px 14px;
+    max-width: 260px;
+    border-radius: 16px;
+    background: linear-gradient(145deg, #ffffff 0%, #f1f5f9 100%);
+    border: 1px solid rgba(148, 163, 184, 0.45);
+    box-shadow:
+        0 12px 32px rgba(15, 23, 42, 0.12),
+        0 2px 8px rgba(15, 23, 42, 0.06);
+    filter: drop-shadow(0 4px 12px rgba(37, 99, 235, 0.08));
+    opacity: 0;
+    transform: translate3d(calc(28px + min(11vw, 64px)), 8px, 0) scale(0.92);
+    transition:
+        opacity 0.45s ease 0.04s,
+        transform 1.08s cubic-bezier(0.2, 1, 0.36, 1) 0.04s;
+    will-change: transform, opacity;
+}
+
+.ai-sprite-widget.is-visible .ai-sprite-widget__bubble {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+}
+
+.ai-sprite-widget.is-peek .ai-sprite-widget__bubble {
+    opacity: 0;
+    transform: translateY(6px);
+    pointer-events: none;
+    transition: opacity 0.45s ease, transform 0.45s ease;
+}
+
+/* 欢迎文案只用于出场阶段；一旦开始退场，后续状态链条都不再显示 */
+.ai-sprite-widget.is-welcome-done .ai-sprite-widget__bubble {
+    opacity: 0;
+    transform: translateY(6px);
+    pointer-events: none;
+}
+
+.ai-sprite-widget__bubble::after {
+    content: '';
+    position: absolute;
+    right: 48px;
+    bottom: -8px;
+    width: 14px;
+    height: 14px;
+    background: #f1f5f9;
+    border-right: 1px solid rgba(148, 163, 184, 0.35);
+    border-bottom: 1px solid rgba(148, 163, 184, 0.35);
+    transform: rotate(45deg);
+    border-radius: 2px;
+}
+
+.ai-sprite-widget__welcome {
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.45;
+    font-weight: 600;
+    color: var(--text);
+}
+
+/* 全宽；高度随精灵 + 留白。纵向用 clip-path 扩展可见区，避免 overflow:hidden 把旋转后的底边裁成一条直线 */
+.ai-sprite-widget__sprite-stage {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: var(--ai-sprite-dock-bottom);
+    height: max(
+        380px,
+        calc(
+            var(--ai-sprite-h, 200px) + var(--ai-sprite-stage-extra, 120px) + var(--ai-sprite-peek-lift, 0px)
+        )
+    );
+    min-height: 300px;
+    overflow: visible;
+    clip-path: inset(
+        calc(-1 * (var(--ai-sprite-stage-extra, 120px) + 40px)) 0
+            calc(-1 * (var(--ai-sprite-stage-extra, 120px) + var(--ai-sprite-peek-lift, 0px) + 40px)) 0
+    );
+    z-index: 45;
+    pointer-events: none;
+}
+
+.ai-sprite-widget.is-peek:not(.is-peek-popout) .ai-sprite-widget__sprite-stage {
+    pointer-events: none;
+    cursor: default;
+}
+
+.ai-sprite-widget.is-smile-rest .ai-sprite-widget__sprite-stage {
+    pointer-events: none;
+    cursor: default;
+}
+
+.ai-sprite-widget.is-peek-popout .ai-sprite-widget__sprite-stage {
+    pointer-events: none;
+    cursor: default;
+}
+
+/* 底层仅右手身体静止；上层抠图「左手」独立叠在左侧，支点在掌根/腕部一侧，仅 img 旋转挥手 */
+.ai-sprite-widget__peek-wrap {
+    position: absolute;
+    right: 12px;
+    bottom: var(--ai-sprite-peek-lift, 0px);
+    line-height: 0;
+    transform: translate3d(min(96px, 22vw), 0, 0) scale(0.94);
+    transform-origin: 100% 100%;
+    transition: transform 1.08s cubic-bezier(0.2, 1, 0.36, 1);
+    will-change: transform;
+    pointer-events: none;
+}
+
+.ai-sprite-widget.is-visible .ai-sprite-widget__peek-wrap {
+    transform: translate3d(0, 0, 0) scale(1);
+}
+
+.ai-sprite-stack {
+    position: relative;
+    display: inline-block;
+    z-index: 2;
+    transform-origin: 96% 92%;
+    transition:
+        opacity 0.55s ease,
+        transform 1.05s cubic-bezier(0.25, 0.85, 0.35, 1);
+    pointer-events: none;
+    cursor: default;
+}
+
+.ai-sprite-widget.is-peek:not(.is-peek-popout) .ai-sprite-stack {
+    pointer-events: auto;
+    cursor: pointer;
+}
+
+.ai-sprite-widget__body {
+    display: block;
+    height: auto;
+    max-height: 200px;
+    width: auto;
+    max-width: 100%;
+    user-select: none;
+    pointer-events: none;
+}
+
+.ai-sprite-widget__arm-layer {
+    position: absolute;
+    z-index: 3;
+    overflow: visible;
+    pointer-events: none;
+    line-height: 0;
+}
+
+.ai-sprite-widget__arm {
+    display: block;
+    width: auto;
+    height: auto;
+    max-height: 200px;
+    user-select: none;
+    transform-origin: 92% 88%;
+    will-change: transform;
+}
+
+/* 仅挥手：只旋转左手素材；四段等时往返，速度更均匀 */
+.ai-sprite-widget.is-waving .ai-sprite-widget__arm {
+    animation: ai-sprite-hand-wave 0.72s linear infinite;
+}
+
+@keyframes ai-sprite-hand-wave {
+    0%,
+    100% {
+        transform: rotate(0deg);
+    }
+    25% {
+        transform: rotate(-11deg);
+    }
+    50% {
+        transform: rotate(0deg);
+    }
+    75% {
+        transform: rotate(11deg);
+    }
+}
+
+/* 阶段一：水平右移（--ai-exit-x 由 JS 按「约半头」可见宽度计算），图不透明度不变 */
+.ai-sprite-widget.is-exiting .ai-sprite-widget__bubble {
+    opacity: 0;
+    transform: translate3d(20px, 0, 0);
+    pointer-events: none;
+    transition:
+        opacity 0.65s ease,
+        transform 0.95s cubic-bezier(0.33, 1, 0.32, 1);
+}
+
+/* 挥手结束后：整只平滑移出屏外（完全退场） */
+.ai-sprite-widget.is-exiting .ai-sprite-stack {
+    transform: translateX(var(--ai-exit-full, 400px)) rotate(0deg);
+    transition: transform 1.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* 屏外已换为揣手图，保持相同位移 */
+.ai-sprite-widget.is-tuck-offscreen .ai-sprite-stack {
+    transform: translateX(var(--ai-exit-full, 400px)) rotate(0deg);
+    transition: none;
+}
+
+/* 1s 后：先露半头，再微倾（两阶段 transition） */
+.ai-sprite-widget.is-tuck-offscreen.is-peek-emerge .ai-sprite-stack {
+    transform: translateX(var(--ai-exit-x, 0px)) rotate(0deg);
+    transition: transform 0.92s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.ai-sprite-widget.is-tuck-offscreen.is-peek-emerge.is-peek-tilt .ai-sprite-stack {
+    transform: translateX(var(--ai-exit-x, 0px)) rotate(var(--ai-peek-tilt, -11deg));
+    transition: transform 0.58s cubic-bezier(0.33, 1, 0.32, 1);
+}
+
+/* 点击后：从偷看位向左回到全身揣手（提高优先级以覆盖 tuck 链） */
+.ai-sprite-widget.is-peek-popout .ai-sprite-stack {
+    transform: translate3d(0, 0, 0) rotate(0deg) !important;
+    transition: transform 1.15s cubic-bezier(0.22, 1, 0.36, 1) !important;
+}
+
+body.dark-mode .ai-sprite-widget__bubble {
+    background: linear-gradient(145deg, var(--gray-800) 0%, var(--gray-900) 100%);
+    border-color: rgba(71, 85, 105, 0.65);
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.35);
+}
+
+body.dark-mode .ai-sprite-widget__bubble::after {
+    background: var(--gray-900);
+    border-color: rgba(71, 85, 105, 0.5);
+}
+
+body.dark-mode .ai-sprite-widget__welcome {
+    color: #f1f5f9;
+}
+
+.ai-sprite-widget.is-dismissed {
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.35s ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .ai-sprite-widget__bubble,
+    .ai-sprite-widget__peek-wrap {
+        transition-duration: 0.01ms;
+        filter: none !important;
+    }
+
+    .ai-sprite-widget__bubble {
+        transform: translate3d(0, 0, 0) scale(1) !important;
+    }
+
+    .ai-sprite-widget__peek-wrap {
+        transform: translate3d(0, 0, 0) scale(1) !important;
+    }
+
+    .ai-sprite-widget.is-waving .ai-sprite-widget__arm {
+        animation: none;
+    }
+
+    .ai-sprite-widget.is-exiting .ai-sprite-stack,
+    .ai-sprite-widget.is-tuck-offscreen.is-peek-emerge .ai-sprite-stack,
+    .ai-sprite-widget.is-tuck-offscreen.is-peek-emerge.is-peek-tilt .ai-sprite-stack,
+    .ai-sprite-widget.is-peek-popout .ai-sprite-stack {
+        transition-duration: 0.01ms !important;
+    }
+
+    .ai-sprite-widget {
+        --ai-peek-tilt: 0deg;
+    }
+
+    .ai-sprite-stack {
+        transition-duration: 0.01ms;
+    }
+
+    .ai-sprite-widget.is-dismissed {
+        transition-duration: 0.01ms;
+    }
+}
+
+@media (max-width: 600px) {
+    .ai-sprite-widget {
+        --ai-sprite-dock-bottom: 100px;
+        max-width: min(280px, 88vw);
+    }
+
+    .ai-sprite-widget__body {
+        max-height: 160px;
+    }
+
+    .ai-sprite-widget__arm {
+        max-height: none;
+    }
+}

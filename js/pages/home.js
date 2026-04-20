@@ -19,6 +19,7 @@
         finished = true;
         window.clearTimeout(fallbackId);
         root.classList.remove('hero-intro-play');
+        window.dispatchEvent(new CustomEvent('circlelearn:heroIntroComplete'));
     };
 
     /** 圆环入场 2.6s；文案入场延迟 1.82s + 2.2s ≈ 4.02s — 须两者都结束再摘 class，否则会打断文案动画产生一帧跳变 */
@@ -232,7 +233,7 @@
     const RING_POPOUT_CAP_OUTER_PAD_PX = 80;
     const RING_POPOUT_BUBBLE_ANGLE_RAD = Math.PI * 1.8;
     const RING_POPOUT_BUBBLE_OUTER_PAD_PX = -100;
-    const RING_POPOUT_CLOCK_ANGLE_RAD = Math.PI * 0.2;
+    const RING_POPOUT_CLOCK_ANGLE_RAD = Math.PI * 0.3;
     const RING_POPOUT_CLOCK_OUTER_PAD_PX = 85;
     const RING_POPOUT_PIE_ANGLE_RAD = Math.PI * 0.9;
     const RING_POPOUT_PIE_OUTER_PAD_PX = 180;
@@ -1041,4 +1042,369 @@
         el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
         observer.observe(el);
     });
+})();
+
+(function initHomeAiSpriteWelcome() {
+    const widget = document.getElementById('aiSpriteWidget');
+    if (!widget) return;
+    const HOME_VISITED_KEY = 'circlelearnHomeVisitedThisTabV1';
+    const navEntry = performance.getEntriesByType('navigation')[0];
+    const isReload =
+        (navEntry && navEntry.type === 'reload') ||
+        (!!performance.navigation && performance.navigation.type === 1);
+    let hasVisitedHomeInTab = false;
+    try {
+        hasVisitedHomeInTab = window.sessionStorage.getItem(HOME_VISITED_KEY) === '1';
+    } catch (e) {
+        hasVisitedHomeInTab = false;
+    }
+    if (!isReload && hasVisitedHomeInTab) {
+        return;
+    }
+    try {
+        window.sessionStorage.setItem(HOME_VISITED_KEY, '1');
+    } catch (e) {}
+
+    const ENTRANCE_MS = 1100;
+    const WAVE_MS = 5000;
+
+    let entranceTimer = null;
+    let waveEndTimer = null;
+    let exitSlideListener = null;
+    let fallbackPeekTimer = null;
+    let peekPopoutFallbackTimer = null;
+    let peekPopoutFinalized = false;
+    let peekSequenceTimer = null;
+    let peekEmergeFallbackTimer = null;
+    let peekTiltFallbackTimer = null;
+
+    const PEEK_FALLBACK_MS = 1850;
+    const PEEK_AFTER_OFFSCREEN_MS = 1000;
+    const PEEK_EMERGE_FALLBACK_MS = 1000;
+    const PEEK_TILT_FALLBACK_MS = 700;
+    const PEEK_POPOUT_MS = 1150;
+    const BODY_SMILE_TUCK_SRC = 'assets/images/global/笑容揣手.png';
+
+    function onPeekEmergeEnd(ev) {
+        if (ev.propertyName !== 'transform') return;
+        if (peekEmergeFallbackTimer !== null) {
+            window.clearTimeout(peekEmergeFallbackTimer);
+            peekEmergeFallbackTimer = null;
+        }
+        if (!widget.classList.contains('is-peek-emerge') || widget.classList.contains('is-peek-tilt')) return;
+        widget.classList.add('is-peek-tilt');
+        const stack = widget.querySelector('.ai-sprite-stack');
+        if (stack) stack.addEventListener('transitionend', onPeekTiltEnd, { once: true });
+        peekTiltFallbackTimer = window.setTimeout(() => {
+            peekTiltFallbackTimer = null;
+            if (!widget.classList.contains('is-peek')) widget.classList.add('is-peek');
+        }, PEEK_TILT_FALLBACK_MS + 120);
+    }
+
+    function onPeekTiltEnd(ev) {
+        if (ev.propertyName !== 'transform') return;
+        if (peekTiltFallbackTimer !== null) {
+            window.clearTimeout(peekTiltFallbackTimer);
+            peekTiltFallbackTimer = null;
+        }
+        if (!widget.classList.contains('is-peek-tilt')) return;
+        if (widget.classList.contains('is-peek')) return;
+        widget.classList.add('is-peek');
+    }
+
+    function schedulePeekFromOffscreen() {
+        const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        if (prefersReduced) {
+            applyPeekExitMetrics();
+            widget.classList.add('is-peek-emerge', 'is-peek-tilt', 'is-peek');
+            return;
+        }
+        peekSequenceTimer = window.setTimeout(() => {
+            peekSequenceTimer = null;
+            applyPeekExitMetrics();
+            requestAnimationFrame(() => {
+                widget.classList.add('is-peek-emerge');
+                const stack = widget.querySelector('.ai-sprite-stack');
+                peekEmergeFallbackTimer = window.setTimeout(() => {
+                    peekEmergeFallbackTimer = null;
+                    if (widget.classList.contains('is-peek-emerge') && !widget.classList.contains('is-peek-tilt')) {
+                        onPeekEmergeEnd({ propertyName: 'transform' });
+                    }
+                }, PEEK_EMERGE_FALLBACK_MS);
+                if (stack) stack.addEventListener('transitionend', onPeekEmergeEnd, { once: true });
+            });
+        }, PEEK_AFTER_OFFSCREEN_MS);
+    }
+
+    function clearSequence() {
+        if (entranceTimer !== null) {
+            window.clearTimeout(entranceTimer);
+            entranceTimer = null;
+        }
+        if (waveEndTimer !== null) {
+            window.clearTimeout(waveEndTimer);
+            waveEndTimer = null;
+        }
+        if (fallbackPeekTimer !== null) {
+            window.clearTimeout(fallbackPeekTimer);
+            fallbackPeekTimer = null;
+        }
+        if (peekSequenceTimer !== null) {
+            window.clearTimeout(peekSequenceTimer);
+            peekSequenceTimer = null;
+        }
+        if (peekEmergeFallbackTimer !== null) {
+            window.clearTimeout(peekEmergeFallbackTimer);
+            peekEmergeFallbackTimer = null;
+        }
+        if (peekTiltFallbackTimer !== null) {
+            window.clearTimeout(peekTiltFallbackTimer);
+            peekTiltFallbackTimer = null;
+        }
+        if (exitSlideListener) {
+            const stack = widget.querySelector('.ai-sprite-stack');
+            if (stack) stack.removeEventListener('transitionend', exitSlideListener);
+            exitSlideListener = null;
+        }
+        if (peekPopoutFallbackTimer !== null) {
+            window.clearTimeout(peekPopoutFallbackTimer);
+            peekPopoutFallbackTimer = null;
+        }
+        const stackPeek = widget.querySelector('.ai-sprite-stack');
+        if (stackPeek) {
+            stackPeek.removeEventListener('transitionend', onPeekPopoutEnd);
+            stackPeek.removeEventListener('transitionend', onPeekEmergeEnd);
+            stackPeek.removeEventListener('transitionend', onPeekTiltEnd);
+        }
+    }
+
+    /** 独立左手图层：按身体当前渲染尺寸缩放，并贴在身体左侧接缝（仅手参与挥手动画） */
+    function alignHandToBody() {
+        const bodyImg = widget.querySelector('.ai-sprite-widget__body');
+        const armImg = widget.querySelector('.ai-sprite-widget__arm');
+        const layer = widget.querySelector('.ai-sprite-widget__arm-layer');
+        if (!bodyImg || !bodyImg.naturalWidth || !bodyImg.naturalHeight) return;
+        const br = bodyImg.getBoundingClientRect();
+        const bh = br.height;
+        const bw = br.width;
+        if (!bh || !bw) return;
+        widget.style.setProperty('--ai-sprite-h', `${Math.round(bh)}px`);
+        if (layer && layer.hasAttribute('hidden')) return;
+        if (widget.classList.contains('is-smile-rest') || armImg == null || layer == null) return;
+        if (!armImg.naturalWidth || !armImg.naturalHeight) return;
+        const handTargetH = bh * 0.36;
+        armImg.style.width = 'auto';
+        armImg.style.height = `${handTargetH}px`;
+        armImg.style.maxHeight = 'none';
+        layer.style.left = `${Math.round(bw * 0.01)}px`;
+        layer.style.bottom = `${Math.round(bh * 0.3)}px`;
+        layer.style.top = 'auto';
+        layer.style.right = 'auto';
+    }
+
+    function finalizePeekPopout() {
+        const bodyImg = widget.querySelector('.ai-sprite-widget__body');
+        const armLayer = widget.querySelector('.ai-sprite-widget__arm-layer');
+        if (!bodyImg) return;
+        const path = bodyImg.getAttribute('src') || '';
+        if (!path.includes('笑容揣手')) {
+            bodyImg.src = BODY_SMILE_TUCK_SRC;
+        }
+        bodyImg.alt = '';
+        if (armLayer) armLayer.setAttribute('hidden', '');
+        widget.classList.remove(
+            'is-peek',
+            'is-peek-popout',
+            'is-tuck-offscreen',
+            'is-peek-emerge',
+            'is-peek-tilt'
+        );
+        widget.classList.add('is-smile-rest');
+        widget.style.removeProperty('--ai-exit-x');
+        widget.style.removeProperty('--ai-exit-full');
+        if (bodyImg.complete && bodyImg.naturalWidth) {
+            alignHandToBody();
+        } else {
+            bodyImg.addEventListener(
+                'load',
+                () => {
+                    alignHandToBody();
+                },
+                { once: true }
+            );
+        }
+    }
+
+    /** 完全移出屏外（右缘）：用于挥手结束后的退场 */
+    function applyFullExitMetrics() {
+        const bodyImg = widget.querySelector('.ai-sprite-widget__body');
+        if (!bodyImg || !bodyImg.naturalWidth) return;
+        const br = bodyImg.getBoundingClientRect();
+        const bw = br.width;
+        if (!bw) return;
+        const pad = 12;
+        const tx = Math.round(bw + pad + 36);
+        widget.style.setProperty('--ai-exit-full', `${tx}px`);
+    }
+
+    /**
+     * 偷看条带：translateX 终点使屏内仅留约「半头」宽（揣手图，与 sprite-stage overflow 配合）
+     */
+    function applyPeekExitMetrics() {
+        const bodyImg = widget.querySelector('.ai-sprite-widget__body');
+        if (!bodyImg || !bodyImg.naturalWidth) return;
+        const br = bodyImg.getBoundingClientRect();
+        const bw = br.width;
+        if (!bw) return;
+        const pad = 12;
+        const visibleW = Math.max(52, Math.round(bw * 0.35));
+        const tx = Math.round(bw + pad - visibleW);
+        widget.style.setProperty('--ai-exit-x', `${tx}px`);
+    }
+
+    const show = () => {
+        widget.removeAttribute('hidden');
+        widget.classList.remove('is-welcome-done');
+        requestAnimationFrame(() => {
+            widget.classList.add('is-visible');
+        });
+        if (typeof window.applySiteI18n === 'function') {
+            window.applySiteI18n();
+        }
+
+        const bodyImg = widget.querySelector('.ai-sprite-widget__body');
+        const armImg = widget.querySelector('.ai-sprite-widget__arm');
+        const onImgReady = () => alignHandToBody();
+        if (bodyImg) {
+            if (bodyImg.complete) onImgReady();
+            else bodyImg.addEventListener('load', onImgReady, { once: true });
+        }
+        if (armImg) {
+            if (armImg.complete) onImgReady();
+            else armImg.addEventListener('load', onImgReady, { once: true });
+        }
+        window.addEventListener(
+            'resize',
+            () => {
+                alignHandToBody();
+                if (widget.classList.contains('is-exiting')) {
+                    applyFullExitMetrics();
+                }
+                if (
+                    widget.classList.contains('is-tuck-offscreen') ||
+                    widget.classList.contains('is-peek-emerge') ||
+                    widget.classList.contains('is-peek')
+                ) {
+                    applyPeekExitMetrics();
+                    applyFullExitMetrics();
+                }
+            },
+            { passive: true }
+        );
+
+        const onFullExitComplete = () => {
+            if (fallbackPeekTimer !== null) {
+                window.clearTimeout(fallbackPeekTimer);
+                fallbackPeekTimer = null;
+            }
+            if (exitSlideListener) {
+                const stack = widget.querySelector('.ai-sprite-stack');
+                if (stack) stack.removeEventListener('transitionend', exitSlideListener);
+                exitSlideListener = null;
+            }
+            if (!widget.classList.contains('is-exiting')) return;
+            const bodyImg = widget.querySelector('.ai-sprite-widget__body');
+            const armLayer = widget.querySelector('.ai-sprite-widget__arm-layer');
+            if (!bodyImg) return;
+            if (armLayer) armLayer.setAttribute('hidden', '');
+            bodyImg.src = BODY_SMILE_TUCK_SRC;
+            widget.classList.remove('is-exiting');
+            widget.classList.add('is-tuck-offscreen');
+            const afterTuckLoad = () => {
+                applyFullExitMetrics();
+                applyPeekExitMetrics();
+                alignHandToBody();
+                schedulePeekFromOffscreen();
+            };
+            if (bodyImg.complete && bodyImg.naturalWidth) afterTuckLoad();
+            else bodyImg.addEventListener('load', afterTuckLoad, { once: true });
+        };
+
+        const onExitSlideEnd = (ev) => {
+            if (ev.propertyName !== 'transform') return;
+            if (!widget.classList.contains('is-exiting')) return;
+            onFullExitComplete();
+        };
+
+        entranceTimer = window.setTimeout(() => {
+            widget.classList.add('is-waving');
+            waveEndTimer = window.setTimeout(() => {
+                widget.classList.remove('is-waving');
+                widget.classList.add('is-welcome-done');
+                applyFullExitMetrics();
+                const stack = widget.querySelector('.ai-sprite-stack');
+                if (stack) {
+                    exitSlideListener = onExitSlideEnd;
+                    stack.addEventListener('transitionend', exitSlideListener);
+                }
+                fallbackPeekTimer = window.setTimeout(onFullExitComplete, PEEK_FALLBACK_MS);
+                requestAnimationFrame(() => {
+                    widget.classList.add('is-exiting');
+                });
+                waveEndTimer = null;
+            }, WAVE_MS);
+            entranceTimer = null;
+        }, ENTRANCE_MS);
+    };
+
+    const root = document.documentElement;
+    if (root.classList.contains('hero-intro-play')) {
+        window.addEventListener('circlelearn:heroIntroComplete', show, { once: true });
+    } else {
+        window.setTimeout(show, 500);
+    }
+
+    const spriteStage = widget.querySelector('.ai-sprite-widget__sprite-stage');
+    const peekStack = widget.querySelector('.ai-sprite-stack');
+
+    function finalizePeekPopoutOnce() {
+        if (peekPopoutFinalized) return;
+        peekPopoutFinalized = true;
+        if (peekPopoutFallbackTimer !== null) {
+            window.clearTimeout(peekPopoutFallbackTimer);
+            peekPopoutFallbackTimer = null;
+        }
+        finalizePeekPopout();
+    }
+
+    function onPeekPopoutEnd(ev) {
+        if (ev.propertyName !== 'transform') return;
+        if (!widget.classList.contains('is-peek-popout')) return;
+        finalizePeekPopoutOnce();
+    }
+
+    const peekClickableTarget = peekStack || spriteStage;
+    if (peekClickableTarget) {
+        peekClickableTarget.addEventListener('click', () => {
+            if (!widget.classList.contains('is-peek') || widget.classList.contains('is-peek-popout')) return;
+            const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            if (prefersReduced) {
+                finalizePeekPopoutOnce();
+                return;
+            }
+            peekPopoutFinalized = false;
+            const stack = widget.querySelector('.ai-sprite-stack');
+            if (stack) {
+                stack.addEventListener('transitionend', onPeekPopoutEnd, { once: true });
+            }
+            requestAnimationFrame(() => {
+                widget.classList.add('is-peek-popout');
+                peekPopoutFallbackTimer = window.setTimeout(
+                    finalizePeekPopoutOnce,
+                    PEEK_POPOUT_MS + 180
+                );
+            });
+        });
+    }
+
 })();
