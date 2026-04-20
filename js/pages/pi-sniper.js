@@ -2532,6 +2532,324 @@ const PiSniper = (() => {
     }
 
     // ===== 背景装饰渲染逻辑 =====
+    // ======= 海洋皮肤辅助绘制函数 =======
+    function getOceanSeabedY(x, w, h) {
+        return h * 0.88 + Math.sin(x * 0.005) * (h * 0.04) + Math.cos(x * 0.01) * (h * 0.02);
+    }
+
+    function drawOceanCrab(ctx, crab, time, w, h) {
+        ctx.save();
+        ctx.translate(crab.x, getOceanSeabedY(crab.x, w, h) - crab.size * 0.3);
+
+        // 身体
+        ctx.fillStyle = '#E11D48'; // 亮红色
+        ctx.beginPath();
+        ctx.ellipse(0, 0, crab.size, crab.size * 0.6, 0, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.shadowBlur = 5; ctx.shadowColor = 'rgba(0,0,0,0.5)'; // 身体阴影
+
+        // 眼睛 (螃蟹是横着走的，眼睛朝向正上方)
+        ctx.shadowBlur = 0;
+        ctx.fillStyle = '#000';
+        ctx.beginPath(); ctx.arc(-crab.size * 0.2, -crab.size * 0.6, crab.size * 0.1, 0, Math.PI * 2); ctx.fill();
+        ctx.beginPath(); ctx.arc(crab.size * 0.2, -crab.size * 0.6, crab.size * 0.1, 0, Math.PI * 2); ctx.fill();
+
+        // 钳子动画 (一只高举，一只低垂，横着走时不变)
+        const clawAngle = Math.sin(time * 5 + crab.phase) * 0.1; // 轻微晃动
+
+        // 确保移动方向和钳子举起方向的关系，让前面那只钳子举起
+        const isMovingRight = crab.speed > 0;
+
+        // 左钳 (高举或低放)
+        ctx.save();
+        ctx.translate(-crab.size * 0.7, -crab.size * 0.2);
+        if (!isMovingRight) {
+            // 向左移动时，左钳高举，钳子张开朝上
+            ctx.rotate(-Math.PI / 4 + clawAngle);
+            ctx.translate(0, -crab.size * 0.4);
+
+            // 绘制钳子下半部分
+            ctx.fillStyle = '#BE123C';
+            ctx.beginPath(); ctx.arc(0, 0, crab.size * 0.4, 0, Math.PI); ctx.fill();
+            // 绘制钳子上半部分 (张开)
+            ctx.fillStyle = '#E11D48';
+            ctx.beginPath(); ctx.arc(0, 0, crab.size * 0.35, Math.PI + 0.1, Math.PI * 2 - 0.3); ctx.fill();
+        } else {
+            // 向右移动时，左钳低放，闭合
+            ctx.rotate(-Math.PI / 8 - clawAngle);
+            ctx.fillStyle = '#BE123C';
+            ctx.beginPath(); ctx.arc(0, 0, crab.size * 0.3, 0, Math.PI * 2); ctx.fill();
+            ctx.fillStyle = '#9F1239'; // 闭合线
+            ctx.strokeStyle = '#9F1239'; // 修复颜色泄漏
+            ctx.lineWidth = crab.size * 0.05; // 修复线宽泄漏
+            ctx.beginPath(); ctx.moveTo(-crab.size * 0.3, 0); ctx.lineTo(crab.size * 0.3, 0); ctx.stroke();
+        }
+        ctx.restore();
+
+        // 右钳 (低放或高举)
+        ctx.save();
+        ctx.translate(crab.size * 0.7, -crab.size * 0.2);
+        if (isMovingRight) {
+            // 向右移动时，右钳高举，钳子张开朝上
+            ctx.rotate(Math.PI / 4 - clawAngle);
+            ctx.translate(0, -crab.size * 0.4);
+
+            // 绘制钳子下半部分
+            ctx.fillStyle = '#BE123C';
+            ctx.beginPath(); ctx.arc(0, 0, crab.size * 0.4, 0, Math.PI); ctx.fill();
+            // 绘制钳子上半部分 (张开)
+            ctx.fillStyle = '#E11D48';
+            ctx.beginPath(); ctx.arc(0, 0, crab.size * 0.35, Math.PI + 0.1, Math.PI * 2 - 0.3); ctx.fill();
+        } else {
+            // 向左移动时，右钳低放，闭合
+            ctx.rotate(Math.PI / 8 + clawAngle);
+            ctx.fillStyle = '#BE123C';
+            ctx.beginPath(); ctx.arc(0, 0, crab.size * 0.3, 0, Math.PI * 2); ctx.fill();
+            ctx.fillStyle = '#9F1239'; // 闭合线
+            ctx.strokeStyle = '#9F1239'; // 修复颜色泄漏
+            ctx.lineWidth = crab.size * 0.05; // 修复线宽泄漏
+            ctx.beginPath(); ctx.moveTo(-crab.size * 0.3, 0); ctx.lineTo(crab.size * 0.3, 0); ctx.stroke();
+        }
+        ctx.restore();
+
+        // 步足 (左侧和右侧的步足，产生横向爬行效果)
+        ctx.strokeStyle = '#9F1239';
+        ctx.lineWidth = crab.size * 0.15;
+        ctx.lineCap = 'round';
+
+        // 动态计算步足的横向张开幅度
+        const walkPhase = time * 15 + crab.phase;
+
+        // 左侧步足
+        for (let i = 0; i < 3; i++) {
+            const offset = Math.sin(walkPhase + i) * crab.size * 0.4;
+            ctx.beginPath();
+            ctx.moveTo(-crab.size * 0.4, crab.size * 0.2);
+            ctx.quadraticCurveTo(-crab.size * 1.0, crab.size * 0.2, -crab.size * 0.8 + offset, crab.size * 0.8);
+            ctx.stroke();
+        }
+
+        // 右侧步足
+        for (let i = 0; i < 3; i++) {
+            const offset = Math.sin(walkPhase + i + Math.PI) * crab.size * 0.4; // 相位差半个周期
+            ctx.beginPath();
+            ctx.moveTo(crab.size * 0.4, crab.size * 0.2);
+            ctx.quadraticCurveTo(crab.size * 1.0, crab.size * 0.2, crab.size * 0.8 + offset, crab.size * 0.8);
+            ctx.stroke();
+        }
+
+        ctx.restore();
+    }
+
+    function drawOceanFish(ctx, fish, time, w) {
+        ctx.save();
+
+        // 计算倾斜游动的插值进度
+        let progress = 0;
+        if (fish.speed > 0) {
+            progress = (fish.x + fish.size * 2) / (w + fish.size * 4);
+        } else {
+            progress = (w + fish.size * 2 - fish.x) / (w + fish.size * 4);
+        }
+        progress = Math.max(0, Math.min(1, progress));
+        const currentY = fish.y + (fish.targetY - fish.y) * progress;
+
+        // 计算游动角度
+        const dx = w + fish.size * 4;
+        const dy = fish.targetY - fish.y;
+        let angle = Math.atan2(dy, dx);
+        if (fish.speed < 0) angle *= -1; // 适配翻转
+
+        ctx.translate(fish.x, currentY + Math.sin(time * 2 + fish.yOffset) * fish.size * 0.1);
+
+        const isRight = fish.speed > 0;
+        if (!isRight) ctx.scale(-1, 1);
+        ctx.rotate(angle);
+
+        const tailAngle = Math.sin(time * 8 + fish.yOffset) * 0.3;
+
+        if (fish.type === 'A') {
+            // 优雅型深海蓝
+            const grad = ctx.createLinearGradient(-fish.size, 0, fish.size, 0);
+            grad.addColorStop(0, 'rgba(14, 116, 144, 0.7)');
+            grad.addColorStop(1, 'rgba(6, 182, 212, 0.7)');
+            ctx.fillStyle = grad;
+
+            // 身体
+            ctx.beginPath(); ctx.ellipse(0, 0, fish.size, fish.size * 0.3, 0, 0, Math.PI * 2); ctx.fill();
+
+            // 尾巴 (更精致的分叉尾鳍)
+            ctx.save();
+            ctx.translate(-fish.size * 0.8, 0);
+            ctx.rotate(tailAngle);
+            ctx.beginPath();
+            ctx.moveTo(0, 0);
+            ctx.quadraticCurveTo(-fish.size * 0.5, -fish.size * 0.2, -fish.size * 0.8, -fish.size * 0.6);
+            ctx.quadraticCurveTo(-fish.size * 0.5, 0, -fish.size * 0.4, 0);
+            ctx.quadraticCurveTo(-fish.size * 0.5, 0, -fish.size * 0.8, fish.size * 0.6);
+            ctx.quadraticCurveTo(-fish.size * 0.5, fish.size * 0.2, 0, 0);
+            ctx.fill();
+            ctx.restore();
+
+            // 侧鳍
+            ctx.fillStyle = 'rgba(6, 182, 212, 0.6)';
+            ctx.beginPath(); ctx.ellipse(-fish.size * 0.2, fish.size * 0.15, fish.size * 0.3, fish.size * 0.1, Math.PI / 6, 0, Math.PI * 2); ctx.fill();
+            // 背鳍
+            ctx.beginPath(); ctx.ellipse(-fish.size * 0.1, -fish.size * 0.25, fish.size * 0.4, fish.size * 0.15, -Math.PI / 12, Math.PI, Math.PI * 2); ctx.fill();
+
+            // 眼睛
+            ctx.fillStyle = '#000';
+            ctx.beginPath(); ctx.arc(fish.size * 0.6, -fish.size * 0.05, fish.size * 0.05, 0, Math.PI * 2); ctx.fill();
+            ctx.fillStyle = '#FFF';
+            ctx.beginPath(); ctx.arc(fish.size * 0.62, -fish.size * 0.07, fish.size * 0.02, 0, Math.PI * 2); ctx.fill();
+
+            // 侧面花纹
+            ctx.strokeStyle = 'rgba(255,255,255,0.2)';
+            ctx.lineWidth = fish.size * 0.05;
+            ctx.beginPath(); ctx.moveTo(-fish.size * 0.3, 0); ctx.quadraticCurveTo(0, fish.size * 0.1, fish.size * 0.4, 0); ctx.stroke();
+
+        } else {
+            // 宽胖型橙黄色
+            const grad = ctx.createLinearGradient(-fish.size, 0, fish.size, 0);
+            grad.addColorStop(0, 'rgba(234, 88, 12, 0.6)');
+            grad.addColorStop(1, 'rgba(251, 146, 60, 0.6)');
+            ctx.fillStyle = grad;
+
+            // 身体
+            ctx.beginPath(); ctx.ellipse(0, 0, fish.size, fish.size * 0.5, 0, 0, Math.PI * 2); ctx.fill();
+
+            // 白色条纹 (花纹)
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.4)';
+            ctx.lineWidth = fish.size * 0.15;
+            ctx.beginPath(); ctx.moveTo(0, -fish.size * 0.45); ctx.lineTo(0, fish.size * 0.45); ctx.stroke();
+            ctx.beginPath(); ctx.moveTo(fish.size * 0.4, -fish.size * 0.35); ctx.lineTo(fish.size * 0.4, fish.size * 0.35); ctx.stroke();
+
+            // 尾巴 (宽大扇形)
+            ctx.save();
+            ctx.translate(-fish.size * 0.8, 0);
+            ctx.rotate(tailAngle);
+            ctx.beginPath();
+            ctx.moveTo(0, 0);
+            ctx.quadraticCurveTo(-fish.size * 0.4, -fish.size * 0.8, -fish.size * 0.6, -fish.size * 0.7);
+            ctx.quadraticCurveTo(-fish.size * 0.4, 0, -fish.size * 0.6, fish.size * 0.7);
+            ctx.quadraticCurveTo(-fish.size * 0.4, fish.size * 0.8, 0, 0);
+            ctx.fill();
+            ctx.restore();
+
+            // 侧鳍
+            ctx.fillStyle = 'rgba(251, 146, 60, 0.6)';
+            ctx.beginPath(); ctx.ellipse(-fish.size * 0.1, fish.size * 0.2, fish.size * 0.25, fish.size * 0.15, Math.PI / 4, 0, Math.PI * 2); ctx.fill();
+            // 背鳍
+            ctx.beginPath(); ctx.ellipse(-fish.size * 0.2, -fish.size * 0.4, fish.size * 0.3, fish.size * 0.2, -Math.PI / 6, Math.PI, Math.PI * 2); ctx.fill();
+
+            // 眼睛 (可爱黑点)
+            ctx.fillStyle = '#FFF';
+            ctx.beginPath(); ctx.arc(fish.size * 0.7, -fish.size * 0.1, fish.size * 0.12, 0, Math.PI * 2); ctx.fill();
+            ctx.fillStyle = '#000';
+            ctx.beginPath(); ctx.arc(fish.size * 0.73, -fish.size * 0.1, fish.size * 0.06, 0, Math.PI * 2); ctx.fill();
+            ctx.fillStyle = '#FFF';
+            ctx.beginPath(); ctx.arc(fish.size * 0.75, -fish.size * 0.12, fish.size * 0.02, 0, Math.PI * 2); ctx.fill();
+        }
+        ctx.restore();
+    }
+
+    function drawOceanJellyfish(ctx, jelly, time) {
+        ctx.save();
+        const scale = 1 + Math.sin(time * 3 + jelly.phase) * 0.05;
+        // 总路程约为单位圆的八分之一，即 r/4 的上下浮动 (振幅约为 r/8)
+        // jelly.size 约为 r * 0.15，所以振幅用 jelly.size * 0.8 差不多
+        const yOffset = Math.sin(time * 0.5 + jelly.phase) * jelly.size * 0.8;
+
+        // 倾斜10度
+        ctx.translate(jelly.x, jelly.y + yOffset);
+        ctx.rotate(10 * Math.PI / 180);
+        ctx.scale(scale, scale);
+
+        // 粉色伞盖
+        ctx.fillStyle = 'rgba(244, 114, 182, 0.6)';
+        ctx.beginPath();
+        ctx.arc(0, 0, jelly.size, Math.PI, Math.PI * 2);
+        ctx.quadraticCurveTo(jelly.size, jelly.size * 0.2, 0, jelly.size * 0.2);
+        ctx.quadraticCurveTo(-jelly.size, jelly.size * 0.2, -jelly.size, 0);
+        ctx.fill();
+
+        // 紫色斑点
+        ctx.fillStyle = 'rgba(147, 51, 234, 0.5)';
+        ctx.beginPath(); ctx.arc(-jelly.size * 0.4, -jelly.size * 0.4, jelly.size * 0.15, 0, Math.PI * 2); ctx.fill();
+        ctx.beginPath(); ctx.arc(jelly.size * 0.3, -jelly.size * 0.6, jelly.size * 0.1, 0, Math.PI * 2); ctx.fill();
+        ctx.beginPath(); ctx.arc(jelly.size * 0.5, -jelly.size * 0.3, jelly.size * 0.12, 0, Math.PI * 2); ctx.fill();
+
+        // 触须
+        ctx.strokeStyle = 'rgba(244, 114, 182, 0.5)';
+        ctx.lineWidth = jelly.size * 0.08;
+        ctx.lineCap = 'round';
+        for (let i = -2; i <= 2; i++) {
+            const startX = i * jelly.size * 0.3;
+            ctx.beginPath(); ctx.moveTo(startX, jelly.size * 0.2);
+            let curX = startX, curY = jelly.size * 0.2;
+            const segments = 4, segH = jelly.size * 0.4;
+            for (let j = 1; j <= segments; j++) {
+                const sway = Math.sin(time * 4 + jelly.phase + j) * jelly.size * 0.15;
+                const nextX = startX + sway;
+                const nextY = curY + segH;
+                const cpX = curX + (nextX - curX) / 2 + Math.cos(time * 5 + jelly.phase) * jelly.size * 0.1;
+                const cpY = curY + segH / 2;
+                ctx.quadraticCurveTo(cpX, cpY, nextX, nextY);
+                curX = nextX; curY = nextY;
+            }
+            ctx.stroke();
+        }
+        ctx.restore();
+    }
+
+    function drawOceanCoral(ctx, coral, time, seabedY) {
+        ctx.save();
+        ctx.translate(coral.x, seabedY);
+
+        ctx.lineCap = 'round';
+        ctx.lineJoin = 'round';
+
+        const baseColor = coral.color;
+
+        if (coral.type === 'finger') {
+            // 极简的手指珊瑚（几根带波浪摆动的粗线条）
+            ctx.strokeStyle = baseColor;
+            ctx.lineWidth = coral.size * 0.3;
+
+            const numFingers = 3;
+            for (let i = 0; i < numFingers; i++) {
+                ctx.beginPath();
+                ctx.moveTo(0, 0);
+
+                // 角度散开
+                const angleOffset = (i - (numFingers - 1) / 2) * 0.4;
+                const length = coral.size * (0.8 + Math.sin(coral.x + i) * 0.2);
+                const endX = Math.sin(angleOffset) * length;
+                const endY = -Math.cos(angleOffset) * length;
+
+                // 随波浪轻微摆动
+                const sway = Math.sin(time * 2 + coral.x + i) * length * 0.1;
+
+                ctx.quadraticCurveTo(endX * 0.5 + sway, endY * 0.5, endX, endY);
+                ctx.stroke();
+            }
+        } else {
+            // 极简的脑状/半球珊瑚（半圆+内圈纹理）
+            ctx.fillStyle = baseColor;
+            ctx.beginPath();
+            ctx.arc(0, 0, coral.size * 0.8, Math.PI, Math.PI * 2);
+            ctx.fill();
+
+            // 添加简单的同心半圆作为纹理
+            ctx.strokeStyle = 'rgba(0,0,0,0.15)';
+            ctx.lineWidth = coral.size * 0.08;
+            ctx.beginPath(); ctx.arc(0, 0, coral.size * 0.5, Math.PI, Math.PI * 2); ctx.stroke();
+            ctx.beginPath(); ctx.arc(0, 0, coral.size * 0.25, Math.PI, Math.PI * 2); ctx.stroke();
+        }
+
+        ctx.restore();
+    }
+
     function initBgAnimState(w, h) {
         const cx = w / 2;
         const r = Math.min(w, h) * 0.35;
@@ -2549,22 +2867,79 @@ const PiSniper = (() => {
             { x: w * 0.4, y: h * 0.1, r: Math.min(w, h) * 0.03, type: 'gas', color1: '#E879F9', color2: '#86198F' }
         ];
 
-        // Ocean: Bubbles, Fishes and Kelps
+        // Ocean: Bubbles, Large Fishes, Crabs, Jellyfishes, Kelps, Corals
         bgAnimState.ocean.bubbles = Array.from({ length: 25 }, () => ({
             x: Math.random() * w,
             y: Math.random() * h,
             s: Math.random() * 3 + 1,
             vy: -(Math.random() * 0.8 + 0.2)
         }));
-        bgAnimState.ocean.fishes = Array.from({ length: 8 }, () => ({
-            x: Math.random() * w,
-            y: h * 0.2 + Math.random() * (h * 0.6),
-            speed: (Math.random() * 1.5 + 0.5) * (Math.random() > 0.5 ? 1 : -1),
-            size: Math.random() * 8 + 8
+
+        // 2 大鱼
+        const fishArea = Math.PI * r * r * 0.25;
+        const fishLen = Math.sqrt(fishArea / 0.4);
+        bgAnimState.ocean.largeFishes = [
+            { type: 'A', x: -fishLen * 2, y: h * 0.35, targetY: h * 0.65, speed: 1.5, size: fishLen * 0.8, yOffset: Math.random() * Math.PI * 2 },
+            { type: 'B', x: w + fishLen * 2, y: h * 0.7, targetY: h * 0.4, speed: -1.0, size: fishLen * 0.9, yOffset: Math.random() * Math.PI * 2 }
+        ];
+
+        // 2 螃蟹
+        bgAnimState.ocean.crabs = [
+            { cx: w * 0.2, range: w * 0.1, x: w * 0.2, speed: 0.5, size: r * 0.15, phase: Math.random() * Math.PI * 2 },
+            { cx: w * 0.8, range: w * 0.15, x: w * 0.8, speed: -0.4, size: r * 0.12, phase: Math.random() * Math.PI * 2 }
+        ];
+
+        // 水母群
+        const jellyBaseX = w * 0.85;
+        const jellyBaseY = h * 0.35;
+        bgAnimState.ocean.jellyfishes = Array.from({ length: 4 }, () => ({
+            x: jellyBaseX + (Math.random() - 0.5) * r * 0.6,
+            y: jellyBaseY + (Math.random() - 0.5) * r * 0.6,
+            size: r * 0.15 + Math.random() * r * 0.05,
+            phase: Math.random() * Math.PI * 2
         }));
+
+        // 错落的海草
         bgAnimState.ocean.kelps = [];
-        for (let i = -10; i <= w + 10; i += Math.max(30, w * 0.05)) {
-            bgAnimState.ocean.kelps.push({ x: i, hRatio: 0.6 + Math.random() * 0.4 });
+        const kelpClusters = [w * 0.15, w * 0.25, w * 0.75, w * 0.85];
+        kelpClusters.forEach(kx => {
+            for (let i = 0; i < 5; i++) {
+                bgAnimState.ocean.kelps.push({
+                    x: kx + (Math.random() - 0.5) * w * 0.1,
+                    hRatio: 0.3 + Math.random() * 0.3
+                });
+            }
+        });
+
+        // 珊瑚礁 (远离中心)
+        bgAnimState.ocean.corals = [];
+        // 还原：左下角
+        const coralX = w * 0.1;
+
+        // 背景层（后层）珊瑚：更高大，颜色偏暗/偏紫/偏蓝，营造层次感
+        for (let i = 0; i < 4; i++) {
+            const bgType = Math.random() > 0.5 ? 'brain' : 'finger';
+            // 如果是深蓝色的直立珊瑚（finger），将它的 x 坐标往左偏移（减去一点点距离），避免与前方珊瑚重叠
+            // 假设小珊瑚群大约在 coralX ± w*0.04 之间，我们将大直立珊瑚放在 coralX - w*0.1 左右
+            const baseBgX = bgType === 'finger' ? (coralX - w * 0.06) : coralX;
+            bgAnimState.ocean.corals.push({
+                x: baseBgX + (Math.random() - 0.5) * w * 0.05,
+                type: bgType,
+                size: r * 0.2 + Math.random() * r * 0.15, // 尺寸更大
+                color: bgType === 'brain' ? '#7E22CE' : '#4338CA', // 脑状(半圆)固定紫色，直立(手指)固定深蓝色
+                layer: 'bg' // 标记为背景层
+            });
+        }
+
+        // 前景层（现有的低矮珊瑚）
+        for (let i = 0; i < 6; i++) {
+            bgAnimState.ocean.corals.push({
+                x: coralX + (Math.random() - 0.5) * w * 0.08,
+                type: Math.random() > 0.5 ? 'brain' : 'finger', // 恢复为简单的随机类型
+                size: r * 0.1 + Math.random() * r * 0.1, // 尺寸适中
+                color: Math.random() > 0.5 ? '#E11D48' : '#EA580C', // 红色和橙色
+                layer: 'fg' // 标记为前景层
+            });
         }
 
         // Forest: Fireflies, Trees and Cabin
@@ -2575,15 +2950,24 @@ const PiSniper = (() => {
             speed: Math.random() * 0.02 + 0.01
         }));
         const trees = [];
-        for (let i = -30; i <= w + 30; i += 40) {
-            trees.push({ x: i, th: h * 0.2 + Math.random() * h * 0.1, layer: 'far' });
+        // 远景树木：增大基础间距，并引入随机间距
+        let farX = -30;
+        while (farX <= w + 30) {
+            trees.push({ x: farX, th: h * 0.2 + Math.random() * h * 0.1, layer: 'far' });
+            // 基础间距 80，外加 0 到 40 的随机增量
+            farX += 80 + Math.random() * 40;
         }
-        for (let i = -20; i <= w + 20; i += 60) {
+
+        // 近景树木：增大基础间距，并引入随机间距
+        let nearX = -20;
+        while (nearX <= w + 20) {
             let th = h * 0.3 + Math.random() * h * 0.15;
-            if (i < cx - r - 20 || i > cx + r + 20) {
+            if (nearX < cx - r - 20 || nearX > cx + r + 20) {
                 th = h * 0.5 + Math.random() * h * 0.3; // 高树分布在两边
             }
-            trees.push({ x: i, th: th, layer: 'near' });
+            trees.push({ x: nearX, th: th, layer: 'near' });
+            // 基础间距 120，外加 0 到 60 的随机增量
+            nearX += 120 + Math.random() * 60;
         }
         bgAnimState.forest.trees = trees;
 
@@ -2595,6 +2979,18 @@ const PiSniper = (() => {
         const cabinW = 120;
         const cabinH = Math.min(140, maxCabinH);
         bgAnimState.forest.cabin = { x: cabinX, y: h - cabinH, w: cabinW, h: cabinH };
+
+        // 小鹿状态机
+        bgAnimState.forest.deer = {
+            state: 'running_in', // running_in, looking_around, running_out, waiting
+            x: -200, // 初始位置在屏幕左侧外
+            y: h - 8, // 更靠近底部
+            targetX: w * 0.3 + Math.random() * (w * 0.1), // 跑入目标位置
+            speed: w * 0.001, // 速度减半，走得慢一点
+            timer: 0,
+            headAngle: 0,
+            jumpOffset: 0 // 跳跃偏移量
+        };
 
         // Cyberpunk: Buildings and Cars
         const bWidth = Math.max(40, w / 15);
@@ -2924,7 +3320,7 @@ const PiSniper = (() => {
                 break;
 
             case 'ocean':
-                // Bubbles
+                // 1. 底层：气泡
                 ctx.fillStyle = 'rgba(255,255,255,0.2)';
                 bgAnimState.ocean.bubbles.forEach(b => {
                     b.y += b.vy; if (b.y < 0) b.y = h;
@@ -2932,43 +3328,63 @@ const PiSniper = (() => {
                     ctx.beginPath(); ctx.arc(b.x, b.y, b.s, 0, Math.PI * 2); ctx.fill();
                 });
 
-                // Fishes
-                bgAnimState.ocean.fishes.forEach(f => {
+                // 2. 中下层：穿梭的大鱼 和 水母群
+                bgAnimState.ocean.largeFishes.forEach(f => {
                     f.x += f.speed;
-                    if (f.speed > 0 && f.x > w + 50) f.x = -50;
-                    if (f.speed < 0 && f.x < -50) f.x = w + 50;
-                    ctx.fillStyle = 'rgba(15, 32, 39, 0.4)';
-                    ctx.beginPath();
-                    const dir = f.speed > 0 ? 1 : -1;
-                    ctx.ellipse(f.x, f.y, f.size, f.size * 0.4, 0, 0, Math.PI * 2);
-                    ctx.moveTo(f.x - dir * f.size * 0.8, f.y);
-                    ctx.lineTo(f.x - dir * f.size * 1.5, f.y - f.size * 0.5);
-                    ctx.lineTo(f.x - dir * f.size * 1.5, f.y + f.size * 0.5);
-                    ctx.fill();
+                    if (f.speed > 0 && f.x > w + f.size * 2) f.x = -f.size * 2;
+                    if (f.speed < 0 && f.x < -f.size * 2) f.x = w + f.size * 2;
+                    drawOceanFish(ctx, f, time, w);
                 });
 
-                // Seaweed (More realistic and limited height)
-                const cy = h / 2;
-                const r = Math.min(w, h) * 0.35;
-                const bottomY = cy + r + 20; // 避免进入单位圆
-                const maxKelpHeight = h - bottomY;
+                bgAnimState.ocean.jellyfishes.forEach(j => {
+                    drawOceanJellyfish(ctx, j, time);
+                });
 
+                // 3. 中层：起伏的沙滩地形
+                const sandGrad = ctx.createLinearGradient(0, h * 0.8, 0, h);
+                sandGrad.addColorStop(0, '#D4A373'); // 浅沙黄
+                sandGrad.addColorStop(1, '#8B5A2B'); // 深褐
+
+                ctx.fillStyle = sandGrad;
+                ctx.beginPath();
+                ctx.moveTo(0, h);
+                for (let x = 0; x <= w; x += 20) {
+                    ctx.lineTo(x, getOceanSeabedY(x, w, h));
+                }
+                ctx.lineTo(w, getOceanSeabedY(w, w, h));
+                ctx.lineTo(w, h);
+                ctx.fill();
+
+                // 4. 沙滩上的珊瑚 (按图层顺序绘制，先画背景层，再画前景层)
+                // 背景层
+                bgAnimState.ocean.corals.filter(c => c.layer === 'bg').forEach(c => {
+                    drawOceanCoral(ctx, c, time, getOceanSeabedY(c.x, w, h));
+                });
+
+                // 前景层
+                bgAnimState.ocean.corals.filter(c => c.layer !== 'bg').forEach(c => {
+                    drawOceanCoral(ctx, c, time, getOceanSeabedY(c.x, w, h));
+                });
+
+                // 5. 沙滩上的海草 (贴合沙滩高度)
+                const maxKelpHeight = h * 0.4;
                 ctx.strokeStyle = 'rgba(34, 197, 94, 0.6)';
                 ctx.lineCap = 'round';
-                bgAnimState.ocean.kelps.forEach((kelp, index) => {
+                bgAnimState.ocean.kelps.forEach((kelp) => {
+                    const seabedY = getOceanSeabedY(kelp.x, w, h);
                     const kHeight = Math.max(50, maxKelpHeight * kelp.hRatio);
                     ctx.lineWidth = Math.max(3, w * 0.008);
                     ctx.beginPath();
-                    ctx.moveTo(kelp.x, h);
+                    ctx.moveTo(kelp.x, seabedY);
 
                     let curX = kelp.x;
-                    let curY = h;
+                    let curY = seabedY;
                     const segments = 4;
                     const segH = kHeight / segments;
                     for (let j = 1; j <= segments; j++) {
                         const sway = Math.sin(time * 2 + kelp.x + j) * 15 * (j / segments);
                         const nextX = kelp.x + sway;
-                        const nextY = h - segH * j;
+                        const nextY = seabedY - segH * j;
                         const cpX = curX + (nextX - curX) / 2 + (Math.cos(time * 3 + kelp.x) * 10);
                         const cpY = curY - segH / 2;
                         ctx.quadraticCurveTo(cpX, cpY, nextX, nextY);
@@ -2977,6 +3393,21 @@ const PiSniper = (() => {
                     }
                     ctx.stroke();
                 });
+
+                // 6. 前景：爬行的螃蟹
+                bgAnimState.ocean.crabs.forEach(crab => {
+                    crab.x += crab.speed;
+                    if (crab.x > crab.cx + crab.range) {
+                        crab.x = crab.cx + crab.range;
+                        crab.speed *= -1;
+                    }
+                    if (crab.x < crab.cx - crab.range) {
+                        crab.x = crab.cx - crab.range;
+                        crab.speed *= -1;
+                    }
+                    drawOceanCrab(ctx, crab, time, w, h);
+                });
+
                 break;
 
             case 'forest':
@@ -3020,6 +3451,253 @@ const PiSniper = (() => {
                     ctx.globalAlpha = Math.abs(Math.sin(time * 2 + f.offset));
                     ctx.beginPath(); ctx.arc(f.x, f.y, 2, 0, Math.PI * 2); ctx.fill();
                 });
+                ctx.globalAlpha = 1.0;
+
+                // 小鹿逻辑与绘制
+                const deer = bgAnimState.forest.deer;
+                if (!deer) break; // 防御性检查
+
+                // 状态机更新
+                switch (deer.state) {
+                    case 'running_in':
+                        deer.x += deer.speed;
+                        if (deer.x >= deer.targetX) {
+                            deer.state = 'looking_around';
+                            deer.timer = 0;
+                        }
+                        break;
+                    case 'looking_around':
+                        deer.timer++;
+                        // 使用正弦函数模拟左右张望
+                        deer.headAngle = Math.sin(deer.timer * 0.03) * 0.4;
+
+                        // 停留时间增加到 300 帧（约 5 秒）
+                        // 期间跳跃两下 (例如在第 100 帧和第 200 帧左右)
+                        if (deer.timer > 80 && deer.timer <= 110) {
+                            // 简单的正弦波跳跃 (第一跳)
+                            const jumpProgress = (deer.timer - 80) / 30; // 0 到 1
+                            // Math.sin 在 0 到 PI 之间总是正数，乘以负数意味着向上偏移（Y轴向上为负）
+                            deer.jumpOffset = -Math.sin(jumpProgress * Math.PI) * 40;
+                        } else if (deer.timer > 180 && deer.timer <= 210) {
+                            // 第二跳
+                            const jumpProgress = (deer.timer - 180) / 30; // 0 到 1
+                            deer.jumpOffset = -Math.sin(jumpProgress * Math.PI) * 40;
+                        } else {
+                            // 不在跳跃区间时，偏移必须严格为 0
+                            deer.jumpOffset = 0;
+                        }
+
+                        // 停留一段时间后离开
+                        if (deer.timer > 300) {
+                            deer.state = 'running_out';
+                        }
+                        break;
+                    case 'running_out':
+                        deer.x -= deer.speed; // 往左跑出
+                        if (deer.x < -200) {
+                            deer.state = 'waiting';
+                            deer.timer = 0;
+                            deer.targetX = w * 0.3 + Math.random() * (w * 0.1); // 保持和第一次一致的跑入目标范围
+                            deer.speed = w * 0.0015; // 保持和第一次一致的慢速
+                        }
+                        break;
+                    case 'waiting':
+                        deer.timer++;
+                        // 等待一段时间后再次跑入
+                        if (deer.timer > 200) { // 缩短等待时间到约3秒
+                            deer.state = 'running_in';
+                            deer.x = -200; // 确保从左侧外重新开始
+                        }
+                        break;
+                }
+
+                // 绘制小鹿 (极简剪影风格)
+                if (deer.state !== 'waiting') {
+                    ctx.save();
+                    // 彻底修复悬空问题：直接使用 deer.y，并且去掉了硬编码的常数。
+                    // 这样，外部初始化/修改的 deer.y (如 h - 10 或 h + 100) 会真实生效。
+                    // 加上 jumpOffset 实现跳跃效果。
+                    ctx.translate(deer.x, deer.y + (deer.jumpOffset || 0));
+
+                    // 根据移动方向翻转 (默认朝右)
+                    if (deer.state === 'running_out') {
+                        ctx.scale(-1, 1);
+                    }
+
+                    const deerSize = 20; // 基础尺寸
+                    ctx.fillStyle = '#A0522D'; // 更亮一点的褐色 (Sienna)
+                    ctx.strokeStyle = '#A0522D';
+
+                    // 身体 (使用贝塞尔曲线绘制流线型的躯干和脖子相连)
+                    ctx.beginPath();
+                    // 身体起始点（臀部后方）
+                    ctx.moveTo(-deerSize * 1.5, -deerSize * 0.8);
+                    // 臀部到背部的曲线
+                    ctx.quadraticCurveTo(-deerSize * 1.2, -deerSize * 1.6, 0, -deerSize * 1.3);
+                    // 背部到脖子的曲线 (降低脖子高度)
+                    ctx.quadraticCurveTo(deerSize * 1.0, -deerSize * 1.0, deerSize * 1.2, -deerSize * 1.8);
+                    // 脖子前部到底部胸膛的曲线
+                    ctx.quadraticCurveTo(deerSize * 0.8, -deerSize * 0.8, deerSize * 0.5, -deerSize * 0.5);
+                    // 胸膛到腹部的曲线
+                    ctx.quadraticCurveTo(0, -deerSize * 0.3, -deerSize * 0.5, -deerSize * 0.6);
+                    // 腹部收回臀部下方
+                    ctx.quadraticCurveTo(-deerSize * 1.2, -deerSize * 0.5, -deerSize * 1.5, -deerSize * 0.8);
+                    ctx.fill();
+
+                    // 尾巴 (小小的翘起)
+                    ctx.beginPath();
+                    ctx.moveTo(-deerSize * 1.4, -deerSize * 1.2);
+                    ctx.quadraticCurveTo(-deerSize * 1.8, -deerSize * 1.4, -deerSize * 1.6, -deerSize * 0.8);
+                    ctx.fill();
+
+                    // 白色斑点 (分布在背部，收敛坐标确保在身体轮廓内)
+                    ctx.fillStyle = '#FFFFFF';
+                    ctx.globalAlpha = 0.8;
+                    // 臀部上方
+                    ctx.beginPath(); ctx.arc(-deerSize * 0.9, -deerSize * 1.1, deerSize * 0.15, 0, Math.PI * 2); ctx.fill();
+                    // 背部中段
+                    ctx.beginPath(); ctx.arc(-deerSize * 0.4, -deerSize * 1.15, deerSize * 0.12, 0, Math.PI * 2); ctx.fill();
+                    // 靠近脖子根部
+                    ctx.beginPath(); ctx.arc(0.1, -deerSize * 1.05, deerSize * 0.1, 0, Math.PI * 2); ctx.fill();
+                    // 侧腹偏下
+                    ctx.beginPath(); ctx.arc(-deerSize * 0.6, -deerSize * 0.85, deerSize * 0.08, 0, Math.PI * 2); ctx.fill();
+                    // 侧后方
+                    ctx.beginPath(); ctx.arc(-deerSize * 1.1, -deerSize * 0.9, deerSize * 0.1, 0, Math.PI * 2); ctx.fill();
+                    ctx.globalAlpha = 1.0;
+
+                    // 恢复身体颜色用于画腿
+                    ctx.fillStyle = '#A0522D';
+
+                    // 腿部 (带有大腿肌肉关节的折线腿)
+                    // 引入两个变量控制前后腿和大小腿的摆动
+                    let swingAngle = 0;
+                    let jumpBend = 0;
+                    if (deer.state === 'running_in' || deer.state === 'running_out') {
+                        swingAngle = time * 10;
+                    } else if (deer.jumpOffset < -5) {
+                        jumpBend = deerSize * 0.4;
+                    }
+
+                    ctx.lineWidth = deerSize * 0.2;
+                    ctx.lineCap = 'round';
+                    ctx.lineJoin = 'round';
+
+                    // 用于绘制带有关节的腿部的辅助函数
+                    // baseY: 腿部连接身体的起点高度
+                    // phase: 控制迈步频率的相位差
+                    // isFront: 是否是前腿 (前腿膝盖向前弯，后腿飞节向后弯)
+                    function drawLeg(baseX, baseY, phase, isFront) {
+                        const currentAngle = swingAngle + phase;
+
+                        // 大腿的摆动角度 (相对垂直方向)
+                        // 前后摆动的幅度为 ±0.4 弧度
+                        const thighAngle = Math.sin(currentAngle) * 0.4;
+
+                        // 小腿的摆动角度 (相对大腿)
+                        // 在迈出时伸直，在收回时弯曲。利用余弦函数模拟这种弯曲。
+                        let calfAngle = 0;
+                        if (isFront) {
+                            calfAngle = Math.max(0, Math.cos(currentAngle)) * 0.6;
+                        } else {
+                            calfAngle = Math.max(0, -Math.cos(currentAngle)) * 0.6;
+                        }
+
+                        const thighLength = deerSize * 0.5 - jumpBend * 0.5;
+                        const calfLength = deerSize * 0.5 - jumpBend * 0.5;
+
+                        // 计算膝盖/飞节的坐标
+                        const jointX = baseX + Math.sin(thighAngle) * thighLength;
+                        const jointY = baseY + Math.cos(thighAngle) * thighLength;
+
+                        // 计算蹄子的坐标
+                        // 前腿膝盖向前，小腿向后折；后腿飞节向后，小腿向前折
+                        const finalCalfAngle = isFront ? (thighAngle - calfAngle) : (thighAngle + calfAngle);
+                        const hoofX = jointX + Math.sin(finalCalfAngle) * calfLength;
+                        const hoofY = jointY + Math.cos(finalCalfAngle) * calfLength;
+
+                        ctx.beginPath();
+                        ctx.moveTo(baseX, baseY);
+                        ctx.lineTo(jointX, jointY);
+                        ctx.lineTo(hoofX, hoofY);
+                        ctx.stroke();
+                    }
+
+                    // 前腿基准点
+                    const frontBaseX = deerSize * 0.5;
+                    const frontBaseY = -deerSize * 0.6;
+
+                    // 前腿 1 和 前腿 2 (相位差 PI)
+                    drawLeg(frontBaseX, frontBaseY, 0, true);
+                    drawLeg(frontBaseX - deerSize * 0.2, frontBaseY, Math.PI, true);
+
+                    // 后腿基准点
+                    const backBaseX = -deerSize * 1.0;
+                    const backBaseY = -deerSize * 0.7;
+
+                    // 后腿 1 和 后腿 2 (相位差 PI)
+                    drawLeg(backBaseX, backBaseY, Math.PI, false);
+                    drawLeg(backBaseX + deerSize * 0.3, backBaseY, 0, false);
+
+                    // 头部 (旋转中心在脖子根部上方)
+                    ctx.save();
+                    // 下调头部的连接位置，匹配变短的脖子
+                    ctx.translate(deerSize * 1.2, -deerSize * 1.8);
+                    if (deer.state === 'looking_around') {
+                        ctx.rotate(deer.headAngle);
+                    }
+
+                    // 头颅 (水滴形)
+                    ctx.beginPath();
+                    ctx.moveTo(-deerSize * 0.3, 0); // 枕部
+                    ctx.quadraticCurveTo(deerSize * 0.5, -deerSize * 0.4, deerSize * 1.0, 0); // 额头到鼻尖
+                    ctx.quadraticCurveTo(deerSize * 0.5, deerSize * 0.3, -deerSize * 0.3, deerSize * 0.4); // 下巴
+                    ctx.fill();
+
+                    // 鼻子 (黑色端点)
+                    ctx.fillStyle = '#000000';
+                    ctx.beginPath(); ctx.arc(deerSize * 0.95, 0, deerSize * 0.1, 0, Math.PI * 2); ctx.fill();
+
+                    // 耳朵
+                    ctx.fillStyle = '#A0522D';
+                    ctx.beginPath();
+                    ctx.moveTo(-deerSize * 0.2, -deerSize * 0.1);
+                    ctx.quadraticCurveTo(-deerSize * 0.8, -deerSize * 0.5, -deerSize * 0.6, -deerSize * 0.8);
+                    ctx.quadraticCurveTo(-deerSize * 0.1, -deerSize * 0.5, -deerSize * 0.1, -deerSize * 0.1);
+                    ctx.fill();
+
+                    // 眼睛 (白色眼白 + 黑色瞳孔)
+                    ctx.fillStyle = '#FFFFFF';
+                    ctx.beginPath(); ctx.arc(deerSize * 0.3, -deerSize * 0.05, deerSize * 0.12, 0, Math.PI * 2); ctx.fill();
+                    ctx.fillStyle = '#000000';
+                    ctx.beginPath(); ctx.arc(deerSize * 0.35, -deerSize * 0.05, deerSize * 0.06, 0, Math.PI * 2); ctx.fill();
+
+                    // 鹿角 (颜色更深的褐色，更复杂的分叉)
+                    ctx.strokeStyle = '#5C4033';
+                    ctx.lineWidth = deerSize * 0.12;
+                    ctx.lineCap = 'round';
+                    ctx.lineJoin = 'round';
+
+                    // 左角主干
+                    ctx.beginPath();
+                    ctx.moveTo(-deerSize * 0.1, -deerSize * 0.3);
+                    ctx.quadraticCurveTo(-deerSize * 0.4, -deerSize * 1.0, -deerSize * 0.2, -deerSize * 1.8);
+                    ctx.stroke();
+                    // 左角分叉
+                    ctx.beginPath(); ctx.moveTo(-deerSize * 0.25, -deerSize * 1.0); ctx.lineTo(-deerSize * 0.7, -deerSize * 1.3); ctx.stroke();
+                    ctx.beginPath(); ctx.moveTo(-deerSize * 0.2, -deerSize * 1.4); ctx.lineTo(0, -deerSize * 1.7); ctx.stroke();
+
+                    // 右角主干 (带有透视位移)
+                    ctx.beginPath();
+                    ctx.moveTo(0.1, -deerSize * 0.3);
+                    ctx.quadraticCurveTo(deerSize * 0.3, -deerSize * 1.0, deerSize * 0.4, -deerSize * 1.6);
+                    ctx.stroke();
+                    // 右角分叉
+                    ctx.beginPath(); ctx.moveTo(deerSize * 0.2, -deerSize * 1.0); ctx.lineTo(deerSize * 0.6, -deerSize * 1.2); ctx.stroke();
+
+                    ctx.restore();
+                    ctx.restore();
+                }
+
                 break;
 
             case 'cyberpunk':
