@@ -3013,11 +3013,13 @@ const PiSniper = (() => {
             });
         }
         bgAnimState.cyberpunk.buildings = buildings;
-        bgAnimState.cyberpunk.cars = Array.from({ length: 10 }, () => ({
+        bgAnimState.cyberpunk.cars = Array.from({ length: 12 }, () => ({
             x: Math.random() * w,
             y: h * 0.1 + Math.random() * (h * 0.6),
             speed: (Math.random() * 4 + 2) * (Math.random() > 0.5 ? 1 : -1),
-            color: ['#F472B6', '#38BDF8', '#34D399', '#FEF08A'][Math.floor(Math.random() * 4)]
+            color: ['#F472B6', '#38BDF8', '#34D399', '#FEF08A', '#A78BFA'][Math.floor(Math.random() * 5)],
+            type: ['sport', 'cargo', 'police'][Math.floor(Math.random() * 3)], // 添加不同的车型
+            size: Math.random() * 0.5 + 0.8 // 大小缩放比例
         }));
 
         bgAnimState.lastW = w;
@@ -3751,10 +3753,27 @@ const PiSniper = (() => {
 
                         ctx.restore();
 
-                        // 楼体边缘线
+                        // 楼体外发光边缘线
                         ctx.strokeStyle = beamColor;
                         ctx.lineWidth = 2;
+                        ctx.shadowColor = beamColor;
+                        ctx.shadowBlur = 10;
                         ctx.strokeRect(b.x, h - b.h, b.w, b.h);
+                        ctx.shadowBlur = 0; // 重置阴影
+                    } else {
+                        // 内部大楼也增加边缘发光线条
+                        const edgeColor = b.windows[0].color;
+                        ctx.strokeStyle = edgeColor;
+                        ctx.lineWidth = 1;
+
+                        // 内部大楼发光稍微暗一点
+                        ctx.globalAlpha = 0.6;
+                        ctx.shadowColor = edgeColor;
+                        ctx.shadowBlur = 5;
+                        ctx.strokeRect(b.x, h - b.h, b.w, b.h);
+
+                        ctx.shadowBlur = 0;
+                        ctx.globalAlpha = 1.0;
                     }
 
                     ctx.globalAlpha = 0.8;
@@ -3771,16 +3790,117 @@ const PiSniper = (() => {
                     ctx.globalAlpha = 1;
                 });
 
-                // Flying Cars (Light streaks)
+                // Flying Cars (Cool Cyberpunk Vehicles)
                 bgAnimState.cyberpunk.cars.forEach(c => {
                     c.x += c.speed;
-                    if (c.speed > 0 && c.x > w + 50) c.x = -50;
-                    if (c.speed < 0 && c.x < -50) c.x = w + 50;
-                    ctx.strokeStyle = c.color;
-                    ctx.lineWidth = 2;
-                    ctx.beginPath(); ctx.moveTo(c.x, c.y); ctx.lineTo(c.x + 40 * (c.speed > 0 ? -1 : 1), c.y);
-                    ctx.shadowColor = c.color; ctx.shadowBlur = 10;
-                    ctx.stroke(); ctx.shadowBlur = 0;
+                    if (c.speed > 0 && c.x > w + 100) c.x = -100;
+                    if (c.speed < 0 && c.x < -100) c.x = w + 100;
+
+                    ctx.save();
+                    ctx.translate(c.x, c.y);
+
+                    // 根据行驶方向翻转
+                    const isRight = c.speed > 0;
+                    if (!isRight) {
+                        ctx.scale(-1, 1);
+                    }
+
+                    // 应用车辆缩放比例
+                    ctx.scale(c.size, c.size);
+
+                    // 车身通用发光效果
+                    ctx.shadowColor = c.color;
+                    ctx.shadowBlur = 10;
+
+                    switch (c.type) {
+                        case 'sport':
+                            // 流线型跑车
+                            ctx.fillStyle = '#1E293B'; // 暗色车身
+                            ctx.beginPath();
+                            ctx.moveTo(-20, 5);
+                            ctx.lineTo(15, 5);
+                            ctx.quadraticCurveTo(25, 5, 20, -5); // 车头
+                            ctx.lineTo(5, -10); // 挡风玻璃
+                            ctx.lineTo(-10, -10); // 车顶
+                            ctx.lineTo(-20, -5); // 车尾
+                            ctx.closePath();
+                            ctx.fill();
+
+                            // 跑车霓虹腰线
+                            ctx.strokeStyle = c.color;
+                            ctx.lineWidth = 2;
+                            ctx.beginPath(); ctx.moveTo(-15, 2); ctx.lineTo(15, 2); ctx.stroke();
+
+                            // 尾焰喷射 (长而亮)
+                            ctx.fillStyle = c.color;
+                            ctx.globalAlpha = 0.6 + Math.sin(time * 15) * 0.4;
+                            ctx.beginPath(); ctx.moveTo(-20, 0); ctx.lineTo(-40, 2); ctx.lineTo(-20, 4); ctx.fill();
+                            ctx.globalAlpha = 1;
+                            break;
+
+                        case 'cargo':
+                            // 笨重的大型货船
+                            ctx.fillStyle = '#0F172A';
+                            ctx.fillRect(-30, -15, 50, 25);
+                            ctx.fillStyle = '#334155';
+                            ctx.fillRect(-25, -10, 40, 15); // 货舱
+
+                            // 货船的警示灯和推进器
+                            ctx.fillStyle = '#EF4444'; // 红灯
+                            if (Math.floor(time * 5) % 2 === 0) {
+                                ctx.fillRect(15, -15, 5, 5); // 车头灯闪烁
+                            }
+
+                            // 底部的垂直悬浮喷口
+                            ctx.strokeStyle = c.color;
+                            ctx.lineWidth = 3;
+                            ctx.beginPath(); ctx.moveTo(-20, 10); ctx.lineTo(-20, 18); ctx.stroke();
+                            ctx.beginPath(); ctx.moveTo(10, 10); ctx.lineTo(10, 18); ctx.stroke();
+
+                            // 后部缓慢的尾焰
+                            ctx.fillStyle = c.color;
+                            ctx.globalAlpha = 0.5 + Math.sin(time * 5) * 0.2;
+                            ctx.beginPath(); ctx.arc(-30, 0, 8, Math.PI * 0.5, Math.PI * 1.5); ctx.fill();
+                            ctx.globalAlpha = 1;
+                            break;
+
+                        case 'police':
+                            // 警用巡逻车
+                            ctx.fillStyle = '#1E293B';
+                            ctx.beginPath();
+                            ctx.moveTo(-15, 5); ctx.lineTo(15, 5); ctx.lineTo(10, -5); ctx.lineTo(-10, -5);
+                            ctx.closePath(); ctx.fill();
+
+                            // 红蓝警灯交替闪烁
+                            ctx.shadowBlur = 15;
+                            if (Math.floor(time * 10) % 2 === 0) {
+                                ctx.shadowColor = '#EF4444';
+                                ctx.fillStyle = '#EF4444';
+                            } else {
+                                ctx.shadowColor = '#3B82F6';
+                                ctx.fillStyle = '#3B82F6';
+                            }
+                            ctx.fillRect(0, -8, 6, 4); // 车顶警灯
+
+                            // 巡逻探照灯 (向下打光)
+                            ctx.shadowBlur = 0;
+                            ctx.globalCompositeOperation = 'screen';
+                            const pGrad = ctx.createLinearGradient(0, 5, 10, 40);
+                            pGrad.addColorStop(0, 'rgba(255, 255, 255, 0.6)');
+                            pGrad.addColorStop(1, 'rgba(255, 255, 255, 0)');
+                            ctx.fillStyle = pGrad;
+                            ctx.beginPath(); ctx.moveTo(5, 5); ctx.lineTo(-10, 40); ctx.lineTo(30, 40); ctx.fill();
+
+                            // 尾焰
+                            ctx.globalCompositeOperation = 'source-over';
+                            ctx.fillStyle = c.color;
+                            ctx.shadowBlur = 10;
+                            ctx.shadowColor = c.color;
+                            ctx.beginPath(); ctx.arc(-15, 0, 4, 0, Math.PI * 2); ctx.fill();
+                            break;
+                    }
+
+                    ctx.restore();
                 });
                 break;
         }
