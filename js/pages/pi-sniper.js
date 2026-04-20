@@ -1972,6 +1972,8 @@ const PiSniper = (() => {
             lt = JSON.parse(localStorage.getItem('pi_sniper_lifetime') || '{}');
         } catch (e) { }
 
+        const bestScore = parseInt(localStorage.getItem('pi_sniper_best') || '0');
+
         const timeInSeconds = lt.totalPlayTime || 0;
         let timeStr = `${timeInSeconds}s`;
         if (timeInSeconds >= 3600) {
@@ -1981,14 +1983,15 @@ const PiSniper = (() => {
         }
 
         const data = [
-            { label: '总游玩局数', value: lt.totalGames || 0, icon: '🎮' },
-            { label: '总游玩时间', value: timeStr, icon: '⏱️' },
-            { label: '总击中目标', value: lt.totalHits || 0, icon: '🎯' },
-            { label: '完美射击', value: lt.totalPerfects || 0, icon: '⭐' },
-            { label: '脱靶次数', value: lt.totalMisses || 0, icon: '❌' },
-            { label: '历史最大连击', value: lt.maxCombo || 0, icon: '🔥' },
-            { label: '击败 Boss', value: lt.totalBossDefeated || 0, icon: '⚔️' },
-            { label: '触发 Frenzy', value: lt.totalFrenzyCount || 0, icon: '⚡' },
+            { label: GameI18N.t('sniper.record.bestScore'), value: bestScore, icon: '🏆' },
+            { label: GameI18N.t('sniper.record.totalGames'), value: lt.totalGames || 0, icon: '🎮' },
+            { label: GameI18N.t('sniper.record.totalTime'), value: timeStr, icon: '⏱️' },
+            { label: GameI18N.t('sniper.record.totalHits'), value: lt.totalHits || 0, icon: '🎯' },
+            { label: GameI18N.t('sniper.record.totalPerfects'), value: lt.totalPerfects || 0, icon: '⭐' },
+            { label: GameI18N.t('sniper.record.totalMisses'), value: lt.totalMisses || 0, icon: '❌' },
+            { label: GameI18N.t('sniper.record.maxCombo'), value: lt.maxCombo || 0, icon: '🔥' },
+            { label: GameI18N.t('sniper.record.totalBoss'), value: lt.totalBossDefeated || 0, icon: '⚔️' },
+            { label: GameI18N.t('sniper.record.totalFrenzy'), value: lt.totalFrenzyCount || 0, icon: '⚡' },
         ];
 
         container.innerHTML = data.map(item => `

@@ -131,6 +131,17 @@ window.GameI18N = (() => {
         'sniper.report.frenzyCount': { zh: 'Frenzy次数', en: 'Frenzy Count' },
         'sniper.report.bossDefeated': { zh: '击败Boss', en: 'Bosses Defeated' },
 
+        // ===== 圆周狙击 - 记录 =====
+        'sniper.record.bestScore': { zh: '历史最高分', en: 'Best Score' },
+        'sniper.record.totalGames': { zh: '总游玩局数', en: 'Total Games' },
+        'sniper.record.totalTime': { zh: '总游玩时间', en: 'Total Time' },
+        'sniper.record.totalHits': { zh: '总击中目标', en: 'Total Hits' },
+        'sniper.record.totalPerfects': { zh: '完美射击', en: 'Total Perfects' },
+        'sniper.record.totalMisses': { zh: '脱靶次数', en: 'Total Misses' },
+        'sniper.record.maxCombo': { zh: '历史最大连击', en: 'Max Combo' },
+        'sniper.record.totalBoss': { zh: '击败 Boss', en: 'Boss Defeated' },
+        'sniper.record.totalFrenzy': { zh: '触发 Frenzy', en: 'Frenzy Triggered' },
+
         // ===== 圆周狙击 - 互动公式卡片 =====
         'sniper.formula.title': { zh: '公式卡片', en: 'Formula Cards' },
         'sniper.formula.arcLength': { zh: '弧长公式', en: 'Arc Length Formula' },
