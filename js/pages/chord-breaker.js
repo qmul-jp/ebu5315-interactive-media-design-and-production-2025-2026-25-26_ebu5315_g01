@@ -228,8 +228,13 @@ const ChordBreaker = (() => {
     }
 
     function bindEvents() {
-        const startBtn = document.getElementById('chordStartBtn');
-        if (startBtn) startBtn.addEventListener('click', startGame);
+        const levelBtns = document.querySelectorAll('.chord-level-btn');
+        levelBtns.forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const level = parseInt(e.target.dataset.level, 10);
+                startGame(level);
+            });
+        });
 
         const nextBtn = document.getElementById('chordNextBtn');
         if (nextBtn) nextBtn.addEventListener('click', nextLevel);
@@ -270,10 +275,10 @@ const ChordBreaker = (() => {
         if (elFinalOverlay) elFinalOverlay.style.display = 'none';
     }
 
-    function startGame() {
-        currentLevel = 0;
+    function startGame(startLevel = 0) {
+        currentLevel = startLevel;
         levelStars = Array(levels.length).fill(0);
-        loadLevel(0);
+        loadLevel(startLevel);
         if (elStartOverlay) elStartOverlay.style.display = 'none';
         if (elWinOverlay) elWinOverlay.style.display = 'none';
         if (elFinalOverlay) elFinalOverlay.style.display = 'none';

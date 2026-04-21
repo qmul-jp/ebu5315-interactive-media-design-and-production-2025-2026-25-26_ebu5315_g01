@@ -74,10 +74,10 @@
 
         // 返回菜单按钮
         const backBtns = [
-            'sniperBackBtn', 'sniperMenuBtn',
-            'slingshotBackBtn', 'slingshotMenuBtn',
-            'hunterBackBtn', 'hunterMenuBtn',
-            'chordBackBtn', 'chordMenuBtn', 'chordFinalMenuBtn'
+            'sniperBackBtn', 'sniperMenuBtn', 'sniperBackFromStartBtn',
+            'slingshotBackBtn', 'slingshotMenuBtn', 'slingshotBackFromStartBtn',
+            'hunterBackBtn', 'hunterMenuBtn', 'hunterBackFromStartBtn',
+            'chordBackBtn', 'chordMenuBtn', 'chordFinalMenuBtn', 'chordBackFromStartBtn'
         ];
         backBtns.forEach(id => {
             const btn = document.getElementById(id);

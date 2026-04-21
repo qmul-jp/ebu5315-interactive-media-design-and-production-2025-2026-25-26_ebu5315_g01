@@ -9,6 +9,66 @@ const GameAudio = (() => {
     let enabled = true;
     let volume = 0.5;
 
+    // 外部加载的音效文件 (使用相对于 HTML 页面的正确路径)
+    const bossWarningAudio = new Audio('../assets/audio/game/boss_alert.mp3');
+
+    // BGM 音频对象
+    const bgmTracks = {
+        cyberpunk: new Audio('../assets/audio/game/cyberpunk.mp3'),
+        forest: new Audio('../assets/audio/game/forest.mp3'),
+        sea: new Audio('../assets/audio/game/sea.mp3'),
+        space: new Audio('../assets/audio/game/space.mp3')
+    };
+
+    // 配置 BGM 循环
+    for (const key in bgmTracks) {
+        bgmTracks[key].loop = true;
+    }
+
+    let currentBgm = null;
+
+    function playBgm(theme) {
+        if (!enabled) return;
+
+        // 映射主题到对应的音乐
+        let trackKey = 'space'; // 默认
+        if (theme === 'cyberpunk') trackKey = 'cyberpunk';
+        else if (theme === 'forest') trackKey = 'forest';
+        else if (theme === 'ocean') trackKey = 'sea';
+        else if (theme === 'deepSpace') trackKey = 'space';
+
+        const track = bgmTracks[trackKey];
+        if (!track) return;
+
+        // 如果要播放的正是当前音乐，不中断
+        if (currentBgm === track) {
+            // 如果音乐被暂停了，尝试继续播放
+            if (currentBgm.paused) {
+                currentBgm.volume = volume * 0.5; // BGM音量稍低一点，避免盖过音效
+                currentBgm.play().catch(e => console.warn("BGM播放失败:", e));
+            }
+            return;
+        }
+
+        // 停止当前音乐
+        if (currentBgm) {
+            currentBgm.pause();
+            currentBgm.currentTime = 0;
+        }
+
+        // 播放新音乐
+        currentBgm = track;
+        currentBgm.volume = volume * 0.5;
+        currentBgm.currentTime = 0;
+        currentBgm.play().catch(e => console.warn("BGM播放失败:", e));
+    }
+
+    function stopBgm() {
+        if (currentBgm) {
+            currentBgm.pause();
+        }
+    }
+
     function init() {
         if (ctx) return;
         try {
@@ -41,7 +101,7 @@ const GameAudio = (() => {
         osc.stop(ctx.currentTime + delay + duration);
     }
 
-    function playNoise(duration = 0.1, vol = 0.2) {
+    function playNoise(duration = 0.1, vol = 0.2, delay = 0) {
         if (!enabled || !ctx) return;
         resume();
         const bufferSize = ctx.sampleRate * duration;
@@ -51,8 +111,8 @@ const GameAudio = (() => {
         const source = ctx.createBufferSource();
         source.buffer = buffer;
         const gain = ctx.createGain();
-        gain.gain.setValueAtTime(vol * volume, ctx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + duration);
+        gain.gain.setValueAtTime(vol * volume, ctx.currentTime + delay);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + delay + duration);
         const filter = ctx.createBiquadFilter();
         filter.type = 'bandpass';
         filter.frequency.value = 1000;
@@ -60,10 +120,10 @@ const GameAudio = (() => {
         source.connect(filter);
         filter.connect(gain);
         gain.connect(masterGain);
-        source.start();
+        source.start(ctx.currentTime + delay);
     }
 
-     // ===== 引力弹弓音效 =====
+    // ===== 引力弹弓音效 =====
     function playLaunch() {
         if (!enabled || !ctx) return;
         resume();
@@ -98,7 +158,7 @@ const GameAudio = (() => {
             playTone(base * Math.pow(2, i / 6), 'sine', 0.3, 0.25, i * 0.15);
         }
     }
-    
+
     // ===== 圆周狙击音效 =====
     function playShoot() {
         if (!enabled || !ctx) return;
@@ -142,9 +202,20 @@ const GameAudio = (() => {
     }
 
     function playFrenzy() {
-        for (let i = 0; i < 8; i++) {
-            playTone(440 * Math.pow(2, i / 12), 'square', 0.1, 0.15, i * 0.06);
+        // 使用锯齿波和方波组合，创造类似"充能爆发"和"警报升级"的激昂音效
+        const baseFreq = 300;
+        for (let i = 0; i < 12; i++) {
+            // 频率逐渐飙升
+            const freq = baseFreq * Math.pow(1.2, i);
+            // 节奏越来越快
+            const delay = i * Math.max(0.02, 0.1 - i * 0.008);
+            playTone(freq, 'sawtooth', 0.1, 0.2, delay);
+            // 叠加一层高八度的方波增加刺激感
+            playTone(freq * 2, 'square', 0.08, 0.1, delay);
         }
+        // 结尾一声强烈的长音爆发
+        playTone(1500, 'sawtooth', 0.4, 0.3, 0.6);
+        playNoise(0.4, 0.2); // 伴随白噪音模拟能量释放
     }
 
     function playTick() {
@@ -159,10 +230,16 @@ const GameAudio = (() => {
 
     // ===== 圆周狙击 - Boss战音效 =====
     function playBossWarning() {
-        for (let i = 0; i < 4; i++) {
-            playTone(220, 'square', 0.15, 0.2, i * 0.12);
-            playTone(330, 'square', 0.15, 0.15, i * 0.12 + 0.06);
-        }
+        if (!enabled) return;
+
+        // 设置音量，保持与全局音量同步
+        bossWarningAudio.volume = volume;
+
+        // 重置播放进度并播放
+        bossWarningAudio.currentTime = 0;
+        bossWarningAudio.play().catch(e => {
+            console.warn("Boss警告音效播放失败:", e);
+        });
     }
 
     function playBossShieldBreak() {
@@ -219,6 +296,7 @@ const GameAudio = (() => {
     function setVolume(v) {
         volume = Math.max(0, Math.min(1, v));
         if (masterGain) masterGain.gain.value = volume;
+        if (currentBgm) currentBgm.volume = volume * 0.5;
         localStorage.setItem('game_audio_volume', volume.toString());
     }
 
@@ -226,6 +304,11 @@ const GameAudio = (() => {
 
     function setEnabled(state) {
         enabled = state;
+        if (!enabled) {
+            stopBgm();
+        } else if (currentBgm) {
+            currentBgm.play().catch(e => console.warn("BGM恢复失败:", e));
+        }
         localStorage.setItem('game_audio_enabled', state.toString());
     }
 
@@ -240,6 +323,7 @@ const GameAudio = (() => {
 
     return {
         init, resume,
+        playBgm, stopBgm,
         playLaunch, playHitWormhole, playCollision, playStarRating,
         playShoot, playPerfect, playExcellent, playGood, playMiss, playCombo, playFrenzy, playTick, playGameOver,
         playBossWarning, playBossShieldBreak, playBossDefeated, playBossHit,
