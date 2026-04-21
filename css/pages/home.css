@@ -1352,6 +1352,21 @@ body.dark-mode .premium-section {
     cursor: pointer;
 }
 
+.ai-sprite-widget.is-smile-rest .ai-sprite-stack {
+    pointer-events: auto;
+    cursor: pointer;
+}
+
+.ai-sprite-widget.is-returning-peek-exit .ai-sprite-stack {
+    pointer-events: none;
+    cursor: default;
+}
+
+.ai-sprite-widget.is-returning-peek-tilt .ai-sprite-stack {
+    pointer-events: none;
+    cursor: default;
+}
+
 .ai-sprite-widget__body {
     display: block;
     height: auto;
@@ -1440,6 +1455,17 @@ body.dark-mode .premium-section {
     transition: transform 1.15s cubic-bezier(0.22, 1, 0.36, 1) !important;
 }
 
+/* 弹出后二次点击：先右移到偷看边缘，再倾斜回到偷看态 */
+.ai-sprite-widget.is-smile-rest.is-returning-peek-exit .ai-sprite-stack {
+    transform: translateX(var(--ai-exit-x, 0px)) rotate(0deg) !important;
+    transition: transform 0.88s cubic-bezier(0.22, 1, 0.36, 1) !important;
+}
+
+.ai-sprite-widget.is-smile-rest.is-returning-peek-exit.is-returning-peek-tilt .ai-sprite-stack {
+    transform: translateX(var(--ai-exit-x, 0px)) rotate(var(--ai-peek-tilt, -11deg)) !important;
+    transition: transform 0.52s cubic-bezier(0.33, 1, 0.32, 1) !important;
+}
+
 body.dark-mode .ai-sprite-widget__bubble {
     background: linear-gradient(145deg, var(--gray-800) 0%, var(--gray-900) 100%);
     border-color: rgba(71, 85, 105, 0.65);
@@ -1483,7 +1509,9 @@ body.dark-mode .ai-sprite-widget__welcome {
     .ai-sprite-widget.is-exiting .ai-sprite-stack,
     .ai-sprite-widget.is-tuck-offscreen.is-peek-emerge .ai-sprite-stack,
     .ai-sprite-widget.is-tuck-offscreen.is-peek-emerge.is-peek-tilt .ai-sprite-stack,
-    .ai-sprite-widget.is-peek-popout .ai-sprite-stack {
+    .ai-sprite-widget.is-peek-popout .ai-sprite-stack,
+    .ai-sprite-widget.is-smile-rest.is-returning-peek-exit .ai-sprite-stack,
+    .ai-sprite-widget.is-smile-rest.is-returning-peek-exit.is-returning-peek-tilt .ai-sprite-stack {
         transition-duration: 0.01ms !important;
     }
 

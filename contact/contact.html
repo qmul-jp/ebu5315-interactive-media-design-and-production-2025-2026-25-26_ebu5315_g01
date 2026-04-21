@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="../css/layout.css">
     <link rel="stylesheet" href="../css/components/buttons.css">
     <link rel="stylesheet" href="../css/components/forms.css">
+    <link rel="stylesheet" href="../css/components/ai-sprite.css">
     <link rel="stylesheet" href="../css/pages/contact.css">
 </head>
 <body>
@@ -228,9 +229,44 @@
         </div>
     </footer>
 
+    <div
+        class="ai-sprite-widget"
+        id="aiSpriteWidget"
+        data-body-smile-tuck-src="../assets/images/global/笑容揣手.png"
+        hidden
+        aria-live="polite"
+    >
+        <div class="ai-sprite-widget__bubble">
+            <p class="ai-sprite-widget__welcome" data-i18n="home.sprite.welcome">
+                Welcome to CircleLearn! Explore games, quizzes, and theorems below.
+            </p>
+        </div>
+        <div class="ai-sprite-widget__sprite-stage">
+            <div class="ai-sprite-widget__peek-wrap">
+                <div class="ai-sprite-stack">
+                    <img
+                        class="ai-sprite-widget__body"
+                        src="../assets/images/global/笑容精灵只有右手.png"
+                        alt=""
+                        decoding="async"
+                    />
+                    <div class="ai-sprite-widget__arm-layer" aria-hidden="true">
+                        <img
+                            class="ai-sprite-widget__arm"
+                            src="../assets/images/global/左手.png"
+                            alt=""
+                            decoding="async"
+                        />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="../js/data/site-i18n.js"></script>
     <script src="../js/utils.js"></script>
     <script src="../js/main.js"></script>
     <script src="../js/pages/contact.js"></script>
+    <script src="../js/components/ai-sprite.js"></script>
 </body>
 </html>
