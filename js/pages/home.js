@@ -19,6 +19,7 @@
         finished = true;
         window.clearTimeout(fallbackId);
         root.classList.remove('hero-intro-play');
+        window.dispatchEvent(new CustomEvent('circlelearn:heroIntroComplete'));
     };
 
     /** 圆环入场 2.6s；文案入场延迟 1.82s + 2.2s ≈ 4.02s — 须两者都结束再摘 class，否则会打断文案动画产生一帧跳变 */
@@ -232,7 +233,7 @@
     const RING_POPOUT_CAP_OUTER_PAD_PX = 80;
     const RING_POPOUT_BUBBLE_ANGLE_RAD = Math.PI * 1.8;
     const RING_POPOUT_BUBBLE_OUTER_PAD_PX = -100;
-    const RING_POPOUT_CLOCK_ANGLE_RAD = Math.PI * 0.2;
+    const RING_POPOUT_CLOCK_ANGLE_RAD = Math.PI * 0.3;
     const RING_POPOUT_CLOCK_OUTER_PAD_PX = 85;
     const RING_POPOUT_PIE_ANGLE_RAD = Math.PI * 0.9;
     const RING_POPOUT_PIE_OUTER_PAD_PX = 180;
@@ -1042,3 +1043,4 @@
         observer.observe(el);
     });
 })();
+

@@ -16,6 +16,8 @@
             'home.hero.subtitle': 'Learn GCSE circle geometry through interactive visualizations, engaging games, and AI-powered guidance. Master complex theorems with ease and confidence.',
             'home.hero.startGame': 'Start Game',
             'home.hero.takeQuiz': 'Take Quiz',
+            'home.sprite.welcome': 'Welcome to CircleLearn! Explore games, quizzes, and theorems below.',
+            'home.sprite.dismiss': 'Dismiss',
             'home.theorem.sectionTitle': 'Explore Circle Theorems',
             'home.theorem.sectionSubtitle': 'Master fundamental circle geometry concepts',
             'home.ai.title': 'Meet Your AI Math Guide',
@@ -171,6 +173,8 @@
             'home.hero.subtitle': '通过交互可视化、趣味游戏和 AI 辅导学习 GCSE 圆几何，更轻松、更自信地掌握复杂定理。',
             'home.hero.startGame': '开始游戏',
             'home.hero.takeQuiz': '开始测验',
+            'home.sprite.welcome': '欢迎来到 CircleLearn！试试下方的游戏、测验或定理内容。',
+            'home.sprite.dismiss': '关闭',
             'home.theorem.sectionTitle': '探索圆定理',
             'home.theorem.sectionSubtitle': '掌握圆几何核心基础概念',
             'home.ai.title': '认识你的 AI 数学助手',
@@ -338,6 +342,12 @@
             const key = el.getAttribute('data-i18n-placeholder');
             const text = t(lang, key);
             if (text !== null) el.setAttribute('placeholder', text);
+        });
+
+        document.querySelectorAll('[data-i18n-aria-label]').forEach((el) => {
+            const key = el.getAttribute('data-i18n-aria-label');
+            const text = t(lang, key);
+            if (text !== null) el.setAttribute('aria-label', text);
         });
     }
 

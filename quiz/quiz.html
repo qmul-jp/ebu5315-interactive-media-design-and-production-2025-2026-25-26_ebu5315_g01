@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="../css/components/cards.css">
     <link rel="stylesheet" href="../css/components/forms.css">
     <link rel="stylesheet" href="../css/components/widgets.css">
+    <link rel="stylesheet" href="../css/components/ai-sprite.css">
     <link rel="stylesheet" href="../css/pages/quiz.css">
 </head>
 <body class="quiz-page">
@@ -20,11 +21,7 @@
         <div class="container">
             <nav class="nav">
                 <a href="../index.html#home" class="logo" aria-label="CircleLearn Home">
-                    <div class="logo-icon">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                            <circle cx="12" cy="12" r="10"/>
-                        </svg>
-                    </div>
+                    <img src="../assets/images/homepage/icon.png" width="40px" height="40px"></img>
                     <span class="logo-text">GEOMETRY CHALLENGER</span>
                 </a>
 
@@ -224,10 +221,45 @@
         </svg>
     </button>
 
+    <div
+        class="ai-sprite-widget"
+        id="aiSpriteWidget"
+        data-body-smile-tuck-src="../assets/images/global/笑容揣手.png"
+        hidden
+        aria-live="polite"
+    >
+        <div class="ai-sprite-widget__bubble">
+            <p class="ai-sprite-widget__welcome" data-i18n="home.sprite.welcome">
+                Welcome to CircleLearn! Explore games, quizzes, and theorems below.
+            </p>
+        </div>
+        <div class="ai-sprite-widget__sprite-stage">
+            <div class="ai-sprite-widget__peek-wrap">
+                <div class="ai-sprite-stack">
+                    <img
+                        class="ai-sprite-widget__body"
+                        src="../assets/images/global/笑容精灵只有右手.png"
+                        alt=""
+                        decoding="async"
+                    />
+                    <div class="ai-sprite-widget__arm-layer" aria-hidden="true">
+                        <img
+                            class="ai-sprite-widget__arm"
+                            src="../assets/images/global/左手.png"
+                            alt=""
+                            decoding="async"
+                        />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="../js/data/quiz-questions.js"></script>
     <script src="../js/utils.js"></script>
     <script src="../js/main.js"></script>
     <script src="../js/pages/quiz.js"></script>
+    <script src="../js/components/ai-sprite.js"></script>
 
     <script>
         const i18n = {
