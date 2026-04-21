@@ -233,7 +233,7 @@ window.GameI18N = (() => {
         // ===== 弦之裂变 =====
         'game.chord.name': { zh: '弦之裂变', en: 'Chord Breaker' },
         'game.chord.desc': { zh: '发射能量球在圆内弹射！击中弦上的节点来通关，运用交弦定理。', en: 'Launch energy balls that bounce inside the circle! Hit chord nodes to clear levels using intersecting chords theorem.' },
-        'game.chord.tag': { zh: '弹球解谜', en: 'Pinball Puzzle' },
+        'game.selectLevel': { zh: '请选择关卡：', en: 'Select Level:' },
         'chord.title': { zh: '弦之裂变', en: 'Chord Breaker' },
         'chord.level': { zh: '关卡', en: 'Level' },
         'chord.shots': { zh: '发射', en: 'Shots' },

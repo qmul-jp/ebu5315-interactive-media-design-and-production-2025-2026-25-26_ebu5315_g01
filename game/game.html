@@ -380,6 +380,13 @@
                     </svg>
                     <span data-game-i18n="slingshot.backToMenu">Back to Menu</span>
                 </button>
+                <button type="button" class="btn btn-outline game-header-btn" id="slingshotQuickRetryBtn">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
+                        <path d="M3 3v5h5" />
+                    </svg>
+                    <span data-game-i18n="slingshot.retry">Retry</span>
+                </button>
                 <span class="game-header-title" data-game-i18n="slingshot.title">Gravity Slingshot</span>
             </div>
             <div class="game-header-stats">
@@ -415,8 +422,35 @@
                 </div>
                 <p class="game-overlay-desc" data-game-i18n="game.slingshot.desc">Navigate your spaceship through
                     gravitational fields to reach the target.</p>
-                <button type="button" class="btn btn-primary btn-primary-full" id="slingshotStartBtn"
-                    data-game-i18n="slingshot.start">Start</button>
+                <div class="level-select-container">
+                    <p class="level-select-title" data-game-i18n="game.selectLevel">Select Level:</p>
+                    <div class="level-select-grid">
+                        <button type="button" class="btn btn-outline slingshot-level-btn level-btn"
+                            data-level="0">1</button>
+                        <button type="button" class="btn btn-outline slingshot-level-btn level-btn"
+                            data-level="1">2</button>
+                        <button type="button" class="btn btn-outline slingshot-level-btn level-btn"
+                            data-level="2">3</button>
+                        <button type="button" class="btn btn-outline slingshot-level-btn level-btn"
+                            data-level="3">4</button>
+                        <button type="button" class="btn btn-outline slingshot-level-btn level-btn"
+                            data-level="4">5</button>
+                        <button type="button" class="btn btn-outline slingshot-level-btn level-btn"
+                            data-level="5">6</button>
+                        <button type="button" class="btn btn-outline slingshot-level-btn level-btn"
+                            data-level="6">7</button>
+                        <button type="button" class="btn btn-outline slingshot-level-btn level-btn"
+                            data-level="7">8</button>
+                        <button type="button" class="btn btn-outline slingshot-level-btn level-btn"
+                            data-level="8">9</button>
+                        <button type="button" class="btn btn-outline slingshot-level-btn level-btn"
+                            data-level="9">10</button>
+                        <button type="button" class="btn btn-outline slingshot-level-btn level-btn"
+                            data-level="10">11</button>
+                        <button type="button" class="btn btn-outline slingshot-level-btn level-btn"
+                            data-level="11">12</button>
+                    </div>
+                </div>
             </div>
         </div>
         <div class="game-overlay" id="slingshotWinOverlay" style="display:none;">
@@ -506,8 +540,13 @@
                     </svg>
                     <span data-game-i18n="chord.backToMenu">Back to Menu</span>
                 </button>
-                <button type="button" class="btn btn-outline" id="chordQuickRetryBtn"
-                    data-game-i18n="chord.retry">Retry</button>
+                <button type="button" class="btn btn-outline game-header-btn" id="chordQuickRetryBtn">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
+                        <path d="M3 3v5h5" />
+                    </svg>
+                    <span data-game-i18n="chord.retry">Retry</span>
+                </button>
                 <span class="game-header-title" data-game-i18n="chord.title">Chord Breaker</span>
             </div>
             <div class="game-header-stats">
@@ -543,8 +582,27 @@
                 </div>
                 <p class="game-overlay-desc" data-game-i18n="game.chord.desc">Launch energy balls that bounce inside the
                     circle!</p>
-                <button type="button" class="btn btn-primary btn-primary-full" id="chordStartBtn"
-                    data-game-i18n="chord.start">Start</button>
+                <div class="level-select-container">
+                    <p class="level-select-title" data-game-i18n="game.selectLevel">Select Level:</p>
+                    <div class="level-select-grid">
+                        <button type="button" class="btn btn-outline chord-level-btn level-btn"
+                            data-level="0">1</button>
+                        <button type="button" class="btn btn-outline chord-level-btn level-btn"
+                            data-level="1">2</button>
+                        <button type="button" class="btn btn-outline chord-level-btn level-btn"
+                            data-level="2">3</button>
+                        <button type="button" class="btn btn-outline chord-level-btn level-btn"
+                            data-level="3">4</button>
+                        <button type="button" class="btn btn-outline chord-level-btn level-btn"
+                            data-level="4">5</button>
+                        <button type="button" class="btn btn-outline chord-level-btn level-btn"
+                            data-level="5">6</button>
+                        <button type="button" class="btn btn-outline chord-level-btn level-btn"
+                            data-level="6">7</button>
+                        <button type="button" class="btn btn-outline chord-level-btn level-btn"
+                            data-level="7">8</button>
+                    </div>
+                </div>
             </div>
         </div>
         <div class="game-overlay" id="chordWinOverlay" style="display:none;">

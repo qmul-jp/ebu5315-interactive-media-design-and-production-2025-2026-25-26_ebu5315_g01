@@ -152,6 +152,52 @@ const GravitySlingshot = (() => {
             ],
             par: 3,
             tip: 'slingshot.knowledge.pi'
+        },
+        // Level 9: 引力走廊 (Gravity Corridor)
+        {
+            launcher: { x: 0.1, y: 0.5 },
+            wormhole: { x: 0.9, y: 0.5 },
+            planets: [
+                { x: 0.3, y: 0.25, r: 0.06, mass: 15 },
+                { x: 0.5, y: 0.75, r: 0.06, mass: 15 },
+                { x: 0.7, y: 0.25, r: 0.06, mass: 15 }
+            ],
+            par: 2,
+            tip: 'slingshot.knowledge.arc'
+        },
+        // Level 10: 死亡黑洞 (Deadly Black Hole)
+        {
+            launcher: { x: 0.1, y: 0.5 },
+            wormhole: { x: 0.9, y: 0.5 },
+            planets: [
+                { x: 0.5, y: 0.5, r: 0.03, mass: 4.5 } // 体积小，质量极大
+            ],
+            par: 2,
+            tip: 'slingshot.knowledge.tangent'
+        },
+        // Level 11: 双星系统 (Binary System)
+        {
+            launcher: { x: 0.1, y: 0.8 },
+            wormhole: { x: 0.9, y: 0.2 },
+            planets: [
+                { x: 0.45, y: 0.45, r: 0.08, mass: 1.8 },
+                { x: 0.55, y: 0.55, r: 0.08, mass: 1.8 }
+            ],
+            par: 3,
+            tip: 'slingshot.knowledge.area'
+        },
+        // Level 12: 混乱星系 (Chaos Galaxy)
+        {
+            launcher: { x: 0.08, y: 0.15 },
+            wormhole: { x: 0.92, y: 0.85 },
+            planets: [
+                { x: 0.3, y: 0.3, r: 0.05, mass: 1.0 },
+                { x: 0.7, y: 0.3, r: 0.08, mass: 1.5 },
+                { x: 0.4, y: 0.7, r: 0.06, mass: 1.2 },
+                { x: 0.8, y: 0.6, r: 0.04, mass: 0.8 }
+            ],
+            par: 4,
+            tip: 'slingshot.knowledge.radius'
         }
     ];
 
@@ -210,15 +256,19 @@ const GravitySlingshot = (() => {
         const retryBtn = document.getElementById('slingshotRetryBtn');
         if (retryBtn) retryBtn.addEventListener('click', retryLevel);
 
-        const startBtn = document.getElementById('slingshotStartBtn');
-        if (startBtn) {
-            startBtn.addEventListener('click', () => {
+        const quickRetryBtn = document.getElementById('slingshotQuickRetryBtn');
+        if (quickRetryBtn) quickRetryBtn.addEventListener('click', retryLevel);
+
+        const levelBtns = document.querySelectorAll('.slingshot-level-btn');
+        levelBtns.forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const level = parseInt(e.target.dataset.level, 10);
                 GameAudio.playClick();
                 document.getElementById('slingshotStartOverlay').style.display = 'none';
                 running = true;
-                loadLevel(0); // 确保从第一关开始
+                loadLevel(level);
             });
-        }
+        });
 
         const backFromStartBtn = document.getElementById('slingshotBackFromStartBtn');
         if (backFromStartBtn) {
@@ -253,7 +303,7 @@ const GravitySlingshot = (() => {
         init();
         resizeCanvas();
         generateStars();
-        
+
         // 显示开始卡片，并暂停游戏逻辑
         const startOverlay = document.getElementById('slingshotStartOverlay');
         if (startOverlay) startOverlay.style.display = 'flex';
@@ -316,7 +366,7 @@ const GravitySlingshot = (() => {
     function nextLevel() {
         GameAudio.playClick();
         if (elWinOverlay) elWinOverlay.style.display = 'none';
-        
+
         if (currentLevel >= levels.length - 1) {
             showCompleteOverlay();
         } else {

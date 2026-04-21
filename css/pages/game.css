@@ -176,7 +176,8 @@ body:not(.dark-mode) .game-page-view {
     gap: 12px;
 }
 
-.game-back-btn {
+.game-back-btn,
+.game-header-btn {
     display: flex;
     align-items: center;
     gap: 6px;
@@ -184,7 +185,8 @@ body:not(.dark-mode) .game-page-view {
     padding: 6px 12px !important;
 }
 
-.game-back-btn svg {
+.game-back-btn svg,
+.game-header-btn svg {
     flex-shrink: 0;
 }
 
@@ -311,6 +313,29 @@ body:not(.dark-mode) .game-page-view {
 
 .game-overlay-buttons .btn {
     min-width: 120px;
+}
+
+.level-select-container {
+    margin-top: 15px;
+}
+
+.level-select-title {
+    margin-bottom: 10px;
+    font-size: 0.9rem;
+    color: white;
+    text-align: left;
+}
+
+.level-select-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+}
+
+.level-btn {
+    padding: 8px;
+    min-width: auto;
+    font-size: 1rem;
 }
 
 /* ===== 知识提示（DOM备用，主要使用Canvas内绘制）===== */
