@@ -30,6 +30,7 @@ body.dark-mode .learn-hero {
 
 .learn-breadcrumb {
     display: inline-flex;
+    transform: translateY(-20px);
     align-items: center;
     gap: 8px;
     margin-bottom: 14px;

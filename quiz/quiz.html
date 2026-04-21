@@ -76,20 +76,13 @@
                             aria-expanded="false"
                             aria-controls="navContactSelectOptions"
                         >
-                            <span data-i18n="settings.about">About</span>
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                height="1em"
-                                viewBox="0 0 512 512"
-                                class="arrow"
-                                aria-hidden="true"
-                            >
-                                <path
-                                    d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z"
-                                ></path>
+                            <img src="../assets/images/homepage/设置.svg" alt="Settings" class="settings-trigger-icon" />
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="settings-trigger-arrow" aria-hidden="true">
+                                <path d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z"></path>
                             </svg>
                         </button>
                         <div class="options" id="navContactSelectOptions">
+                            <a href="javascript:void(0)" class="option option-settings" data-i18n="settings.settings">Settings</a>
                             <a href="../contact/contact.html" class="option" data-i18n="settings.contact">Contact Us</a>
                             <a href="../premium/premium.html" class="option option-support" data-i18n="settings.support">Support Us</a>
                         </div>
@@ -99,18 +92,22 @@
         </div>
     </header>
 
+    <section class="page-breadcrumb-row">
+        <div class="container">
+            <nav class="learn-breadcrumb" aria-label="Breadcrumb">
+                <a href="../index.html#home" data-i18n="nav.home">Home</a>
+                <span class="learn-breadcrumb-sep" aria-hidden="true">&gt;</span>
+                <a href="quiz-levels.html" data-i18n="nav.quiz">Quiz</a>
+                <span class="learn-breadcrumb-sep" aria-hidden="true">&gt;</span>
+                <span id="breadcrumbLevel">Level 1</span>
+            </nav>
+        </div>
+    </section>
+
     <main class="page-content">
         <div class="container">
             <div class="quiz-dashboard">
                 <div class="quiz-dashboard-main">
-                    <nav class="quiz-breadcrumbs" aria-label="Breadcrumb">
-                        <a href="../index.html#home" data-i18n="bcHome">Home</a>
-                        <span class="quiz-bc-sep">&gt;</span>
-                        <a href="quiz.html" data-i18n="bcQuiz">Quiz</a>
-                        <span class="quiz-bc-sep">&gt;</span>
-                        <span id="breadcrumbLevel" data-i18n="bcLevel">Level 1</span>
-                    </nav>
-
                     <section class="card quiz-container">
                         <span class="quiz-card-label" id="toggleSidebarBtn" data-i18n="sidebarToggleLabel">question</span>
                         

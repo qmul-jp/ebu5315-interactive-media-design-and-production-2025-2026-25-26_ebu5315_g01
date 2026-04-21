@@ -1,7 +1,11 @@
 /* Premium 页面 */
 .premium-page-content {
-    padding-top: 48px;
+    padding-top: 0px;
     padding-bottom: 98px;
+}
+
+.page-breadcrumb-row {
+    background: #f8fafc;
 }
 
 /* 与 home/game/quiz 导航文字保持一致，避免页面额外样式覆盖 */
@@ -18,7 +22,7 @@
 }
 
 .premium-hero {
-    padding: 30px 0 16px;
+    padding: 0 0 16px;
 }
 
 .premium-eyebrow {

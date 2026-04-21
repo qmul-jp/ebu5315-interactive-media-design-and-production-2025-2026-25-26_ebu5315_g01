@@ -2,8 +2,10 @@
  * 全局初始化（各页共用）
  */
 document.addEventListener('DOMContentLoaded', () => {
+    initGlobalFontScale();
     initSettingsMenu();
     initClickSelectMenu();
+    initSettingsModal();
     initTheme();
     initLangToggle();
     initFontSize();

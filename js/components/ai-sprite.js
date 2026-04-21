@@ -1,6 +1,17 @@
 (function initSharedAiSprite() {
     const widget = document.getElementById('aiSpriteWidget');
     if (!widget) return;
+    const SPRITE_ENABLED_KEY = 'circlelearnSpriteEnabledV1';
+    const spriteEnabled = localStorage.getItem(SPRITE_ENABLED_KEY) !== '0';
+    if (!spriteEnabled) {
+        window.__circlelearnSpriteRuntimeActive = false;
+        widget.setAttribute('hidden', '');
+        widget.style.display = 'none';
+        return;
+    }
+    window.__circlelearnSpriteRuntimeActive = true;
+    const forcePeekFromSettings = window.__circlelearnSpriteEnableFromSettings === true;
+    window.__circlelearnSpriteEnableFromSettings = false;
     const navEntry = performance.getEntriesByType('navigation')[0];
     const isReloadNav =
         (navEntry && navEntry.type === 'reload') ||
@@ -435,8 +446,15 @@
     if (isReloadNav) {
         clearPersistedState();
     }
-    const restored = !isReloadNav && restoreFromSession();
-    if (!restored) {
+    const restored = !isReloadNav && !forcePeekFromSettings && restoreFromSession();
+    if (forcePeekFromSettings) {
+        widget.style.removeProperty('display');
+        widget.removeAttribute('hidden');
+        widget.classList.remove(...MANAGED_CLASSES);
+        // 设置启用时只播放探头动画，不显示欢迎文案气泡。
+        widget.classList.add('is-visible', 'is-tuck-offscreen', 'is-welcome-done');
+        schedulePeekFromOffscreen(80);
+    } else if (!restored) {
         const root = document.documentElement;
         if (root.classList.contains('hero-intro-play')) {
             window.addEventListener('circlelearn:heroIntroComplete', show, { once: true });
