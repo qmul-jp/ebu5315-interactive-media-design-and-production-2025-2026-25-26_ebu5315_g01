@@ -9,13 +9,12 @@
     const QuizState = {
         currentLevel: 1,
         currentQuestionId: null,
-        userAnswers: {}, // { questionId: { selected: index, correct: boolean } }
+        userAnswers: {}, // { level: { questionId: { selected: index, correct: boolean } } }
         score: 0,
         correctInARow: 0,
         answeredCount: 0,
         totalCorrect: 0,
         wrongCategories: {},
-        usedIds: new Set(),
 
         // 加载状态
         load() {
@@ -25,8 +24,8 @@
                     const parsed = JSON.parse(saved);
                     this.currentLevel = parsed.currentLevel || 1;
                     this.correctInARow = parsed.correctInARow || 0;
-                    this.usedIds = new Set(parsed.usedIds || []);
                     this.wrongCategories = parsed.wrongCategories || {};
+                    this.userAnswers = parsed.userAnswers || {};
                 }
             } catch (e) {
                 console.error('Failed to load game state:', e);
@@ -44,8 +43,8 @@
                 const stateToSave = {
                     currentLevel: this.currentLevel,
                     correctInARow: this.correctInARow,
-                    usedIds: Array.from(this.usedIds),
-                    wrongCategories: this.wrongCategories
+                    wrongCategories: this.wrongCategories,
+                    userAnswers: this.userAnswers
                 };
                 localStorage.setItem('quizGameState', JSON.stringify(stateToSave));
                 localStorage.setItem('quizAnsweredCount', this.answeredCount.toString());
@@ -69,12 +68,19 @@
 
         // 获取题目状态
         getQuestionStatus(questionId) {
-            return this.userAnswers[questionId] || { selected: null, correct: null };
+            if (!this.userAnswers[this.currentLevel]) {
+                return { selected: null, correct: null };
+            }
+            return this.userAnswers[this.currentLevel][questionId] || { selected: null, correct: null };
         },
 
         // 记录答案
         recordAnswer(questionId, selectedIndex, correct) {
-            this.userAnswers[questionId] = { selected: selectedIndex, correct };
+            // 确保当前等级的作答记录对象存在
+            if (!this.userAnswers[this.currentLevel]) {
+                this.userAnswers[this.currentLevel] = {};
+            }
+            this.userAnswers[this.currentLevel][questionId] = { selected: selectedIndex, correct };
             this.answeredCount++;
             
             const question = window.getQuestionById(questionId);
@@ -132,8 +138,10 @@
             const level = parseInt(levelParam);
             if (level >= 1 && level <= 3) {
                 QuizState.currentLevel = level;
-                QuizState.userAnswers = {};
-                QuizState.usedIds.clear();
+                // 确保当前等级的作答记录对象存在
+                if (!QuizState.userAnswers[QuizState.currentLevel]) {
+                    QuizState.userAnswers[QuizState.currentLevel] = {};
+                }
                 QuizState.correctInARow = 0;
                 QuizState.save();
             }
@@ -141,28 +149,32 @@
     }
     handleUrlParams();
 
-    // 智能抽题逻辑 (AI: Avoid Repetitions)
+    // 顺序抽题逻辑
     function getNextSmartQuestion() {
-        // 筛选：符合当前等级 且 没做过
+        // 确保当前等级的作答记录对象存在
+        if (!QuizState.userAnswers[QuizState.currentLevel]) {
+            QuizState.userAnswers[QuizState.currentLevel] = {};
+        }
+        
+        // 筛选：符合当前等级 且 没做过（已回答的题目）
         const pool = QuizState.getCurrentLevelQuestions().filter((q) =>
-            !QuizState.usedIds.has(q.id)
+            !QuizState.userAnswers[QuizState.currentLevel][q.id]
         );
 
         // 如果当前等级题抽完了
         if (pool.length === 0) {
             if (QuizState.currentLevel < 3) {
-                // 自动提升等级 (AI: Progress Levels)
+                // 自动提升等级
                 QuizState.currentLevel++;
                 return getNextSmartQuestion();
             }
-            // 所有题都做完了，重置已做题目记录
-            QuizState.usedIds.clear();
+            // 所有题都做完了，重置当前等级的作答记录
+            QuizState.userAnswers[QuizState.currentLevel] = {};
             return getNextSmartQuestion();
         }
 
-        const randomIndex = Math.floor(Math.random() * pool.length);
-        const selected = pool[randomIndex];
-        QuizState.usedIds.add(selected.id); // 记录已使用
+        // 按顺序选择第一个未做过的题目
+        const selected = pool[0];
         QuizState.currentQuestionId = selected.id;
         return selected;
     }
@@ -483,8 +495,10 @@
     function changeLevel(level) {
         if (level < 1 || level > 3) return;
         QuizState.currentLevel = level;
-        QuizState.userAnswers = {};
-        QuizState.usedIds.clear();
+        // 确保当前等级的作答记录对象存在
+        if (!QuizState.userAnswers[QuizState.currentLevel]) {
+            QuizState.userAnswers[QuizState.currentLevel] = {};
+        }
         QuizState.correctInARow = 0;
         QuizState.save();
         renderQuestion();
