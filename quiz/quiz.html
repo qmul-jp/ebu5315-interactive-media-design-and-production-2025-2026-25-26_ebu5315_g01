@@ -285,7 +285,7 @@
         });
 
         function hideSidebar() {
-            const sidebar = document.getElementById('sidebar');
+            const sidebar = document.getElementById('quiz-sidebar');
             if (sidebar) sidebar.classList.remove('is-open');
         }
 
@@ -298,20 +298,12 @@
             applyI18n();
 
             const toggleBtn = document.getElementById('toggleSidebarBtn');
-            const sidebar = document.getElementById('sidebar');
+            const sidebar = document.getElementById('quiz-sidebar');
             if (toggleBtn && sidebar) {
                 toggleBtn.addEventListener('click', () => sidebar.classList.toggle('is-open'));
             }
 
-            let time = 9 * 60 + 45;
-            const timerEl = document.getElementById('timer');
-            setInterval(() => {
-                if (time <= 0) return;
-                time--;
-                const m = Math.floor(time / 60).toString().padStart(2, '0');
-                const s = (time % 60).toString().padStart(2, '0');
-                if (timerEl) timerEl.textContent = `${m}:${s}`;
-            }, 1000);
+
         });
     </script>
 </body>

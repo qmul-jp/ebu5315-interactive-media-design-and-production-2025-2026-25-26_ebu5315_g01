@@ -177,27 +177,6 @@
     function updateUI() {
         if (!root) return;
 
-        const progressBarEl = root.querySelector('#levelProgressBar');
-        const weakTagEl = root.querySelector('#weakTags');
-        const scoreEl = root.querySelector('#currentScore');
-
-        if (progressBarEl) {
-            const pct = Math.min(100, Math.round((QuizState.correctInARow / 3) * 100));
-            progressBarEl.style.width = `${pct}%`;
-        }
-        if (scoreEl) {
-            scoreEl.textContent = QuizState.score.toString();
-        }
-        if (weakTagEl) {
-            const sortedWeakness = Object.entries(QuizState.wrongCategories)
-                .sort((a, b) => b[1] - a[1])
-                .slice(0, 3)
-                .map(([name, cnt]) => `${name}(${cnt})`);
-            weakTagEl.textContent = sortedWeakness.length
-                ? sortedWeakness.join(' / ')
-                : 'None';
-        }
-
         // 更新面包屑等级显示
         const breadcrumbLevel = document.getElementById('breadcrumbLevel');
         if (breadcrumbLevel) {
@@ -210,25 +189,6 @@
         const levelDisplay = document.getElementById('levelDisplay');
         if (levelDisplay) {
             levelDisplay.textContent = '';
-        }
-
-        // 更新进度条
-        updateProgressBar();
-    }
-
-    // 更新进度条
-    function updateProgressBar() {
-        const progress = QuizState.getProgress();
-        const progressBar = document.getElementById('quizProgressBar');
-        const progressText = document.getElementById('quizProgressText');
-
-        if (progressBar) {
-            progressBar.style.width = `${progress.percentage}%`;
-        }
-        if (progressText) {
-            const lang = getCurrentLang();
-            const progressLabel = lang === 'zh' ? '进度：' : 'Progress: ';
-            progressText.textContent = `${progressLabel} ${progress.answered}/${progress.total} (${progress.percentage}%)`;
         }
     }
 
@@ -247,7 +207,7 @@
             sidebarTitle.textContent = titleText;
         }
 
-        // 清空侧边栏内容
+        // 清空侧边栏内容（保留标题）
         const existingNavigator = sidebar.querySelector('.quiz-navigator');
         if (existingNavigator) {
             existingNavigator.remove();
@@ -313,7 +273,9 @@
 
         const title = document.createElement('p');
         title.className = 'quiz-question';
-        title.textContent = `${q.id}. ${q.question}`;
+        const lang = getCurrentLang();
+        const questionText = lang === 'zh' && q.question_zh ? q.question_zh : q.question;
+        title.textContent = `${q.id}. ${questionText}`;
 
         const statusCard = document.createElement('div');
         statusCard.style.marginBottom = '16px';
@@ -330,27 +292,110 @@
             statusCard.style.border = '1px solid #2E5A3D';
         }
         
-        const lang = getCurrentLang();
         const weakText = lang === 'zh' ? '薄弱知识点：' : 'Weak topics: ';
         const scoreText = lang === 'zh' ? '得分：' : 'Score: ';
 
+        // 定义所有题目类别
+        const categories = {
+            center_circumference: lang === 'zh' ? '圆心角与圆周角' : 'Center & Circumference',
+            semicircle: lang === 'zh' ? '半圆角' : 'Semicircle',
+            same_segment: lang === 'zh' ? '同弓形角' : 'Same Segment',
+            cyclic_quad: lang === 'zh' ? '圆内接四边形' : 'Cyclic Quadrilateral',
+            tangent_radius: lang === 'zh' ? '切线与半径' : 'Tangent & Radius',
+            tangents_point: lang === 'zh' ? '同点切线' : 'Tangents from Point',
+            alternate_segment: lang === 'zh' ? '弦切角' : 'Alternate Segment',
+            chord_bisector: lang === 'zh' ? '弦的垂直平分线' : 'Chord Bisector',
+            isosceles_triangle: lang === 'zh' ? '等腰三角形' : 'Isosceles Triangle',
+            combination: lang === 'zh' ? '定理组合' : 'Combination',
+            complex_cyclic: lang === 'zh' ? '复杂圆内接四边形' : 'Complex Cyclic',
+            tangent_logic: lang === 'zh' ? '切线逻辑' : 'Tangent Logic',
+            arc_logic: lang === 'zh' ? '弧长逻辑' : 'Arc Logic',
+            ultimate_challenge: lang === 'zh' ? '终极挑战' : 'Ultimate Challenge'
+        };
+        
+        // 获取当前题目的类别
+        const currentCategory = q.category || 'general';
+        const categoryName = categories[currentCategory] || currentCategory;
+        
         statusCard.innerHTML = `
-            <div style="display:flex;gap:16px;flex-wrap:wrap;align-items:center;justify-content:space-between;margin-bottom:8px;">
-                <span><strong>${scoreText}</strong> <span id="currentScore">0</span></span>
-            </div>
-            <div style="height:8px;background:var(--gray-200);border-radius:999px;overflow:hidden;margin-bottom:8px;">
-                <div id="levelProgressBar" style="width:0%;height:100%;background:var(--primary);transition:width .25s ease;"></div>
-            </div>
-            <div style="height:8px;background:var(--gray-200);border-radius:999px;overflow:hidden;margin-bottom:8px;">
-                <div id="quizProgressBar" style="width:0%;height:100%;background:var(--secondary);transition:width .25s ease;"></div>
-            </div>
-            <div style="display:flex;justify-content:space-between;align-items:center;">
-                <div><strong>${weakText}</strong> <span id="weakTags">None</span></div>
-                <div id="quizProgressText" style="font-size:0.875rem;color:var(--text-muted);"></div>
+            <div style="margin-bottom:12px;">
+                <strong>${lang === 'zh' ? '知识点：' : 'Topic: '}</strong>
+                <span>${categoryName}</span>
             </div>
         `;
 
         root.appendChild(statusCard);
+        
+        // 更新AI提示
+        const hintContent = document.getElementById('hintContent');
+        if (hintContent) {
+            // 根据题目类别生成对应的提示
+            const hints = {
+                center_circumference: {
+                    en: "Remember the relationship between the angle at the center and the angle at the circumference subtended by the same arc.",
+                    zh: "记住同圆弧所对应的圆心角与圆周角之间的关系。"
+                },
+                semicircle: {
+                    en: "Any angle inscribed in a semicircle is a right angle (90°).",
+                    zh: "半圆所对的圆周角恒为直角（90°）。"
+                },
+                same_segment: {
+                    en: "Angles subtended by the same chord (or arc) at the circumference, on the same side of the chord, are equal.",
+                    zh: "同弦（或同弧）在圆周同侧所对的圆周角相等。"
+                },
+                cyclic_quad: {
+                    en: "Opposite angles of a cyclic quadrilateral sum to 180°.",
+                    zh: "圆内接四边形的对角互补，和为 180°。"
+                },
+                tangent_radius: {
+                    en: "A radius drawn to the point of contact is perpendicular to the tangent: the angle between them is 90°.",
+                    zh: "过切点的半径与切线垂直，夹角为 90°。"
+                },
+                tangents_point: {
+                    en: "From an external point, the two tangent segments to a circle have equal lengths.",
+                    zh: "从圆外一点向圆引两条切线，两条切线段长度相等。"
+                },
+                alternate_segment: {
+                    en: "The angle between a tangent and a chord through the contact point equals the angle in the alternate segment.",
+                    zh: "切线与过切点弦所成的角，等于该弦在对侧弧所对的圆周角。"
+                },
+                chord_bisector: {
+                    en: "A diameter perpendicular to a chord bisects the chord and its arcs.",
+                    zh: "垂直于弦的直径平分这条弦，且平分弦所对的两条弧。"
+                },
+                isosceles_triangle: {
+                    en: "In an isosceles triangle, the angles opposite equal sides are equal.",
+                    zh: "在等腰三角形中，等边对等角。"
+                },
+                combination: {
+                    en: "Combine multiple circle theorems to solve this problem.",
+                    zh: "结合多个圆定理来解决这个问题。"
+                },
+                complex_cyclic: {
+                    en: "Look for cyclic quadrilaterals and their properties in this complex diagram.",
+                    zh: "在这个复杂图形中寻找圆内接四边形及其性质。"
+                },
+                tangent_logic: {
+                    en: "Use tangent properties and logical reasoning to solve this problem.",
+                    zh: "利用切线性质和逻辑推理来解决这个问题。"
+                },
+                arc_logic: {
+                    en: "Remember the relationship between arcs, angles, and chord lengths.",
+                    zh: "记住弧长、角度和弦长之间的关系。"
+                },
+                ultimate_challenge: {
+                    en: "This is a challenging problem that requires applying multiple geometry concepts.",
+                    zh: "这是一个具有挑战性的问题，需要应用多个几何概念。"
+                }
+            };
+            
+            const currentHint = hints[currentCategory] || {
+                en: "Remember the circle theorems to solve this problem.",
+                zh: "记住圆定理来解决这个问题。"
+            };
+            hintContent.textContent = currentHint[lang] || currentHint.en;
+        }
+        
         root.appendChild(title);
 
         const opts = document.createElement('div');
@@ -360,7 +405,8 @@
         feedback.className = 'quiz-feedback';
         feedback.id = 'quizFeedback';
 
-        q.options.forEach((text, i) => {
+        const options = lang === 'zh' && q.options_zh ? q.options_zh : q.options;
+        options.forEach((text, i) => {
             const b = document.createElement('button');
             b.type = 'button';
             b.className = 'quiz-option-btn';
@@ -379,9 +425,10 @@
                 
                 const correctText = lang === 'zh' ? '正确！' : 'Correct! ';
                 const wrongText = lang === 'zh' ? '不对哦。' : 'Not quite. ';
+                const explanationText = lang === 'zh' && q.explanation_zh ? q.explanation_zh : q.explanation;
                 feedback.textContent = correct
-                    ? `${correctText} ${q.explanation}`
-                    : `${wrongText} ${q.explanation}`;
+                    ? `${correctText} ${explanationText}`
+                    : `${wrongText} ${explanationText}`;
 
                 const oldNext = root.querySelector('#quizNextBtn');
                 if (oldNext) oldNext.remove();
@@ -427,6 +474,9 @@
             // 如果没有当前题目，渲染新题目
             renderQuestion();
         }
+        
+        // 确保侧边栏导航网格也被更新
+        renderSidebarNavigator();
     });
 
     // 切换等级函数
@@ -442,5 +492,9 @@
     window.changeLevel = changeLevel;
 
     // 初始化渲染
-    renderQuestion();
+    document.addEventListener('DOMContentLoaded', () => {
+        renderQuestion();
+        // 确保侧边栏导航网格在页面加载时显示
+        renderSidebarNavigator();
+    });
 })();
