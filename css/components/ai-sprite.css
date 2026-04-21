@@ -133,6 +133,7 @@
 }
 
 .ai-sprite-widget.is-peek:not(.is-peek-popout) .ai-sprite-stack,
+.ai-sprite-widget.is-peek-popout .ai-sprite-stack,
 .ai-sprite-widget.is-smile-rest .ai-sprite-stack {
     pointer-events: auto;
     cursor: pointer;

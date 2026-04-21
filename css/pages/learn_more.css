@@ -855,7 +855,7 @@ body.dark-mode .learn-theorem-visual {
 
 .learn-back-to-top {
     position: fixed;
-    top: 96px;
+    bottom: 50px;
     right: 20px;
     z-index: 60;
     display: inline-flex;

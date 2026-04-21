@@ -1,21 +1,24 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Choose Level - Geometry Challenger</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../css/reset.css">
-    <link rel="stylesheet" href="../css/variables.css">
-    <link rel="stylesheet" href="../css/base.css">
-    <link rel="stylesheet" href="../css/layout.css">
-    <link rel="stylesheet" href="../css/components/buttons.css">
-    <link rel="stylesheet" href="../css/components/cards.css">
-    <link rel="stylesheet" href="../css/components/ai-sprite.css">
-    <link rel="stylesheet" href="../css/pages/quiz.css">
-    <link rel="stylesheet" href="../css/pages/quiz.css">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Premium Plans - Geometry Challenger</title>
+
+    <link rel="stylesheet" href="../css/reset.css" />
+    <link rel="stylesheet" href="../css/variables.css" />
+    <link rel="stylesheet" href="../css/base.css" />
+    <link rel="stylesheet" href="../css/layout.css" />
+    <link rel="stylesheet" href="../css/components/buttons.css" />
+    <link rel="stylesheet" href="../css/components/cards.css" />
+    <link rel="stylesheet" href="../css/components/forms.css" />
+    <link rel="stylesheet" href="../css/components/widgets.css" />
+    <link rel="stylesheet" href="../css/components/ai-sprite.css" />
+    <link rel="stylesheet" href="../css/pages/premium.css" />
 </head>
-<body class="quiz-page quiz-levels-page">
+
+<body>
     <script>
         (function () {
             try {
@@ -39,7 +42,7 @@
                 <div class="nav-links">
                     <a href="../index.html#home" class="nav-link" data-i18n="nav.home">Home</a>
                     <a href="../game/game.html" class="nav-link" data-i18n="nav.game">Game</a>
-                    <a href="quiz-levels.html" class="nav-link active" data-i18n="nav.quiz">Quiz</a>
+                    <a href="../quiz/quiz-levels.html" class="nav-link" data-i18n="nav.quiz">Quiz</a>
                 </div>
 
                 <div class="nav-actions nav-settings-inline">
@@ -54,7 +57,6 @@
                         <div class="glass-glider"></div>
                     </div>
                       
-                    <!-- From Uiverse.io by Galahhad --> 
                     <div>
                         <label class="switch" for="switch">
                             <input id="switch" type="checkbox" class="circle" />
@@ -90,7 +92,7 @@
                         </button>
                         <div class="options" id="navContactSelectOptions">
                             <a href="../contact/contact.html" class="option" data-i18n="settings.contact">Contact Us</a>
-                            <a href="../premium/premium.html" class="option option-support" data-i18n="settings.support">Support Us</a>
+                            <a href="premium.html" class="option option-support" data-i18n="settings.support">Support Us</a>
                         </div>
                     </div>
                 </div>
@@ -98,54 +100,74 @@
         </div>
     </header>
 
-
-    <main class="main">
-        <div class="container">
-            <div class="card quiz-container" style="text-align: center;">
-                <div class="quiz-card-header">
-                    <h1 class="quiz-title" data-i18n="quiz.chooseLevel">Choose Your Level</h1>
-                    <p style="color: var(--text-muted); margin-bottom: 32px;" data-i18n="quiz.levelDescription">Select a difficulty level to start your geometry challenge</p>
+    <main class="page-content premium-page-content">
+        <section class="premium-hero">
+            <div class="container">
+                <p class="premium-eyebrow">CircleLearn Premium</p>
+                <h1>选择你的充值套餐，解锁更多游戏皮肤</h1>
+                <p class="premium-hero-subtitle">
+                    充值后可在 Game 页面使用更多主题皮肤与视觉特效。购买后立即生效，支持随时续费。
+                </p>
+                <div class="premium-member-status" id="premiumMemberStatus">
+                    当前状态：未开通
                 </div>
+                <button type="button" class="premium-debug-reset-btn" id="premiumDebugResetBtn">
+                    调试：恢复为未开通
+                </button>
+            </div>
+        </section>
 
-                <div class="level-cards-container">
-                    <!-- Level 1 Card -->
-                    <div class="level-card" onclick="window.location.href='quiz.html?level=1'">
-                        <h3 data-i18n="quiz.level1.title">Level 1</h3>
-                        <div class="level-difficulty difficulty-easy" data-i18n="quiz.level1.difficulty">Easy</div>
-                        <div class="level-info">
-                            <span data-i18n="quiz.level1.questions">15 Questions</span>
-                            <span data-i18n="quiz.level1.concepts">Basic Concepts</span>
-                        </div>
-                        <p data-i18n="quiz.level1.description">Perfect for beginners. Focuses on fundamental geometry concepts and simple calculations.</p>
-                        <button class="btn btn-primary" data-i18n="quiz.level1.start">Start Level 1</button>
-                    </div>
+        <section class="premium-plans">
+            <div class="container">
+                <div class="plan-grid">
+                    <article class="plan-card">
+                        <p class="plan-name">轻量体验</p>
+                        <h2>7 天</h2>
+                        <p class="plan-price">¥6.6</p>
+                        <ul>
+                            <li>立即解锁游戏高级皮肤</li>
+                            <li>适合短期冲刺练习</li>
+                            <li>可随时升级更长套餐</li>
+                        </ul>
+                        <button class="btn btn-premium plan-buy-btn" type="button" data-plan-id="7d"
+                            data-plan-name="7天体验" data-plan-days="7" data-plan-price="6.6">
+                            立即开通
+                        </button>
+                    </article>
 
-                    <!-- Level 2 Card -->
-                    <div class="level-card" onclick="window.location.href='quiz.html?level=2'">
-                        <h3 data-i18n="quiz.level2.title">Level 2</h3>
-                        <div class="level-difficulty difficulty-medium" data-i18n="quiz.level2.difficulty">Medium</div>
-                        <div class="level-info">
-                            <span data-i18n="quiz.level2.questions">15 Questions</span>
-                            <span data-i18n="quiz.level2.concepts">Intermediate</span>
-                        </div>
-                        <p data-i18n="quiz.level2.description">Challenging for those with basic knowledge. Includes more complex problems and reasoning.</p>
-                        <button class="btn btn-primary" data-i18n="quiz.level2.start">Start Level 2</button>
-                    </div>
+                    <article class="plan-card plan-card--featured">
+                        <img class="plan-card-flame" src="../assets/images/premium/火苗.png" alt="" aria-hidden="true" />
+                        <p class="plan-name">热门推荐</p>
+                        <h2>1 个月</h2>
+                        <p class="plan-price">¥20</p>
+                        <ul>
+                            <li>畅玩全部高级皮肤</li>
+                            <li>长期练习更划算</li>
+                            <li>优先体验后续视觉主题</li>
+                        </ul>
+                        <button class="btn btn-premium plan-buy-btn" type="button" data-plan-id="30d"
+                            data-plan-name="1个月会员" data-plan-days="30" data-plan-price="20">
+                            立即开通
+                        </button>
+                    </article>
 
-                    <!-- Level 3 Card -->
-                    <div class="level-card" onclick="window.location.href='quiz.html?level=3'">
-                        <h3 data-i18n="quiz.level3.title">Level 3</h3>
-                        <div class="level-difficulty difficulty-hard" data-i18n="quiz.level3.difficulty">Hard</div>
-                        <div class="level-info">
-                            <span data-i18n="quiz.level3.questions">10 Questions</span>
-                            <span data-i18n="quiz.level3.concepts">Advanced</span>
-                        </div>
-                        <p data-i18n="quiz.level3.description">For geometry experts. Features complex problems requiring advanced reasoning and calculations.</p>
-                        <button class="btn btn-primary" data-i18n="quiz.level3.start">Start Level 3</button>
-                    </div>
+                    <article class="plan-card">
+                        <p class="plan-name">年度高性价比</p>
+                        <h2>1 年</h2>
+                        <p class="plan-price">¥180</p>
+                        <ul>
+                            <li>全年持续高级权益</li>
+                            <li>平均每月仅 ¥15</li>
+                            <li>适合长期备考和刷题</li>
+                        </ul>
+                        <button class="btn btn-premium plan-buy-btn" type="button" data-plan-id="365d"
+                            data-plan-name="1年会员" data-plan-days="365" data-plan-price="180">
+                            立即开通
+                        </button>
+                    </article>
                 </div>
             </div>
-        </div>
+        </section>
     </main>
 
     <footer class="footer">
@@ -153,7 +175,7 @@
             <div class="footer-grid">
                 <div class="footer-brand">
                     <a href="../index.html#home" class="logo">
-                        <img src="../assets/images/homepage/icon.png" width="40px" height="40px"></img>
+                        <img src="../assets/images/homepage/icon.png" width="40" height="40" alt="CircleLearn logo" />
                         <span class="logo-text">GEOMETRY CHALLENGER</span>
                     </a>
                     <p class="footer-description">
@@ -163,9 +185,9 @@
                 <div class="footer-links-section">
                     <h4 class="footer-links-title">Quick Links</h4>
                     <ul class="footer-links">
-                        <li><a href="../index.html#home" data-i18n="nav.home">Home</a></li>
-                        <li><a href="../game/game.html" data-i18n="nav.game">Game</a></li>
-                        <li><a href="quiz-levels.html" data-i18n="nav.quiz">Quiz</a></li>
+                        <li><a href="../index.html#home">Home</a></li>
+                        <li><a href="../game/game.html">Game</a></li>
+                        <li><a href="../quiz/quiz-levels.html">Quiz</a></li>
                         <li><a href="../contact/contact.html">Contact</a></li>
                     </ul>
                 </div>
@@ -184,13 +206,8 @@
         </div>
     </footer>
 
-    <div
-        class="ai-sprite-widget"
-        id="aiSpriteWidget"
-        data-body-smile-tuck-src="../assets/images/global/笑容揣手.png"
-        hidden
-        aria-live="polite"
-    >
+    <div class="ai-sprite-widget" id="aiSpriteWidget" data-body-smile-tuck-src="../assets/images/global/笑容揣手.png"
+        hidden aria-live="polite">
         <div class="ai-sprite-widget__bubble">
             <p class="ai-sprite-widget__welcome" data-i18n="home.sprite.welcome">
                 Welcome to CircleLearn! Explore games, quizzes, and theorems below.
@@ -199,28 +216,22 @@
         <div class="ai-sprite-widget__sprite-stage">
             <div class="ai-sprite-widget__peek-wrap">
                 <div class="ai-sprite-stack">
-                    <img
-                        class="ai-sprite-widget__body"
-                        src="../assets/images/global/笑容精灵只有右手.png"
-                        alt=""
-                        decoding="async"
-                    />
+                    <img class="ai-sprite-widget__body" src="../assets/images/global/笑容精灵只有右手.png" alt=""
+                        decoding="async" />
                     <div class="ai-sprite-widget__arm-layer" aria-hidden="true">
-                        <img
-                            class="ai-sprite-widget__arm"
-                            src="../assets/images/global/左手.png"
-                            alt=""
-                            decoding="async"
-                        />
+                        <img class="ai-sprite-widget__arm" src="../assets/images/global/左手.png" alt=""
+                            decoding="async" />
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
+    <script src="../js/data/site-i18n.js"></script>
     <script src="../js/utils.js"></script>
     <script src="../js/main.js"></script>
-    <script src="../js/data/site-i18n.js"></script>
+    <script src="../js/pages/premium.js"></script>
     <script src="../js/components/ai-sprite.js"></script>
 </body>
+
 </html>

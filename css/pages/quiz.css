@@ -570,3 +570,122 @@ body.dark-mode .level-btn.active {
     border-color: var(--primary);
     color: white;
 }
+
+.level-cards-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 24px;
+    margin-top: 32px;
+}
+
+.level-card {
+    background: #ffffff;
+    border: 1px solid var(--gray-200);
+    border-radius: 16px;
+    padding: 24px;
+    text-align: center;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.level-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+}
+
+body.dark-mode .level-card {
+    background: #153A24;
+    border-color: #254A34;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.level-card h3 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 12px;
+}
+
+.level-card p {
+    color: var(--text-muted);
+    margin-bottom: 24px;
+}
+
+.level-card .level-difficulty {
+    display: inline-block;
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    margin-bottom: 20px;
+}
+
+.level-card .difficulty-easy {
+    background: #e2ebff;
+    color: #1d4ed8;
+}
+
+.level-card .difficulty-medium {
+    background: #D1FAE5;
+    color: #065F46;
+}
+
+.level-card .difficulty-hard {
+    background: #FEF3C7;
+    color: #92400E;
+}
+
+body.dark-mode .level-card .difficulty-easy {
+    background: #14532D;
+    color: #BBF7D0;
+}
+
+body.dark-mode .level-card .difficulty-medium {
+    background: #78350F;
+    color: #FDE68A;
+}
+
+body.dark-mode .level-card .difficulty-hard {
+    background: #7F1D1D;
+    color: #FECACA;
+}
+
+.level-card .level-info {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 24px;
+    font-size: 0.875rem;
+    color: var(--text-muted);
+}
+
+.level-card .btn {
+    width: 100%;
+}
+
+/* Quiz Levels 页面专用：容器和卡片拉高，并给底部留白 */
+.quiz-levels-page .main {
+    padding-top: 50px;
+    padding-bottom: 80px;
+}
+
+.quiz-levels-page .card.quiz-container {
+    min-height: 640px;
+    padding-bottom: 3rem;
+}
+
+.quiz-levels-page .level-cards-container {
+    align-items: stretch;
+    margin-bottom: 18px;
+}
+
+.quiz-levels-page .level-card {
+    min-height: 420px;
+    display: flex;
+    flex-direction: column;
+
+}
+
+.quiz-levels-page .level-card .btn {
+    margin-top: auto;
+}

@@ -10,7 +10,7 @@
 }
 
 body.dark-mode .header {
-    background-color: #0F2A17;
+    background-color: #3B3A3A;
     border-bottom-color: #1E3A27;
 }
 
@@ -65,6 +65,15 @@ body.dark-mode .header {
 .nav-link:hover,
 .nav-link.active {
     color: var(--primary);
+}
+
+body.dark-mode .nav-link {
+    color: #ffffff;
+}
+
+body.dark-mode .nav-link:hover,
+body.dark-mode .nav-link.active {
+    color: #7CC4FF;
 }
 
 .nav-actions {
@@ -215,7 +224,7 @@ body.dark-mode .nav-settings-inline .settings-item:hover {
 .theme-switch {
     --toggle-size: 10px;
     --container-width: 5.625em;
-    --container-height: 2.5em;
+    --container-height: 1.5em;
     --container-radius: 6.25em;
     --container-light-bg: #3D7EAE;
     --container-night-bg: #1D1F2C;
@@ -425,24 +434,25 @@ body.dark-mode .nav-settings-inline .settings-item:hover {
 
 .glass-glider {
     position: absolute;
-    top: 0;
-    bottom: 0;
-    width: calc(100% / 2);
-    border-radius: 0.75rem;
+    top: 2px;
+    bottom: 2px;
+    left: 2px;
+    width: calc(100% / 2 - 3px);
+    border-radius: 0.62rem;
     z-index: 1;
     transition: transform 0.5s cubic-bezier(0.37, 1.95, 0.66, 0.56), background 0.4s ease-in-out, box-shadow 0.4s ease-in-out;
 }
 
 #glass-lang-en:checked ~ .glass-glider {
     transform: translateX(0%);
-    background: linear-gradient(135deg, #ffd70055, #ffcc00);
-    box-shadow: 0 0 18px rgba(255, 215, 0, 0.5), 0 0 10px rgba(255, 235, 150, 0.4) inset;
+    background: linear-gradient(90deg, #2DD0D6 0%, #8EECEF 62%, #CFF9FB 100%);
+    box-shadow: none;
 }
 
 #glass-lang-zh:checked ~ .glass-glider {
-    transform: translateX(100%);
+    transform: translateX(calc(100% + 2px));
     background: linear-gradient(135deg, #d0e7ff55, #a0d8ff);
-    box-shadow: 0 0 18px rgba(160, 216, 255, 0.5), 0 0 10px rgba(200, 240, 255, 0.4) inset;
+    box-shadow: none;
 }
 
 body.dark-mode .glass-radio-group {
@@ -452,6 +462,127 @@ body.dark-mode .glass-radio-group {
 body.dark-mode .glass-radio-group label:hover,
 body.dark-mode .glass-radio-group input:checked + label {
     color: #ffffff;
+}
+
+/* 全站导航控件：明暗模式切换（新组件） */
+.switch {
+    --transition: 300ms;
+    --transition500: 500ms;
+    --color-dark: #0c0f14;
+    --color-darkGray: #21262e;
+    --color-gray: #52555a;
+    --color-offwhite: #cecece;
+    --shadow-color: var(--color-dark);
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 60px;
+    height: fit-content;
+    background-color: var(--color-dark);
+    border-radius: 24px;
+    padding: 3px;
+    transition: var(--transition500);
+    user-select: none;
+    cursor: pointer;
+    overflow: hidden;
+}
+
+.switch .svg {
+    transition: var(--transition);
+    position: absolute;
+    left: 5px;
+}
+
+.switch .moon {
+    width: 16px;
+    fill: var(--color-gray);
+    opacity: 1;
+}
+
+.switch .sun {
+    transform: translateY(-50%);
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    left: calc(100% - 19px);
+    top: 13px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    scale: 0.75;
+    opacity: 0;
+}
+
+.switch .sun .dot {
+    position: relative;
+    display: block;
+    width: 3px;
+    height: 3px;
+    border-radius: 50%;
+    background: white;
+    z-index: 1;
+    box-shadow: 11px 0px 0px var(--shadow-color),
+        10.3px 0px 0px var(--shadow-color), -11px 0px 0px var(--shadow-color),
+        -10.3px 0px 0px var(--shadow-color), 0px -11px 0px var(--shadow-color),
+        0px -10.3px 0px var(--shadow-color), 0px 11px 0px var(--shadow-color),
+        0px 10.3px 0px var(--shadow-color), 8px 8px 0px var(--shadow-color),
+        7.3px 7.3px 0px var(--shadow-color), 8px -8px 0px var(--shadow-color),
+        7.3px -7.3px 0px var(--shadow-color), -8px -8px 0px var(--shadow-color),
+        -7.3px -7.3px 0px var(--shadow-color), -8px 8px 0px var(--shadow-color),
+        -7.3px 7.3px 0px var(--shadow-color);
+}
+
+.switch .sun .dot::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: white;
+    border: 2px solid var(--color-dark);
+}
+
+.switch .circle {
+    appearance: none;
+    position: relative;
+    width: 21px;
+    height: 21px;
+    border-radius: 50%;
+    left: 0;
+    background-color: var(--color-darkGray);
+    border: 1px solid var(--color-darkGray);
+    transition: var(--transition500);
+    box-shadow: 1px 1px 20px 3px var(--color-darkGray);
+}
+
+.switch:has(.circle:checked) {
+    background: var(--color-offwhite);
+}
+
+.switch .circle:hover {
+    margin-left: 3px;
+}
+
+.switch .circle:checked:hover {
+    margin-left: -3px;
+}
+
+.switch .circle:checked {
+    left: calc(100% - 20px);
+    background: white;
+    border-color: white;
+    box-shadow: 1px 1px 30px 12px white;
+}
+
+.switch:has(.circle:checked) > .sun {
+    opacity: 1;
+}
+
+.switch:has(.circle:checked) > .moon {
+    opacity: 0;
 }
 
 /* 导航 About 下拉菜单（点击触发） */

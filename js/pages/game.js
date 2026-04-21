@@ -5,6 +5,87 @@
 (function () {
     'use strict';
 
+    const PREMIUM_STORAGE_KEY = 'circlelearnPremiumPlanV1';
+    const GAME_SKIN_STORAGE_KEY = 'circlelearnGameSkinV1';
+
+    function readPremiumPlan() {
+        try {
+            const raw = localStorage.getItem(PREMIUM_STORAGE_KEY);
+            if (!raw) return null;
+            const plan = JSON.parse(raw);
+            if (!plan || typeof plan !== 'object') return null;
+            if (typeof plan.expireAt === 'number' && Date.now() > plan.expireAt) {
+                localStorage.removeItem(PREMIUM_STORAGE_KEY);
+                return null;
+            }
+            return plan;
+        } catch (err) {
+            return null;
+        }
+    }
+
+    function formatPremiumRemaining(expireAt) {
+        if (!expireAt) return '长期有效';
+        const remainMs = Math.max(0, expireAt - Date.now());
+        const remainDays = Math.ceil(remainMs / (24 * 60 * 60 * 1000));
+        return `剩余 ${remainDays} 天`;
+    }
+
+    function applyMenuSkin(skinName) {
+        document.body.classList.remove(
+            'game-skin-aurora',
+            'game-skin-sunset',
+            'game-skin-neon'
+        );
+        if (skinName && skinName !== 'default') {
+            document.body.classList.add(`game-skin-${skinName}`);
+        }
+    }
+
+    function initPremiumSkins() {
+        const lab = document.getElementById('premiumSkinLab');
+        const statusEl = document.getElementById('premiumSkinStatus');
+        const unlockCta = document.getElementById('premiumUnlockCta');
+        const skinButtons = Array.from(document.querySelectorAll('.premium-skin-option'));
+        if (!lab || !statusEl || skinButtons.length === 0) return;
+
+        const plan = readPremiumPlan();
+        const hasPremium = Boolean(plan);
+        if (hasPremium) {
+            statusEl.textContent = `已开通：${plan.name}（${formatPremiumRemaining(plan.expireAt)}）`;
+            if (unlockCta) {
+                unlockCta.textContent = '会员已开通';
+                unlockCta.setAttribute('aria-disabled', 'true');
+                unlockCta.classList.add('is-disabled');
+            }
+        } else {
+            lab.classList.add('is-locked');
+            statusEl.textContent = '当前未开通：仅可使用 Default 皮肤';
+        }
+
+        let selectedSkin = localStorage.getItem(GAME_SKIN_STORAGE_KEY) || 'default';
+        const allowedPremiumSkins = new Set(['aurora', 'sunset', 'neon']);
+        if (!hasPremium && allowedPremiumSkins.has(selectedSkin)) {
+            selectedSkin = 'default';
+            localStorage.setItem(GAME_SKIN_STORAGE_KEY, selectedSkin);
+        }
+        applyMenuSkin(selectedSkin);
+
+        skinButtons.forEach((btn) => {
+            const skin = btn.getAttribute('data-skin') || 'default';
+            const isPremiumSkin = skin !== 'default';
+            if (isPremiumSkin && !hasPremium) btn.disabled = true;
+            if (skin === selectedSkin) btn.classList.add('is-active');
+            btn.addEventListener('click', () => {
+                if (isPremiumSkin && !hasPremium) return;
+                localStorage.setItem(GAME_SKIN_STORAGE_KEY, skin);
+                applyMenuSkin(skin);
+                skinButtons.forEach((item) => item.classList.remove('is-active'));
+                btn.classList.add('is-active');
+            });
+        });
+    }
+
     // ===== 视图管理 =====
     const views = {
         menu: document.querySelectorAll('#gameMenuHero, #gameMenuMain'),
@@ -363,6 +444,7 @@
         GameI18N.init();
         GameI18N.translatePage();
         initNavigation();
+        initPremiumSkins();
         initPreviewAnimations();
         showView('menu');
     });

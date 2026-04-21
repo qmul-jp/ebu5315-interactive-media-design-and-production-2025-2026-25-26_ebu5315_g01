@@ -217,7 +217,7 @@
             'footer.privacy': '隐私政策',
             'footer.terms': '服务条款',
             'footer.accessibility': '无障碍说明',
-            'footer.copy': '© 2026 CircleLearn. 保留所有权利。为全球学生用心打造。',
+            'footer.copy': '© 2026 GEOMETRY CHALLENGER. 保留所有权利。为全球学生用心打造。',
             'learn.breadcrumb.home': '首页',
             'learn.breadcrumb.current': '深入学习',
             'learn.hero.title': '清晰理解圆定理',

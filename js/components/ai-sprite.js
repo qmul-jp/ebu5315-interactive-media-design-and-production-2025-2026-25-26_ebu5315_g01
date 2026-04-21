@@ -1,6 +1,10 @@
 (function initSharedAiSprite() {
     const widget = document.getElementById('aiSpriteWidget');
     if (!widget) return;
+    const navEntry = performance.getEntriesByType('navigation')[0];
+    const isReloadNav =
+        (navEntry && navEntry.type === 'reload') ||
+        (!!performance.navigation && performance.navigation.type === 1);
 
     const SPRITE_STATE_KEY = 'circlelearnAiSpriteStateV1';
     const MANAGED_CLASSES = [
@@ -72,6 +76,12 @@
         } catch (e) {
             return null;
         }
+    }
+
+    function clearPersistedState() {
+        try {
+            window.sessionStorage.removeItem(SPRITE_STATE_KEY);
+        } catch (e) {}
     }
 
     function persistState() {
@@ -422,7 +432,10 @@
         }, ENTRANCE_MS);
     };
 
-    const restored = restoreFromSession();
+    if (isReloadNav) {
+        clearPersistedState();
+    }
+    const restored = !isReloadNav && restoreFromSession();
     if (!restored) {
         const root = document.documentElement;
         if (root.classList.contains('hero-intro-play')) {
@@ -540,6 +553,15 @@
                 widget.classList.contains('is-returning-peek-exit') ||
                 widget.classList.contains('is-returning-peek-tilt')
             ) {
+                return;
+            }
+            if (widget.classList.contains('is-peek-popout')) {
+                finalizePeekPopoutOnce();
+                requestAnimationFrame(() => {
+                    if (widget.classList.contains('is-smile-rest')) {
+                        startReturnToPeekFromSmileRest();
+                    }
+                });
                 return;
             }
             if (widget.classList.contains('is-smile-rest')) {

@@ -141,6 +141,148 @@ body.dark-mode .knowledge-tag {
     margin-top: auto;
 }
 
+/* ===== Premium 皮肤权益面板 ===== */
+.premium-skin-lab {
+    margin-top: 28px;
+    border: 1px solid rgba(37, 99, 235, 0.2);
+    border-radius: 18px;
+    padding: 20px;
+    background: linear-gradient(140deg, rgba(219, 234, 254, 0.45), rgba(255, 255, 255, 0.92));
+}
+
+.premium-skin-lab__header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 18px;
+    margin-bottom: 14px;
+}
+
+.premium-skin-lab__badge {
+    margin: 0 0 6px;
+    font-size: 0.76rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #2563EB;
+    font-weight: 700;
+}
+
+.premium-skin-lab h3 {
+    margin: 0 0 6px;
+    color: var(--text);
+}
+
+.premium-skin-lab p {
+    margin: 0;
+    color: var(--text-muted);
+}
+
+.premium-skin-lab .btn.is-disabled {
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+.premium-skin-grid {
+    display: grid;
+    gap: 10px;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+}
+
+.premium-skin-option {
+    border: 1px solid rgba(37, 99, 235, 0.2);
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.76);
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #1E293B;
+    transition: all 0.2s ease;
+}
+
+.premium-skin-option:hover {
+    border-color: rgba(37, 99, 235, 0.5);
+    transform: translateY(-2px);
+}
+
+.premium-skin-option.is-active {
+    border-color: #2563EB;
+    box-shadow: 0 8px 22px rgba(37, 99, 235, 0.2);
+}
+
+.premium-skin-option:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.premium-skin-chip {
+    width: 26px;
+    height: 26px;
+    border-radius: 8px;
+    display: inline-block;
+    border: 1px solid rgba(255, 255, 255, 0.45);
+}
+
+.premium-skin-chip--default {
+    background: linear-gradient(120deg, #2563EB, #60A5FA);
+}
+
+.premium-skin-chip--aurora {
+    background: linear-gradient(120deg, #059669, #22D3EE);
+}
+
+.premium-skin-chip--sunset {
+    background: linear-gradient(120deg, #EA580C, #F43F5E);
+}
+
+.premium-skin-chip--neon {
+    background: linear-gradient(120deg, #8B5CF6, #22C55E);
+}
+
+.premium-skin-lab.is-locked .premium-skin-option:not([data-skin='default']) {
+    opacity: 0.45;
+    pointer-events: none;
+}
+
+body.dark-mode .premium-skin-lab {
+    background: linear-gradient(140deg, rgba(30, 41, 59, 0.96), rgba(15, 23, 42, 0.98));
+    border-color: rgba(96, 165, 250, 0.3);
+}
+
+body.dark-mode .premium-skin-option {
+    background: rgba(30, 41, 59, 0.85);
+    color: #E2E8F0;
+}
+
+/* 游戏菜单主题色皮肤 */
+body.game-skin-aurora .game-card-tag {
+    color: #5EEAD4;
+    border-color: rgba(45, 212, 191, 0.4);
+}
+
+body.game-skin-sunset .game-card-tag {
+    color: #FDBA74;
+    border-color: rgba(249, 115, 22, 0.4);
+}
+
+body.game-skin-neon .game-card-tag {
+    color: #C4B5FD;
+    border-color: rgba(139, 92, 246, 0.5);
+}
+
+body.game-skin-aurora .game-card:hover {
+    box-shadow: 0 12px 40px rgba(16, 185, 129, 0.22);
+}
+
+body.game-skin-sunset .game-card:hover {
+    box-shadow: 0 12px 40px rgba(249, 115, 22, 0.24);
+}
+
+body.game-skin-neon .game-card:hover {
+    box-shadow: 0 12px 40px rgba(139, 92, 246, 0.26);
+}
+
 /* ===== 游戏页面视图（全屏游戏模式） ===== */
 .game-page-view {
     position: fixed;

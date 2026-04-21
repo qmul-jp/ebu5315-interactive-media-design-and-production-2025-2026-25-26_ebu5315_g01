@@ -18,8 +18,9 @@ function setSiteLang(nextLang) {
 function initTheme() {
     const body = document.body;
     const themeToggle = document.getElementById('menuThemeToggle');
-    const themeSwitchCheckbox = document.querySelector('.theme-switch__checkbox');
+    const themeSwitchCheckbox = document.querySelector('.switch .circle, .theme-switch__checkbox');
     const themeValue = document.getElementById('menuThemeValue');
+    const isNewSwitch = Boolean(themeSwitchCheckbox && themeSwitchCheckbox.classList.contains('circle'));
 
     const updateThemeText = () => {
         if (themeValue) {
@@ -36,7 +37,7 @@ function initTheme() {
         body.classList.toggle('dark-mode', isDark);
         localStorage.setItem('theme', isDark ? 'dark' : 'light');
         if (themeSwitchCheckbox) {
-            themeSwitchCheckbox.checked = isDark;
+            themeSwitchCheckbox.checked = isNewSwitch ? !isDark : isDark;
         }
         updateThemeText();
     };
@@ -54,7 +55,7 @@ function initTheme() {
 
     if (themeSwitchCheckbox) {
         themeSwitchCheckbox.addEventListener('change', () => {
-            applyTheme(themeSwitchCheckbox.checked);
+            applyTheme(isNewSwitch ? !themeSwitchCheckbox.checked : themeSwitchCheckbox.checked);
         });
     }
 }

@@ -1156,10 +1156,11 @@ body.dark-mode .premium-section {
   
   .glass-glider {
     position: absolute;
-    top: 0;
-    bottom: 0;
-    width: calc(100% / 2);
-    border-radius: 0.75rem;
+    top: 2px;
+    bottom: 2px;
+    left: 2px;
+    width: calc(100% / 2 - 3px);
+    border-radius: 0.62rem;
     z-index: 1;
     transition:
       transform 0.5s cubic-bezier(0.37, 1.95, 0.66, 0.56),
@@ -1170,19 +1171,15 @@ body.dark-mode .premium-section {
   /* English（左侧） */
   #glass-lang-en:checked ~ .glass-glider {
     transform: translateX(0%);
-    background: linear-gradient(135deg, #ffd70055, #ffcc00);
-    box-shadow:
-    0 0 18px rgba(255, 215, 0, 0.5),
-    0 0 10px rgba(255, 235, 150, 0.4) inset;
+    background: linear-gradient(90deg, #2DD0D6 0%, #8EECEF 62%, #f7f7f7 100%);
+    box-shadow: none;
   }
 
   /* 简体中文（右侧） */
   #glass-lang-zh:checked ~ .glass-glider {
-    transform: translateX(100%);
+    transform: translateX(calc(100% + 2px));
     background: linear-gradient(135deg, #d0e7ff55, #a0d8ff);
-    box-shadow:
-    0 0 18px rgba(160, 216, 255, 0.5),
-    0 0 10px rgba(200, 240, 255, 0.4) inset;
+    box-shadow: none;
   }
 
   body.dark-mode .glass-radio-group {
