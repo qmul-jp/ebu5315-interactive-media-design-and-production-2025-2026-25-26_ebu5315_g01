@@ -22,6 +22,7 @@ project/
 ├─ README.md
 ├─ Architecture_Guide_CN.md      # Architecture guide (Chinese)
 ├─ Architecture_Guide_EN.md      # This file (English)
+├─ I18N_Development_Standard.md  # Internationalization development standard
 │
 ├─ game/
 │  └─ game.html                  # Game module page
@@ -31,6 +32,9 @@ project/
 │
 ├─ contact/
 │  └─ contact.html               # Contact page
+│
+├─ learn_more/
+│  └─ learn_more.html            # Learning materials page
 │
 ├─ css/
 │  ├─ reset.css                  # Browser reset
@@ -46,7 +50,12 @@ project/
 │     ├─ home.css                # Homepage only
 │     ├─ game.css                # Game page only
 │     ├─ quiz.css                # Quiz page only (includes dashboard extras)
-│     └─ contact.css             # Contact page only
+│     ├─ contact.css             # Contact page only
+│     ├─ learn_more.css          # Learning materials page only
+│     ├─ pi-sniper.css           # Game sub-module styles
+│     ├─ gravity-slingshot.css   # Game sub-module styles
+│     ├─ angle-hunter.css        # Game sub-module styles
+│     └─ chord-breaker.css       # Game sub-module styles
 │
 ├─ js/
 │  ├─ main.js                    # Global init (settings menu, theme, language, etc.)
@@ -55,18 +64,29 @@ project/
 │  │  ├─ circle-rules.js         # Circle geometry rules data
 │  │  ├─ quiz-questions.js       # Quiz bank (used by quiz.js and related code)
 │  │  ├─ game-i18n.js            # Game copy / i18n data (when used)
-│  │  └─ game-audio.js           # Game audio mapping / config (when used)
+│  │  ├─ game-audio.js           # Game audio mapping / config (when used)
+│  │  ├─ learn-more-manifest.js  # Learning materials manifest
+│  │  └─ site-i18n.js            # Site internationalization data
 │  └─ pages/
 │     ├─ home.js                 # Homepage interactions
 │     ├─ game.js                 # Main game logic
 │     ├─ pi-sniper.js            # Game sub-module (used with game)
 │     ├─ gravity-slingshot.js    # Game sub-module (used with game)
+│     ├─ angle-hunter.js         # Game sub-module (used with game)
+│     ├─ chord-breaker.js        # Game sub-module (used with game)
 │     ├─ quiz.js                 # Quiz logic (renders when #quizRoot exists)
-│     └─ contact.js              # Contact form, etc.
+│     ├─ contact.js              # Contact form, etc.
+│     └─ learn_more.js           # Learning materials page logic
+│
+├─ scripts/
+│  └─ update-learn-more-manifest.mjs # Script to update learning materials manifest
 │
 └─ assets/
    └─ images/
-      └─ homepage/               # Images for homepage and content (theorems, decorations)
+      ├─ homepage/               # Images for homepage and content (theorems, decorations)
+      └─ learn_more/             # Images for learning materials page
+         ├─ 进阶/                # Advanced content images
+         └─ 更进阶/              # More advanced content images
       # videos/ and audio/ can be added as needed; images are the main asset type today
 ```
 
@@ -118,6 +138,7 @@ When adding questions, prefer editing **`js/data/quiz-questions.js`** and keep t
 | `game/game.html` | Game module |
 | `quiz/quiz.html` | Quiz module |
 | `contact/contact.html` | Contact page |
+| `learn_more/learn_more.html` | Learning materials page |
 
 Subpages use paths like `../css/...` and `../js/...`. From `quiz/`, link to the homepage with `../index.html` (and `#home` anchors if needed).
 
@@ -168,6 +189,11 @@ Reusable UI across pages.
 | `game.css`    | Game-specific styles |
 | `quiz.css`    | Quiz-specific styles |
 | `contact.css` | Contact page styles  |
+| `learn_more.css` | Learning materials page styles |
+| `pi-sniper.css` | Game sub-module styles |
+| `gravity-slingshot.css` | Game sub-module styles |
+| `angle-hunter.css` | Game sub-module styles |
+| `chord-breaker.css` | Game sub-module styles |
 
 👉 Rule: only styles unique to that page go here.
 
@@ -192,8 +218,11 @@ Reusable UI across pages.
 | `game.js`    | Main game logic                                 |
 | `pi-sniper.js` | Game sub-module                               |
 | `gravity-slingshot.js` | Game sub-module                               |
+| `angle-hunter.js` | Game sub-module                               |
+| `chord-breaker.js` | Game sub-module                               |
 | `quiz.js`    | Quiz logic (depends on `quiz-questions.js` and a mount point) |
 | `contact.js` | Form handling                                   |
+| `learn_more.js` | Learning materials page logic                 |
 
 👉 Each page manages its own logic; game scripts are loaded from `game.html` as needed.
 
@@ -207,6 +236,8 @@ Reusable UI across pages.
 | `quiz-questions.js` | Quiz question bank  |
 | `game-i18n.js`      | Game i18n / copy data |
 | `game-audio.js`     | Game audio mapping / config |
+| `learn-more-manifest.js` | Learning materials manifest |
+| `site-i18n.js`      | Site internationalization data |
 
 👉 Keep data separate from logic for easier updates.
 
@@ -217,6 +248,9 @@ Reusable UI across pages.
 | Path | Purpose |
 | ---- | ------- |
 | `assets/images/homepage/` | Images for the homepage and content (theorem diagrams, decorations) |
+| `assets/images/learn_more/` | Images for learning materials page |
+| `assets/images/learn_more/进阶/` | Advanced content images |
+| `assets/images/learn_more/更进阶/` | More advanced content images |
 | `assets/videos/`, `assets/audio/` | Optional; add when the project needs them |
 
 ---
@@ -251,6 +285,7 @@ Suggested division:
 | A        | Homepage (`index`) |
 | B        | Game |
 | C        | Quiz |
+| D        | Learning materials (`learn_more`) |
 
 Typical ownership:
 

@@ -121,13 +121,7 @@
                                 <div class="dot"></div>
                             </div>
 
-                            <div class="quiz-meta-row" style="margin-top: 1rem;">
-                                <span id="questionCounter" data-i18n="questionMeta">Question 1 of 10</span>
-                                <div class="quiz-timer">
-                                    <span data-i18n="timeLabel">Time Remaining:</span>
-                                    <span id="timer">09:45</span>
-                                </div>
-                            </div>
+
                         </div>
 
                         <div class="ai-hint-box" id="aiHintBox">
@@ -156,20 +150,10 @@
                     </section>
                 </div>
 
-                <aside class="quiz-sidebar-panel" id="sidebar">
+                <aside id="quiz-sidebar">
                     <div class="quiz-sidebar-header">
                         <h3 id="sidebarTitleDisplay" data-i18n="sidebarTitle">All Questions (Level 1)</h3>
-                        <button type="button" class="btn btn-outline quiz-sidebar-close" onclick="hideSidebar()" data-i18n="sidebarClose">🔒 Close</button>
                     </div>
-
-                    <div class="question-grid" id="questionGrid">
-                        <div class="grid-item current">
-                            <span class="q-num">1</span>
-                            <span class="q-status" data-i18n="sidebarStatusCurrent">Current</span>
-                        </div>
-                    </div>
-
-                    <button type="button" class="btn btn-primary-full" id="submitQuizBtn" data-i18n="submitBtn">Submit Quiz</button>
                 </aside>
             </div>
         </div>
@@ -258,6 +242,14 @@
     <script src="../js/data/quiz-questions.js"></script>
     <script src="../js/utils.js"></script>
     <script src="../js/main.js"></script>
+    <script>
+        // 检查是否有level参数，如果没有则重定向到quiz-levels.html
+        const urlParams = new URLSearchParams(window.location.search);
+        const levelParam = urlParams.get('level');
+        if (!levelParam) {
+            window.location.href = 'quiz-levels.html';
+        }
+    </script>
     <script src="../js/pages/quiz.js"></script>
     <script src="../js/components/ai-sprite.js"></script>
 
@@ -325,7 +317,7 @@
         });
 
         function hideSidebar() {
-            const sidebar = document.getElementById('sidebar');
+            const sidebar = document.getElementById('quiz-sidebar');
             if (sidebar) sidebar.classList.remove('is-open');
         }
 
@@ -338,20 +330,12 @@
             applyI18n();
 
             const toggleBtn = document.getElementById('toggleSidebarBtn');
-            const sidebar = document.getElementById('sidebar');
+            const sidebar = document.getElementById('quiz-sidebar');
             if (toggleBtn && sidebar) {
                 toggleBtn.addEventListener('click', () => sidebar.classList.toggle('is-open'));
             }
 
-            let time = 9 * 60 + 45;
-            const timerEl = document.getElementById('timer');
-            setInterval(() => {
-                if (time <= 0) return;
-                time--;
-                const m = Math.floor(time / 60).toString().padStart(2, '0');
-                const s = (time % 60).toString().padStart(2, '0');
-                if (timerEl) timerEl.textContent = `${m}:${s}`;
-            }, 1000);
+
         });
     </script>
 </body>
