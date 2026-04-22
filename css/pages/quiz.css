@@ -57,8 +57,8 @@ body.dark-mode .quiz-question {
 }
 
 body.dark-mode .quiz-option-btn {
-    background: #1E4A2D;
-    border-color: #2E5A3D;
+    background: #353E63;
+    border-color: #49527A;
     color: #FFFFFF;
 }
 
@@ -89,8 +89,8 @@ body.dark-mode .quiz-option-btn {
 }
 
 body.dark-mode .quiz-feedback.correct {
-    background: #14532D;
-    color: #BBF7D0;
+    background: #2E3657;
+    color: #DEE6FF;
 }
 
 body.dark-mode .quiz-feedback.wrong {
@@ -202,8 +202,8 @@ body.quiz-page.dark-mode {
 }
 
 body.dark-mode .card.quiz-container {
-    background: #153A24;
-    border-color: #254A34;
+    background: #1B2538;
+    border-color: #2A3A56;
     box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.35);
 }
 
@@ -259,7 +259,7 @@ body.dark-mode .quiz-meta-row {
 }
 
 body.dark-mode .ai-hint-box {
-    background: #255A37;
+    background: #353E63;
 }
 
 .ai-hint-box .hint-label {
@@ -302,7 +302,7 @@ body.dark-mode .ai-hint-box p {
 }
 
 body.dark-mode .geometry-canvas {
-    background: #255A37;
+    background: #353E63;
 }
 
 .geometry-canvas::before,
@@ -372,8 +372,8 @@ body.dark-mode .options-grid .quiz-option-btn.selected {
 }
 
 body.dark-mode .quiz-sidebar-panel {
-    background: #153A24;
-    border-color: #254A34;
+    background: #353E63;
+    border-color: #49527A;
 }
 
 .quiz-sidebar-panel.is-open {
@@ -411,8 +411,8 @@ body.dark-mode .quiz-sidebar-panel {
 }
 
 body.dark-mode #quiz-sidebar {
-    background: #153A24;
-    border-color: #254A34;
+    background: #353E63;
+    border-color: #49527A;
 }
 
 .quiz-navigator {
@@ -434,8 +434,8 @@ body.dark-mode #quiz-sidebar {
 }
 
 body.dark-mode .quiz-nav-item {
-    background: #255A37;
-    border-color: #356A47;
+    background: #353E63;
+    border-color: #4C567F;
     color: #FFFFFF;
 }
 
@@ -454,8 +454,8 @@ body.dark-mode .quiz-nav-item:hover {
 }
 
 body.dark-mode .quiz-nav-item.unanswered {
-    background: #255A37;
-    border-color: #356A47;
+    background: #353E63;
+    border-color: #4C567F;
 }
 
 .quiz-nav-item.correct {
@@ -465,9 +465,9 @@ body.dark-mode .quiz-nav-item.unanswered {
 }
 
 body.dark-mode .quiz-nav-item.correct {
-    background: #14532D;
-    border-color: #10B981;
-    color: #BBF7D0;
+    background: #2E3657;
+    border-color: #596793;
+    color: #DEE6FF;
 }
 
 .quiz-nav-item.incorrect {
@@ -482,6 +482,31 @@ body.dark-mode .quiz-nav-item.incorrect {
     color: #FECACA;
 }
 
+/* 色盲友好：将易混淆的“绿/红”改为“蓝/橙”语义 */
+body.colorblind-mode .quiz-nav-item.correct {
+    background: #DBEAFE;
+    border-color: #2563EB;
+    color: #1E3A8A;
+}
+
+body.colorblind-mode .quiz-nav-item.incorrect {
+    background: #FFEDD5;
+    border-color: #C2410C;
+    color: #7C2D12;
+}
+
+body.dark-mode.colorblind-mode .quiz-nav-item.correct {
+    background: #1E3A8A;
+    border-color: #60A5FA;
+    color: #DBEAFE;
+}
+
+body.dark-mode.colorblind-mode .quiz-nav-item.incorrect {
+    background: #7C2D12;
+    border-color: #FDBA74;
+    color: #FFEDD5;
+}
+
 .quiz-nav-item.active {
     border: 2px solid var(--primary);
     background: rgba(37, 99, 235, 0.08);
@@ -492,6 +517,14 @@ body.dark-mode .quiz-nav-item.incorrect {
 body.dark-mode .quiz-nav-item.active {
     background: rgba(37, 99, 235, 0.2);
     color: var(--primary);
+}
+
+body.dark-mode .dot.active {
+    background: #4C5A88;
+}
+
+body.dark-mode #quizProgressBar {
+    background: #4C5A88;
 }
 
 /* 进度条样式 */
@@ -595,7 +628,7 @@ body.dark-mode .level-btn.active {
 }
 
 body.dark-mode .level-card {
-    background: #153A24;
+    background: #353E63;
     border-color: #254A34;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
 }
@@ -637,18 +670,18 @@ body.dark-mode .level-card {
 }
 
 body.dark-mode .level-card .difficulty-easy {
+    background: #1E3A8A;
+    color: #BFDBFE;
+}
+
+body.dark-mode .level-card .difficulty-medium {
     background: #14532D;
     color: #BBF7D0;
 }
 
-body.dark-mode .level-card .difficulty-medium {
-    background: #78350F;
-    color: #FDE68A;
-}
-
 body.dark-mode .level-card .difficulty-hard {
-    background: #7F1D1D;
-    color: #FECACA;
+    background: #713F12;
+    color: #FDE68A;
 }
 
 .level-card .level-info {

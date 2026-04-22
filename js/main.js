@@ -3,6 +3,7 @@
  */
 document.addEventListener('DOMContentLoaded', () => {
     initGlobalFontScale();
+    initColorblindMode();
     initSettingsMenu();
     initClickSelectMenu();
     initSettingsModal();

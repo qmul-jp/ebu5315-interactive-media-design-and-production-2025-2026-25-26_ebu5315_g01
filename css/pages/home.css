@@ -726,6 +726,10 @@ body.dark-mode .inner-circle {
     animation: float-2 5s ease-in-out infinite;
 }
 
+body.colorblind-mode .floating-shape-1 {
+    background-color: #C2410C;
+}
+
 @keyframes rotate-clockwise {
     from { transform: rotate(0deg); }
     to { transform: rotate(360deg); }

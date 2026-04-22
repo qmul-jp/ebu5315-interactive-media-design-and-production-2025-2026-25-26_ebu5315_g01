@@ -440,6 +440,10 @@ body:not(.dark-mode) .game-page-view {
     margin-bottom: 16px;
 }
 
+body.colorblind-mode .game-record-badge {
+    background: linear-gradient(135deg, #2563EB, #C2410C);
+}
+
 .game-stars {
     font-size: 36px;
     margin-bottom: 16px;
@@ -582,6 +586,13 @@ body:not(.dark-mode) .game-page-view {
     -webkit-text-fill-color: transparent;
     background-clip: text;
     margin-bottom: 16px;
+}
+
+body.colorblind-mode .game-complete-panel h2 {
+    background: linear-gradient(135deg, #1D4ED8, #2563EB, #C2410C);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
 }
 
 .game-complete-desc {

@@ -9,6 +9,7 @@ function getSiteLang() {
 
 const GLOBAL_FONT_SCALE_KEY = 'circlelearnGlobalFontScaleV1';
 const SPRITE_ENABLED_KEY = 'circlelearnSpriteEnabledV1';
+const COLORBLIND_MODE_KEY = 'circlelearnColorblindModeV1';
 const FONT_SCALE_MIN = 85;
 const FONT_SCALE_MAX = 125;
 const FONT_SCALE_INITIAL = 95;
@@ -33,6 +34,29 @@ function setSiteLang(nextLang) {
     document.documentElement.lang = lang === 'zh' ? 'zh-CN' : 'en';
     document.dispatchEvent(new CustomEvent('circlelearn:langchange', { detail: { lang } }));
     return lang;
+}
+
+function isColorblindModeEnabled() {
+    try {
+        return localStorage.getItem(COLORBLIND_MODE_KEY) === '1';
+    } catch (e) {
+        return false;
+    }
+}
+
+function applyColorblindMode(enabled, persist = true) {
+    const nextEnabled = Boolean(enabled);
+    document.body.classList.toggle('colorblind-mode', nextEnabled);
+    if (persist) {
+        try {
+            localStorage.setItem(COLORBLIND_MODE_KEY, nextEnabled ? '1' : '0');
+        } catch (e) {}
+    }
+    return nextEnabled;
+}
+
+function initColorblindMode() {
+    applyColorblindMode(isColorblindModeEnabled(), false);
 }
 
 function initTheme() {
@@ -306,18 +330,29 @@ function buildSettingsModal() {
             </div>
             <div class="settings-modal__content">
                 <div class="settings-item-block">
-                    <label for="settingsSpriteToggle" data-i18n="settings.sprite.label">AI Sprite</label>
-                    <div class="settings-custom-select" id="settingsSpriteToggle">
-                        <button type="button" class="settings-custom-select__trigger" aria-expanded="false">
-                            <span id="settingsSpriteToggleValue">Enable</span>
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="settings-custom-select__arrow" aria-hidden="true">
-                                <path d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z"></path>
-                            </svg>
-                        </button>
-                        <div class="settings-custom-select__options">
-                            <button type="button" class="settings-custom-select__option" data-value="1" data-i18n="settings.sprite.enable">Enable</button>
-                            <button type="button" class="settings-custom-select__option" data-value="0" data-i18n="settings.sprite.disable">Disable</button>
-                        </div>
+                    <label for="settingsSpriteCheckbox" data-i18n="settings.sprite.label">AI Sprite</label>
+                    <p class="settings-item-help" data-i18n="settings.sprite.desc">Show or hide the AI sprite helper.</p>
+                    <div class="settings-mode-row">
+                        <span class="settings-mode-state" id="settingsSpriteState">Disabled</span>
+                        <label class="settings-mode-switch" for="settingsSpriteCheckbox">
+                            <input id="settingsSpriteCheckbox" type="checkbox" />
+                            <span class="settings-mode-switch__track">
+                                <span class="settings-mode-switch__thumb"></span>
+                            </span>
+                        </label>
+                    </div>
+                </div>
+                <div class="settings-item-block">
+                    <label for="settingsColorblindCheckbox" data-i18n="settings.colorblind.label">Colorblind Friendly Mode</label>
+                    <p class="settings-item-help" data-i18n="settings.colorblind.desc">Use a blue-orange high-contrast palette for clearer distinctions.</p>
+                    <div class="settings-mode-row">
+                        <span class="settings-mode-state" id="settingsColorblindState">Disabled</span>
+                        <label class="settings-mode-switch" for="settingsColorblindCheckbox">
+                            <input id="settingsColorblindCheckbox" type="checkbox" />
+                            <span class="settings-mode-switch__track">
+                                <span class="settings-mode-switch__thumb"></span>
+                            </span>
+                        </label>
                     </div>
                 </div>
                 <div class="settings-item-block">
@@ -341,25 +376,15 @@ function buildSettingsModal() {
 
 function initSettingsModal() {
     const modal = buildSettingsModal();
-    const spriteToggle = modal.querySelector('#settingsSpriteToggle');
-    const spriteToggleTrigger = modal.querySelector('.settings-custom-select__trigger');
-    const spriteToggleValue = modal.querySelector('#settingsSpriteToggleValue');
-    const spriteOptions = Array.from(modal.querySelectorAll('.settings-custom-select__option'));
+    const spriteCheckbox = modal.querySelector('#settingsSpriteCheckbox');
+    const spriteState = modal.querySelector('#settingsSpriteState');
+    const colorblindCheckbox = modal.querySelector('#settingsColorblindCheckbox');
+    const colorblindState = modal.querySelector('#settingsColorblindState');
     const fontRange = modal.querySelector('#settingsFontRange');
     const fontValue = modal.querySelector('#settingsFontRangeValue');
     const fontResetBtn = modal.querySelector('#settingsFontResetBtn');
     const openers = document.querySelectorAll('.option-settings');
-    if (!spriteToggle || !spriteToggleTrigger || !spriteToggleValue || !spriteOptions.length || !fontRange || !fontValue || !fontResetBtn || !openers.length) return;
-
-    const setSpriteUIValue = (value) => {
-        const next = value === '0' ? '0' : '1';
-        spriteToggle.setAttribute('data-value', next);
-        spriteOptions.forEach((option) => {
-            option.classList.toggle('is-active', option.dataset.value === next);
-        });
-        const active = spriteOptions.find((option) => option.dataset.value === next);
-        spriteToggleValue.textContent = active ? active.textContent : next;
-    };
+    if (!spriteCheckbox || !spriteState || !colorblindCheckbox || !colorblindState || !fontRange || !fontValue || !fontResetBtn || !openers.length) return;
 
     const setFontUIValue = (value, persist = true) => {
         const next = applyGlobalFontScale(value, persist);
@@ -367,6 +392,34 @@ function initSettingsModal() {
         fontValue.value = String(next);
         fontRange.style.setProperty('--settings-range-progress', `${getRangeProgressPercent(next)}%`);
         return next;
+    };
+
+    const getColorblindStateText = (enabled) => {
+        const lang = getSiteLang();
+        if (lang === 'zh') return enabled ? '已启用' : '已禁用';
+        return enabled ? 'Enabled' : 'Disabled';
+    };
+
+    const setColorblindUIValue = (enabled, persist = true) => {
+        const nextEnabled = applyColorblindMode(enabled, persist);
+        colorblindCheckbox.checked = nextEnabled;
+        colorblindState.textContent = getColorblindStateText(nextEnabled);
+        colorblindState.classList.toggle('is-on', nextEnabled);
+        return nextEnabled;
+    };
+
+    const getSpriteStateText = (enabled) => {
+        const lang = getSiteLang();
+        if (lang === 'zh') return enabled ? '已启用' : '已禁用';
+        return enabled ? 'Enabled' : 'Disabled';
+    };
+
+    const setSpriteUIValue = (enabled) => {
+        const nextEnabled = Boolean(enabled);
+        spriteCheckbox.checked = nextEnabled;
+        spriteState.textContent = getSpriteStateText(nextEnabled);
+        spriteState.classList.toggle('is-on', nextEnabled);
+        return nextEnabled;
     };
 
     const runSpritePeekEnterAnimation = () => {
@@ -472,22 +525,20 @@ function initSettingsModal() {
 
     const openModal = () => {
         const enabled = localStorage.getItem(SPRITE_ENABLED_KEY) !== '0';
-        setSpriteUIValue(enabled ? '1' : '0');
-        spriteToggle.classList.remove('is-open');
-        spriteToggleTrigger.setAttribute('aria-expanded', 'false');
+        setSpriteUIValue(enabled);
+        setColorblindUIValue(isColorblindModeEnabled(), false);
         const scale = getGlobalFontScale();
         setFontUIValue(scale, false);
         modal.removeAttribute('hidden');
         if (typeof window.applySiteI18n === 'function') {
             window.applySiteI18n();
-            setSpriteUIValue(enabled ? '1' : '0');
+            setSpriteUIValue(enabled);
+            setColorblindUIValue(isColorblindModeEnabled(), false);
         }
     };
 
     const closeModal = () => {
         modal.setAttribute('hidden', '');
-        spriteToggle.classList.remove('is-open');
-        spriteToggleTrigger.setAttribute('aria-expanded', 'false');
     };
 
     openers.forEach((opener) => {
@@ -513,43 +564,31 @@ function initSettingsModal() {
         if (e.key === 'Escape' && !modal.hasAttribute('hidden')) closeModal();
     });
 
-    spriteToggleTrigger.addEventListener('click', (e) => {
-        e.preventDefault();
-        const willOpen = !spriteToggle.classList.contains('is-open');
-        spriteToggle.classList.toggle('is-open', willOpen);
-        spriteToggleTrigger.setAttribute('aria-expanded', willOpen ? 'true' : 'false');
-    });
-
-    spriteOptions.forEach((option) => {
-        option.addEventListener('click', () => {
-            const selected = option.dataset.value === '0' ? '0' : '1';
-            setSpriteUIValue(selected);
-            spriteToggle.classList.remove('is-open');
-            spriteToggleTrigger.setAttribute('aria-expanded', 'false');
-            const enabled = selected === '1';
-            const wasEnabled = localStorage.getItem(SPRITE_ENABLED_KEY) !== '0';
-            localStorage.setItem(SPRITE_ENABLED_KEY, enabled ? '1' : '0');
-            if (!enabled) {
-                sessionStorage.removeItem('circlelearnAiSpriteStateV1');
-                const widget = document.getElementById('aiSpriteWidget');
-                if (widget) {
-                    widget.setAttribute('hidden', '');
-                    widget.style.display = 'none';
-                }
-                window.__circlelearnSpriteRuntimeActive = false;
-            } else if (!wasEnabled) {
-                enableSpriteWithoutReload();
+    spriteCheckbox.addEventListener('change', () => {
+        const enabled = spriteCheckbox.checked;
+        setSpriteUIValue(enabled);
+        const wasEnabled = localStorage.getItem(SPRITE_ENABLED_KEY) !== '0';
+        localStorage.setItem(SPRITE_ENABLED_KEY, enabled ? '1' : '0');
+        if (!enabled) {
+            sessionStorage.removeItem('circlelearnAiSpriteStateV1');
+            const widget = document.getElementById('aiSpriteWidget');
+            if (widget) {
+                widget.setAttribute('hidden', '');
+                widget.style.display = 'none';
             }
-        });
+            window.__circlelearnSpriteRuntimeActive = false;
+        } else if (!wasEnabled) {
+            enableSpriteWithoutReload();
+        }
     });
 
-    document.addEventListener('click', (e) => {
-        if (modal.hasAttribute('hidden')) return;
-        const target = e.target;
-        if (!(target instanceof Node)) return;
-        if (spriteToggle.contains(target)) return;
-        spriteToggle.classList.remove('is-open');
-        spriteToggleTrigger.setAttribute('aria-expanded', 'false');
+    colorblindCheckbox.addEventListener('change', () => {
+        setColorblindUIValue(colorblindCheckbox.checked, true);
+    });
+
+    document.addEventListener('circlelearn:langchange', () => {
+        setSpriteUIValue(spriteCheckbox.checked);
+        setColorblindUIValue(colorblindCheckbox.checked, false);
     });
 
     const onFontValueCommit = () => {

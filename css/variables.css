@@ -47,3 +47,41 @@ body.dark-mode {
     --gray-800: #1E293B;
     --gray-900: #0F172A;
 }
+
+/* 色盲友好模式（Deuteranopia / Protanopia / Tritanopia 优先） */
+body.colorblind-mode {
+    --primary: #1D4ED8;          /* 主交互蓝 */
+    --secondary: #C2410C;        /* 替代绿：高对比橙 */
+    --accent-warm: #B45309;
+    --accent-warm-2: #9A3412;
+    --accent-warm-soft: #FFE7C2;
+    --accent-warm-deep: #7C2D12;
+    --background: #F7FAFF;
+    --text: #0B1B3A;
+    --text-muted: #334155;
+    --gray-50: #F7FAFF;
+    --gray-100: #EAF1FF;
+    --gray-200: #CEDCF5;
+    --gray-300: #AFC3E4;
+    --gray-600: #425A80;
+    --gray-700: #334866;
+    --gray-800: #1E3553;
+    --gray-900: #102742;
+}
+
+body.dark-mode.colorblind-mode {
+    --primary: #7FB2FF;
+    --secondary: #FFB15A;
+    --accent-warm: #FFB15A;
+    --accent-warm-2: #FF8A3D;
+    --accent-warm-soft: #3A2A1A;
+    --accent-warm-deep: #FFD8A8;
+    --background: #0B1220;
+    --text: #EAF2FF;
+    --text-muted: #A9BCD8;
+    --gray-50: #1A2740;
+    --gray-100: #223452;
+    --gray-200: #31486C;
+    --gray-800: #1A2740;
+    --gray-900: #0B1220;
+}
