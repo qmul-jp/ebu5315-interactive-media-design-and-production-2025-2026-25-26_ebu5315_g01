@@ -1172,6 +1172,96 @@ body.dark-mode .settings-mode-switch__thumb {
     background: #f8fafc;
 }
 
+/* 法律条款弹窗（页脚链接） */
+.legal-modal[hidden] {
+    display: none;
+}
+
+.legal-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 320;
+}
+
+.legal-modal__backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(2, 8, 23, 0.58);
+    backdrop-filter: blur(3px);
+    opacity: 0;
+    transition: opacity 0.22s ease;
+}
+
+.legal-modal__panel {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0.98);
+    width: min(92vw, 720px);
+    max-height: 78vh;
+    overflow: auto;
+    background: #ffffff;
+    border: 1px solid var(--gray-200);
+    border-radius: 16px;
+    box-shadow: 0 24px 48px rgba(15, 23, 42, 0.24);
+    padding: 18px;
+    opacity: 0;
+    transition: opacity 0.22s ease, transform 0.22s ease;
+}
+
+.legal-modal.is-open .legal-modal__backdrop {
+    opacity: 1;
+}
+
+.legal-modal.is-open .legal-modal__panel {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+}
+
+.legal-modal__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 10px;
+}
+
+.legal-modal__header h3 {
+    margin: 0;
+    font-size: 1.2rem;
+    color: var(--text);
+}
+
+.legal-modal__close {
+    border: none;
+    background: transparent;
+    color: var(--text-muted);
+    font-size: 24px;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.legal-modal__content {
+    display: grid;
+    gap: 10px;
+}
+
+.legal-modal__content p {
+    margin: 0;
+    color: var(--text);
+    line-height: 1.7;
+    font-size: 0.95rem;
+}
+
+body.dark-mode .legal-modal__panel {
+    background: var(--gray-900);
+    border-color: var(--gray-700);
+}
+
+body.dark-mode .legal-modal__content p {
+    color: #e2e8f0;
+}
+
 /* 色盲模式下，确保导航和关键交互与背景区分明显 */
 body.colorblind-mode .nav-link:hover,
 body.colorblind-mode .nav-link.active {

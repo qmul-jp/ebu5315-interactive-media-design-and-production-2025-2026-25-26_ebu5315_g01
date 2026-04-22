@@ -700,3 +700,100 @@ function initButtonRipples() {
         });
     });
 }
+
+function buildLegalDocsModal() {
+    const existing = document.getElementById('legalDocsModal');
+    if (existing) return existing;
+    const modal = document.createElement('div');
+    modal.className = 'legal-modal';
+    modal.id = 'legalDocsModal';
+    modal.setAttribute('hidden', '');
+    modal.innerHTML = `
+        <div class="legal-modal__backdrop" data-legal-close="1"></div>
+        <div class="legal-modal__panel" role="dialog" aria-modal="true" aria-labelledby="legalDocsTitle">
+            <div class="legal-modal__header">
+                <h3 id="legalDocsTitle"></h3>
+                <button type="button" class="legal-modal__close" data-legal-close="1" data-i18n-aria-label="legal.modal.close">×</button>
+            </div>
+            <div class="legal-modal__content" id="legalDocsContent"></div>
+        </div>
+    `;
+    document.body.appendChild(modal);
+    if (typeof window.applySiteI18n === 'function') window.applySiteI18n();
+    return modal;
+}
+
+function initLegalDocsModal() {
+    const links = Array.from(document.querySelectorAll('.footer a[href$="#privacy"], .footer a[href$="#terms"], .footer a[href$="#accessibility"]'));
+    if (!links.length) return;
+    const modal = buildLegalDocsModal();
+    const titleEl = modal.querySelector('#legalDocsTitle');
+    const contentEl = modal.querySelector('#legalDocsContent');
+    if (!titleEl || !contentEl) return;
+
+    let currentDoc = '';
+    let closeTimer = null;
+
+    const getText = (key) => {
+        if (typeof window.getSiteI18nText === 'function') {
+            const text = window.getSiteI18nText(key, getSiteLang());
+            if (text) return text;
+        }
+        return key;
+    };
+
+    const renderDoc = (doc) => {
+        currentDoc = doc;
+        const title = getText(`legal.${doc}.title`);
+        const body = getText(`legal.${doc}.body`);
+        titleEl.textContent = title || '';
+        const paragraphs = String(body || '')
+            .split(/\n{2,}/)
+            .map((line) => line.trim())
+            .filter(Boolean);
+        contentEl.innerHTML = paragraphs.map((line) => `<p>${line}</p>`).join('');
+    };
+
+    const openModal = (doc) => {
+        if (closeTimer) {
+            window.clearTimeout(closeTimer);
+            closeTimer = null;
+        }
+        renderDoc(doc);
+        modal.removeAttribute('hidden');
+        requestAnimationFrame(() => modal.classList.add('is-open'));
+    };
+
+    const closeModal = () => {
+        modal.classList.remove('is-open');
+        closeTimer = window.setTimeout(() => {
+            modal.setAttribute('hidden', '');
+        }, 220);
+    };
+
+    links.forEach((link) => {
+        link.addEventListener('click', (e) => {
+            e.preventDefault();
+            const href = link.getAttribute('href') || '';
+            if (href.endsWith('#privacy')) openModal('privacy');
+            else if (href.endsWith('#terms')) openModal('terms');
+            else if (href.endsWith('#accessibility')) openModal('accessibility');
+        });
+    });
+
+    modal.addEventListener('click', (e) => {
+        const target = e.target;
+        if (target instanceof HTMLElement && target.hasAttribute('data-legal-close')) {
+            closeModal();
+        }
+    });
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && !modal.hasAttribute('hidden')) closeModal();
+    });
+
+    document.addEventListener('circlelearn:langchange', () => {
+        if (modal.hasAttribute('hidden') || !currentDoc) return;
+        renderDoc(currentDoc);
+    });
+}

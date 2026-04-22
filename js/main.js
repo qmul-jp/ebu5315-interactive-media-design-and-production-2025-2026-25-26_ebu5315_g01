@@ -12,6 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initFontSize();
     initSmoothAnchorScroll();
     initNavScrollSpy();
+    initLegalDocsModal();
     injectRippleStyles();
     initButtonRipples();
 
