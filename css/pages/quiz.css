@@ -57,8 +57,8 @@ body.dark-mode .quiz-question {
 }
 
 body.dark-mode .quiz-option-btn {
-    background: #1E4A2D;
-    border-color: #2E5A3D;
+    background: #353E63;
+    border-color: #49527A;
     color: #FFFFFF;
 }
 
@@ -89,8 +89,8 @@ body.dark-mode .quiz-option-btn {
 }
 
 body.dark-mode .quiz-feedback.correct {
-    background: #14532D;
-    color: #BBF7D0;
+    background: #2E3657;
+    color: #DEE6FF;
 }
 
 body.dark-mode .quiz-feedback.wrong {
@@ -197,13 +197,13 @@ body.quiz-page.dark-mode {
     border-radius: 24px;
     box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
     border: 1px solid var(--gray-200);
-    padding: 2rem 2.5rem 2.5rem;
+    padding: 2.5rem 2.5rem 2.5rem;
     transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 body.dark-mode .card.quiz-container {
-    background: #153A24;
-    border-color: #254A34;
+    background: #1B2538;
+    border-color: #2A3A56;
     box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.35);
 }
 
@@ -259,7 +259,7 @@ body.dark-mode .quiz-meta-row {
 }
 
 body.dark-mode .ai-hint-box {
-    background: #255A37;
+    background: #353E63;
 }
 
 .ai-hint-box .hint-label {
@@ -302,7 +302,7 @@ body.dark-mode .ai-hint-box p {
 }
 
 body.dark-mode .geometry-canvas {
-    background: #255A37;
+    background: #353E63;
 }
 
 .geometry-canvas::before,
@@ -372,8 +372,8 @@ body.dark-mode .options-grid .quiz-option-btn.selected {
 }
 
 body.dark-mode .quiz-sidebar-panel {
-    background: #153A24;
-    border-color: #254A34;
+    background: #353E63;
+    border-color: #49527A;
 }
 
 .quiz-sidebar-panel.is-open {
@@ -411,8 +411,8 @@ body.dark-mode .quiz-sidebar-panel {
 }
 
 body.dark-mode #quiz-sidebar {
-    background: #153A24;
-    border-color: #254A34;
+    background: #353E63;
+    border-color: #49527A;
 }
 
 .quiz-navigator {
@@ -434,8 +434,8 @@ body.dark-mode #quiz-sidebar {
 }
 
 body.dark-mode .quiz-nav-item {
-    background: #255A37;
-    border-color: #356A47;
+    background: #353E63;
+    border-color: #4C567F;
     color: #FFFFFF;
 }
 
@@ -454,8 +454,8 @@ body.dark-mode .quiz-nav-item:hover {
 }
 
 body.dark-mode .quiz-nav-item.unanswered {
-    background: #255A37;
-    border-color: #356A47;
+    background: #353E63;
+    border-color: #4C567F;
 }
 
 .quiz-nav-item.correct {
@@ -465,9 +465,9 @@ body.dark-mode .quiz-nav-item.unanswered {
 }
 
 body.dark-mode .quiz-nav-item.correct {
-    background: #14532D;
-    border-color: #10B981;
-    color: #BBF7D0;
+    background: #2E3657;
+    border-color: #596793;
+    color: #DEE6FF;
 }
 
 .quiz-nav-item.incorrect {
@@ -482,6 +482,31 @@ body.dark-mode .quiz-nav-item.incorrect {
     color: #FECACA;
 }
 
+/* 色盲友好：将易混淆的“绿/红”改为“蓝/橙”语义 */
+body.colorblind-mode .quiz-nav-item.correct {
+    background: #DBEAFE;
+    border-color: #2563EB;
+    color: #1E3A8A;
+}
+
+body.colorblind-mode .quiz-nav-item.incorrect {
+    background: #FFEDD5;
+    border-color: #C2410C;
+    color: #7C2D12;
+}
+
+body.dark-mode.colorblind-mode .quiz-nav-item.correct {
+    background: #1E3A8A;
+    border-color: #60A5FA;
+    color: #DBEAFE;
+}
+
+body.dark-mode.colorblind-mode .quiz-nav-item.incorrect {
+    background: #7C2D12;
+    border-color: #FDBA74;
+    color: #FFEDD5;
+}
+
 .quiz-nav-item.active {
     border: 2px solid var(--primary);
     background: rgba(37, 99, 235, 0.08);
@@ -492,6 +517,14 @@ body.dark-mode .quiz-nav-item.incorrect {
 body.dark-mode .quiz-nav-item.active {
     background: rgba(37, 99, 235, 0.2);
     color: var(--primary);
+}
+
+body.dark-mode .dot.active {
+    background: #4C5A88;
+}
+
+body.dark-mode #quizProgressBar {
+    background: #4C5A88;
 }
 
 /* 进度条样式 */
@@ -569,4 +602,123 @@ body.dark-mode .level-btn.active {
     background: var(--primary);
     border-color: var(--primary);
     color: white;
+}
+
+.level-cards-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 24px;
+    margin-top: 32px;
+}
+
+.level-card {
+    background: #ffffff;
+    border: 1px solid var(--gray-200);
+    border-radius: 16px;
+    padding: 24px;
+    text-align: center;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.level-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+}
+
+body.dark-mode .level-card {
+    background: #353E63;
+    border-color: #254A34;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.level-card h3 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 12px;
+}
+
+.level-card p {
+    color: var(--text-muted);
+    margin-bottom: 24px;
+}
+
+.level-card .level-difficulty {
+    display: inline-block;
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    margin-bottom: 20px;
+}
+
+.level-card .difficulty-easy {
+    background: #e2ebff;
+    color: #1d4ed8;
+}
+
+.level-card .difficulty-medium {
+    background: #D1FAE5;
+    color: #065F46;
+}
+
+.level-card .difficulty-hard {
+    background: #FEF3C7;
+    color: #92400E;
+}
+
+body.dark-mode .level-card .difficulty-easy {
+    background: #1E3A8A;
+    color: #BFDBFE;
+}
+
+body.dark-mode .level-card .difficulty-medium {
+    background: #14532D;
+    color: #BBF7D0;
+}
+
+body.dark-mode .level-card .difficulty-hard {
+    background: #713F12;
+    color: #FDE68A;
+}
+
+.level-card .level-info {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 24px;
+    font-size: 0.875rem;
+    color: var(--text-muted);
+}
+
+.level-card .btn {
+    width: 100%;
+}
+
+/* Quiz Levels 页面专用：容器和卡片拉高，并给底部留白 */
+.quiz-levels-page .main {
+    padding-top: 20px;
+    padding-bottom: 80px;
+}
+
+.quiz-levels-page .card.quiz-container {
+    min-height: 640px;
+    padding-bottom: 3rem;
+}
+
+.quiz-levels-page .level-cards-container {
+    align-items: stretch;
+    margin-bottom: 18px;
+}
+
+.quiz-levels-page .level-card {
+    min-height: 420px;
+    display: flex;
+    flex-direction: column;
+
+}
+
+.quiz-levels-page .level-card .btn {
+    margin-top: auto;
 }

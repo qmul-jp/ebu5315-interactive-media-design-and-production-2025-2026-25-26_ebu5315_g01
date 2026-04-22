@@ -122,28 +122,6 @@ body.dark-mode .quick-question-btn {
     color: var(--text);
 }
 
-.floating-chat-btn {
-    position: fixed;
-    bottom: 32px;
-    right: 32px;
-    width: 64px;
-    height: 64px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, #9333EA, #3B82F6);
-    border: none;
-    color: white;
-    cursor: pointer;
-    box-shadow: 0 8px 24px rgba(147, 51, 234, 0.4);
-    transition: all 0.3s ease;
-    z-index: 40;
-    animation: fade-in 0.3s ease-out 1s both;
-}
-
-.floating-chat-btn:hover {
-    transform: scale(1.1);
-    box-shadow: 0 12px 32px rgba(147, 51, 234, 0.5);
-}
-
 .premium-banner {
     position: relative;
     background: linear-gradient(90deg, #9333EA 0%, #3B82F6 50%, #6366F1 100%);

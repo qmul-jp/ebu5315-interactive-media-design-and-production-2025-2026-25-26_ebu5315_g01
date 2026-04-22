@@ -11,112 +11,30 @@
     <link rel="stylesheet" href="../css/layout.css">
     <link rel="stylesheet" href="../css/components/buttons.css">
     <link rel="stylesheet" href="../css/components/cards.css">
+    <link rel="stylesheet" href="../css/components/ai-sprite.css">
+    <link rel="stylesheet" href="../css/components/ai-chat-widget.css">
     <link rel="stylesheet" href="../css/pages/quiz.css">
-    <style>
-        .level-cards-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 24px;
-            margin-top: 32px;
-        }
-        
-        .level-card {
-            background: #ffffff;
-            border: 1px solid var(--gray-200);
-            border-radius: 16px;
-            padding: 24px;
-            text-align: center;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-            transition: all 0.3s ease;
-            cursor: pointer;
-        }
-        
-        .level-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
-        }
-        
-        body.dark-mode .level-card {
-            background: #153A24;
-            border-color: #254A34;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-        }
-        
-        .level-card h3 {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--text);
-            margin-bottom: 12px;
-        }
-        
-        .level-card p {
-            color: var(--text-muted);
-            margin-bottom: 24px;
-        }
-        
-        .level-card .level-difficulty {
-            display: inline-block;
-            padding: 6px 16px;
-            border-radius: 20px;
-            font-size: 0.875rem;
-            font-weight: 600;
-            margin-bottom: 20px;
-        }
-        
-        .level-card .difficulty-easy {
-            background: #D1FAE5;
-            color: #065F46;
-        }
-        
-        .level-card .difficulty-medium {
-            background: #FEF3C7;
-            color: #92400E;
-        }
-        
-        .level-card .difficulty-hard {
-            background: #FEE2E2;
-            color: #991B1B;
-        }
-        
-        body.dark-mode .level-card .difficulty-easy {
-            background: #14532D;
-            color: #BBF7D0;
-        }
-        
-        body.dark-mode .level-card .difficulty-medium {
-            background: #78350F;
-            color: #FDE68A;
-        }
-        
-        body.dark-mode .level-card .difficulty-hard {
-            background: #7F1D1D;
-            color: #FECACA;
-        }
-        
-        .level-card .level-info {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 24px;
-            font-size: 0.875rem;
-            color: var(--text-muted);
-        }
-        
-        .level-card .btn {
-            width: 100%;
-        }
-    </style>
+    <link rel="stylesheet" href="../css/pages/quiz.css">
 </head>
-<body class="quiz-page">
+<body class="quiz-page quiz-levels-page">
+    <script>
+        (function () {
+            try {
+                if (localStorage.getItem('theme') === 'dark') {
+                    document.body.classList.add('dark-mode');
+                }
+            } catch (e) {}
+        })();
+    </script>
     <header class="header">
         <div class="container">
             <nav class="nav">
                 <a href="../index.html#home" class="logo" aria-label="CircleLearn Home">
-                    <div class="logo-icon">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                            <circle cx="12" cy="12" r="10"/>
-                        </svg>
-                    </div>
-                    <span class="logo-text">GEOMETRY CHALLENGER</span>
+                    
+                    <img src="../assets/images/homepage/icon.png" alt="CircleLearn Logo" width="40" height="40">        
+                    </img>
+                    
+                    <span class="logo-text" data-i18n="brand.name">GEOMETRY CHALLENGER</span>
                 </a>
 
                 <div class="nav-links">
@@ -126,33 +44,64 @@
                 </div>
 
                 <div class="nav-actions nav-settings-inline">
+                    <!-- From Uiverse.io by xxx --> 
                     <div class="glass-radio-group">
                         <input type="radio" name="langPlan" id="glass-lang-en" checked="" />
                         <label for="glass-lang-en">English</label>
+
                         <input type="radio" name="langPlan" id="glass-lang-zh" />
                         <label for="glass-lang-zh">简体中文</label>
+                      
                         <div class="glass-glider"></div>
                     </div>
-
-                    <label class="theme-switch">
-                        <input type="checkbox" class="theme-switch__checkbox">
-                        <div class="theme-switch__container">
-                        <div class="theme-switch__clouds"></div>
-                        <div class="theme-switch__stars-container">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 144 55" fill="none">
-                            <path fill-rule="evenodd" clip-rule="evenodd" d="M135.831 3.00688C135.055 3.85027 134.111 4.29946 133 4.35447C134.111 4.40947 135.055 4.85867 135.831 5.71123C136.607 6.55462 136.996 7.56303 136.996 8.72727C136.996 7.95722 137.172 7.25134 137.525 6.59129C137.886 5.93124 138.372 5.39954 138.98 5.00535C139.598 4.60199 140.268 4.39114 141 4.35447C139.88 4.2903 138.936 3.85027 138.16 3.00688C137.384 2.16348 136.996 1.16425 136.996 0C136.996 1.16425 136.607 2.16348 135.831 3.00688ZM31 23.3545C32.1114 23.2995 33.0551 22.8503 33.8313 22.0069C34.6075 21.1635 34.9956 20.1642 34.9956 19C34.9956 20.1642 35.3837 21.1635 36.1599 22.0069C36.9361 22.8503 37.8798 23.2903 39 23.3545C38.2679 23.3911 37.5976 23.602 36.9802 24.0053C36.3716 24.3995 35.8864 24.9312 35.5248 25.5913C35.172 26.2513 34.9956 26.9572 34.9956 27.7273C34.9956 26.563 34.6075 25.5546 33.8313 24.7112C33.0551 23.8587 32.1114 23.4095 31 23.3545ZM0 36.3545C1.11136 36.2995 2.05513 35.8503 2.83131 35.0069C3.6075 34.1635 3.99559 33.1642 3.99559 32C3.99559 33.1642 4.38368 34.1635 5.15987 35.0069C5.93605 35.8503 6.87982 36.2903 8 36.3545C7.26792 36.3911 6.59757 36.602 5.98015 37.0053C5.37155 37.3995 4.88644 37.9312 4.52481 38.5913C4.172 39.2513 3.99559 39.9572 3.99559 40.7273C3.99559 39.563 3.6075 38.5546 2.83131 37.7112C2.05513 36.8587 1.11136 36.4095 0 36.3545ZM56.8313 24.0069C56.0551 24.8503 55.1114 25.2995 54 25.3545C55.1114 25.4095 56.0551 25.8587 56.8313 26.7112C57.6075 27.5546 57.9956 28.563 57.9956 29.7273C57.9956 28.9572 58.172 28.2513 58.5248 27.5913C58.8864 26.9312 59.3716 26.3995 59.9802 26.0053C60.5976 25.602 61.2679 25.3911 62 25.3545C60.8798 25.2903 59.9361 24.8503 59.1599 24.0069C58.3837 23.1635 57.9956 22.1642 57.9956 21C57.9956 22.1642 57.6075 23.1635 56.8313 24.0069ZM81 25.3545C82.1114 25.2995 83.0551 24.8503 83.8313 24.0069C84.6075 23.1635 84.9956 22.1642 84.9956 21C84.9956 22.1642 85.3837 23.1635 86.1599 24.0069C86.9361 24.8503 87.8798 25.2903 89 25.3545C88.2679 25.3911 87.5976 25.602 86.9802 26.0053C86.3716 26.3995 85.8864 26.9312 85.5248 27.5913C85.172 28.2513 84.9956 28.9572 84.9956 29.7273C84.9956 28.563 84.6075 27.5546 83.8313 26.7112C83.0551 25.8587 82.1114 25.4095 81 25.3545ZM90 48.3545C91.1114 48.2995 92.0551 47.8503 92.8313 47.0069C93.6075 46.1635 93.9956 45.1642 93.9956 44C93.9956 45.1642 94.3837 46.1635 95.1599 47.0069C95.9361 47.8503 96.8798 48.2903 98 48.3545C97.2679 48.3911 96.5976 48.602 95.9802 49.0053C95.3716 49.3995 94.8864 49.9312 94.5248 50.5913C94.172 51.2513 93.9956 51.9572 93.9956 52.7273C93.9956 51.563 93.6075 50.5546 92.8313 49.7112C92.0551 48.8587 91.1114 48.4095 90 48.3545ZM40 5.35447C41.1114 5.29946 42.0551 4.85027 42.8313 4.00688C43.6075 3.16348 43.9956 2.16425 43.9956 1C43.9956 2.16425 44.3837 3.16348 45.1599 4.00688C45.9361 4.85027 46.8798 5.2903 48 5.35447C47.2679 5.39114 46.5976 5.602 45.9802 6.00535C45.3716 6.39954 44.8864 6.93124 44.5248 7.59129C44.172 8.25134 43.9956 8.95722 43.9956 9.72727C43.9956 8.56303 43.6075 7.55462 42.8313 6.71123C42.0551 5.85867 41.1114 5.40947 40 5.35447ZM117 5.35447C118.111 5.29946 119.055 4.85027 119.831 4.00688C120.607 3.16348 120.996 2.16425 120.996 1C120.996 2.16425 121.384 3.16348 122.16 4.00688C122.936 4.85027 123.88 5.2903 125 5.35447C124.268 5.39114 123.598 5.602 122.98 6.00535C122.372 6.39954 121.886 6.93124 121.525 7.59129C121.172 8.25134 120.996 8.95722 120.996 9.72727C120.996 8.56303 120.607 7.55462 119.831 6.71123C119.055 5.85867 118.111 5.40947 117 5.35447Z" fill="white"/>
+                      
+                    <!-- From Uiverse.io by Galahhad --> 
+                    <div>
+                        <label class="switch" for="switch">
+                            <input id="switch" type="checkbox" class="circle" />
+                            <svg viewBox="0 0 384 512" xmlns="http://www.w3.org/2000/svg" class="moon svg">
+                                <path d="M223.5 32C100 32 0 132.3 0 256S100 480 223.5 480c60.6 0 115.5-24.2 155.8-63.4c5-4.9 6.3-12.5 3.1-18.7s-10.1-9.7-17-8.5c-9.8 1.7-19.8 2.6-30.1 2.6c-96.9 0-175.5-78.8-175.5-176c0-65.8 36-123.1 89.3-153.3c6.1-3.5 9.2-10.5 7.7-17.3s-7.3-11.9-14.3-12.5c-6.3-.5-12.6-.8-19-.8z"></path>
                             </svg>
-                        </div>
-                        <div class="theme-switch__sun-moon-container">
-                            <div class="theme-switch__sun-moon">
+                            <div class="sun svg">
+                                <span class="dot"></span>
                             </div>
+                        </label>
+                    </div>
+                    <div class="select nav-contact-select" id="navContactSelect">
+                        <button
+                            type="button"
+                            class="selected"
+                            id="navContactSelectToggle"
+                            aria-haspopup="true"
+                            aria-expanded="false"
+                            aria-controls="navContactSelectOptions"
+                        >
+                            <img src="../assets/images/homepage/设置.svg" alt="Settings" class="settings-trigger-icon" />
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="settings-trigger-arrow" aria-hidden="true">
+                                <path d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z"></path>
+                            </svg>
+                        </button>
+                        <div class="options" id="navContactSelectOptions">
+                            <a href="javascript:void(0)" class="option option-settings" data-i18n="settings.settings">Settings</a>
+                            <a href="../contact/contact.html" class="option" data-i18n="settings.contact">Contact Us</a>
+                            <a href="../premium/premium.html" class="option option-support" data-i18n="settings.support">Support Us</a>
                         </div>
-                        </div>
-                    </label>
+                    </div>
                 </div>
             </nav>
         </div>
     </header>
+
+    <section class="page-breadcrumb-row">
+        <div class="container">
+            <nav class="learn-breadcrumb" aria-label="Breadcrumb">
+                <a href="../index.html#home" data-i18n="nav.home">Home</a>
+                <span class="learn-breadcrumb-sep" aria-hidden="true">&gt;</span>
+                <a href="javascript:void(0)" class="learn-breadcrumb-sep" aria-current="page" data-i18n="nav.quiz">Quiz</a>
+            </nav>
+        </div>
+    </section>
+
 
     <main class="main">
         <div class="container">
@@ -208,43 +157,75 @@
             <div class="footer-grid">
                 <div class="footer-brand">
                     <a href="../index.html#home" class="logo">
-                        <div class="logo-icon">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                                <circle cx="12" cy="12" r="10"/>
-                            </svg>
-                        </div>
-                        <span class="logo-text">CircleLearn</span>
+                        <img src="../assets/images/homepage/icon.png" width="40px" height="40px"></img>
+                        <span class="logo-text" data-i18n="brand.name">GEOMETRY CHALLENGER</span>
                     </a>
-                    <p class="footer-description">
-                        Master GCSE circle geometry through interactive learning, engaging games, and AI-powered guidance.
+                    <p class="footer-description" data-i18n="footer.description">
+                        Practice GCSE circle geometry with visual lessons, interactive games, and quizzes. Learn by doing in English or Chinese.
                     </p>
                 </div>
                 <div class="footer-links-section">
-                    <h4 class="footer-links-title">Quick Links</h4>
+                    <h4 class="footer-links-title" data-i18n="footer.quickLinks">Quick Links</h4>
                     <ul class="footer-links">
                         <li><a href="../index.html#home" data-i18n="nav.home">Home</a></li>
                         <li><a href="../game/game.html" data-i18n="nav.game">Game</a></li>
                         <li><a href="quiz-levels.html" data-i18n="nav.quiz">Quiz</a></li>
-                        <li><a href="../contact/contact.html">Contact</a></li>
+                        <li><a href="../contact/contact.html" data-i18n="footer.contact">Contact</a></li>
                     </ul>
                 </div>
                 <div class="footer-links-section">
-                    <h4 class="footer-links-title">Legal</h4>
+                    <h4 class="footer-links-title" data-i18n="footer.legal">Legal</h4>
                     <ul class="footer-links">
-                        <li><a href="../index.html#privacy">Privacy Policy</a></li>
-                        <li><a href="../index.html#terms">Terms of Service</a></li>
-                        <li><a href="../index.html#accessibility">Accessibility</a></li>
+                        <li><a href="../index.html#privacy" data-i18n="footer.privacy">Privacy Policy</a></li>
+                        <li><a href="../index.html#terms" data-i18n="footer.terms">Terms of Service</a></li>
+                        <li><a href="../index.html#accessibility" data-i18n="footer.accessibility">Accessibility</a></li>
                     </ul>
                 </div>
             </div>
             <div class="footer-bottom">
-                <p class="footer-copyright">© 2026 CircleLearn. All rights reserved.</p>
+                <p class="footer-copyright" data-i18n="footer.copy">© 2026 CircleLearn. All rights reserved.</p>
             </div>
         </div>
     </footer>
 
+    <div
+        class="ai-sprite-widget"
+        id="aiSpriteWidget"
+        data-body-smile-tuck-src="../assets/images/global/笑容揣手.png"
+        hidden
+        aria-live="polite"
+    >
+        <div class="ai-sprite-widget__bubble">
+            <p class="ai-sprite-widget__welcome" data-i18n="home.sprite.welcome">
+                Welcome to CircleLearn! Explore games, quizzes, and theorems below.
+            </p>
+        </div>
+        <div class="ai-sprite-widget__sprite-stage">
+            <div class="ai-sprite-widget__peek-wrap">
+                <div class="ai-sprite-stack">
+                    <img
+                        class="ai-sprite-widget__body"
+                        src="../assets/images/global/笑容精灵只有右手.png"
+                        alt=""
+                        decoding="async"
+                    />
+                    <div class="ai-sprite-widget__arm-layer" aria-hidden="true">
+                        <img
+                            class="ai-sprite-widget__arm"
+                            src="../assets/images/global/左手.png"
+                            alt=""
+                            decoding="async"
+                        />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="../js/utils.js"></script>
     <script src="../js/main.js"></script>
     <script src="../js/data/site-i18n.js"></script>
+    <script src="../js/components/ai-sprite.js"></script>
+    <script src="../js/components/ai-chat-widget.js"></script>
 </body>
 </html>

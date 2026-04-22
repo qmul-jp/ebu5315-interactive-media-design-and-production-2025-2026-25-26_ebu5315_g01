@@ -235,6 +235,22 @@
         font-size: 0.9rem;
     }
 
+    .skin-lock-hint {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 24px;
+        padding: 4px 8px;
+        border-radius: 999px;
+        font-size: 0.72rem;
+        line-height: 1.2;
+        color: #f8fafc;
+        background: linear-gradient(135deg, rgba(239, 68, 68, 0.28), rgba(251, 146, 60, 0.24));
+        border: 1px solid rgba(248, 113, 113, 0.5);
+        letter-spacing: 0.2px;
+        max-width: 100%;
+    }
+
     .skin-btn {
         width: 100%;
         padding: 6px;

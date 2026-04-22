@@ -30,6 +30,7 @@ body.dark-mode .learn-hero {
 
 .learn-breadcrumb {
     display: inline-flex;
+    transform: translateY(-20px);
     align-items: center;
     gap: 8px;
     margin-bottom: 14px;
@@ -218,6 +219,43 @@ body.dark-mode .learn-toc-trigger {
 .learn-toc-dropdown.is-open .learn-toc-trigger {
     border-color: var(--primary);
     box-shadow: 0 8px 24px rgba(37, 99, 235, 0.18);
+}
+
+#learnTocTrigger {
+    background: linear-gradient(135deg, #3b82f6 0%, #6366f1 55%, #7c3aed 100%);
+    border-color: rgba(99, 102, 241, 0.62);
+    color: #ffffff;
+}
+
+#learnTocTriggerAdvanced {
+    background: linear-gradient(135deg, #15803d 0%, #16a34a 52%, #22c55e 100%);
+    border-color: rgba(34, 197, 94, 0.62);
+    color: #ffffff;
+}
+
+#learnTocTriggerMoreAdvanced {
+    background: linear-gradient(135deg, #92400e 0%, #b45309 55%, #d97706 100%);
+    border-color: rgba(245, 158, 11, 0.65);
+    color: #ffffff;
+}
+
+#learnTocTrigger .learn-toc-trigger-sub,
+#learnTocTriggerAdvanced .learn-toc-trigger-sub,
+#learnTocTriggerMoreAdvanced .learn-toc-trigger-sub,
+#learnTocTrigger .learn-toc-trigger-chevron,
+#learnTocTriggerAdvanced .learn-toc-trigger-chevron,
+#learnTocTriggerMoreAdvanced .learn-toc-trigger-chevron {
+    color: rgba(255, 255, 255, 0.92);
+}
+
+#learnTocTrigger:hover,
+#learnTocTriggerAdvanced:hover,
+#learnTocTriggerMoreAdvanced:hover,
+.learn-toc-dropdown.is-open #learnTocTrigger,
+.learn-toc-dropdown.is-open #learnTocTriggerAdvanced,
+.learn-toc-dropdown.is-open #learnTocTriggerMoreAdvanced {
+    border-color: rgba(255, 255, 255, 0.58);
+    box-shadow: 0 10px 24px rgba(15, 23, 42, 0.22);
 }
 
 .learn-toc-trigger-text {
@@ -820,8 +858,8 @@ body.dark-mode .learn-theorem--more-advanced .learn-theorem-tip-icon {
 }
 
 body.dark-mode .learn-theorem-visual {
-    background: linear-gradient(180deg, var(--gray-900) 0%, var(--gray-800) 100%);
-    border-color: var(--gray-700);
+    background: #EBE9DF;
+    border-color: #e8e0dc;
 }
 
 .learn-theorem-visual img {
@@ -855,7 +893,7 @@ body.dark-mode .learn-theorem-visual {
 
 .learn-back-to-top {
     position: fixed;
-    top: 96px;
+    bottom: 50px;
     right: 20px;
     z-index: 60;
     display: inline-flex;
