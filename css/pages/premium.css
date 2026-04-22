@@ -5,7 +5,11 @@
 }
 
 .page-breadcrumb-row {
-    background: #f8fafc;
+    background: #ffffff;
+}
+
+body.dark-mode .page-breadcrumb-row {
+    background: var(--background);
 }
 
 /* 与 home/game/quiz 导航文字保持一致，避免页面额外样式覆盖 */

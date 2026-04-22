@@ -14,6 +14,19 @@ const FONT_SCALE_MAX = 125;
 const FONT_SCALE_INITIAL = 95;
 const FONT_SCALE_DEFAULT = 100;
 
+function applyThemeLogo(isDark) {
+    const logoImages = document.querySelectorAll(
+        'img[src*="assets/images/homepage/icon.png"], img[src*="assets/images/homepage/dark_icon.png"]'
+    );
+    const nextName = isDark ? 'dark_icon.png' : 'icon.png';
+    logoImages.forEach((img) => {
+        const src = img.getAttribute('src');
+        if (!src) return;
+        const nextSrc = src.replace(/(?:dark_)?icon\.png(\?.*)?$/, `${nextName}$1`);
+        if (nextSrc !== src) img.setAttribute('src', nextSrc);
+    });
+}
+
 function setSiteLang(nextLang) {
     const lang = nextLang === 'zh' ? 'zh' : 'en';
     localStorage.setItem('lang', lang);
@@ -43,6 +56,7 @@ function initTheme() {
     const applyTheme = (isDark) => {
         body.classList.toggle('dark-mode', isDark);
         localStorage.setItem('theme', isDark ? 'dark' : 'light');
+        applyThemeLogo(isDark);
         if (themeSwitchCheckbox) {
             themeSwitchCheckbox.checked = isNewSwitch ? !isDark : isDark;
         }

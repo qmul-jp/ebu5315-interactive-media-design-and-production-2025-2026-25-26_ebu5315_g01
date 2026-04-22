@@ -1126,6 +1126,10 @@ body.dark-mode .learn-breadcrumb a {
     margin-bottom: 0;
 }
 
+body.dark-mode .page-breadcrumb-row {
+    background: var(--background);
+}
+
 .section-header {
     text-align: center;
     margin-bottom: 48px;

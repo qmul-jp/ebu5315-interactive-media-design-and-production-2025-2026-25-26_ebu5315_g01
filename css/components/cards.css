@@ -167,6 +167,13 @@ body.dark-mode .theorem-icon {
     display: block;
 }
 
+body.dark-mode .theorem-image {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 8px;
+}
+
 .theorem-description {
     font-size: 14px;
     color: var(--text-muted);
@@ -394,6 +401,28 @@ body.dark-mode .theorem-card--flip .theorem-card-back.theorem-card-back--v8 {
         radial-gradient(circle at 84% 13%, rgba(255, 236, 199, 0.18), transparent 25%),
         radial-gradient(circle at 13% 78%, rgba(255, 92, 120, 0.12), transparent 30%),
         linear-gradient(8deg, #5a220d 0%, #7a3011 40%, #aa4a19 68%, #d36d22 100%);
+}
+
+/* 主页面黑暗模式：正面统一为较深灰黄色，图区与文案区同一底色 */
+body.dark-mode .theorems-section .theorem-card--flip .theorem-card-front {
+    background-color: #c9bfb0;
+    border-color: rgba(62, 54, 44, 0.22);
+}
+
+body.dark-mode .theorems-section .theorem-card--flip .theorem-card-front .theorem-image {
+    background: transparent;
+    border: none;
+    border-radius: 0;
+    padding: 0;
+}
+
+body.dark-mode .theorems-section .theorem-card--flip .theorem-card-front .theorem-title {
+    color: #1e293b;
+}
+
+body.dark-mode .theorems-section .theorem-card--flip .theorem-card-front .theorem-icon {
+    background-color: rgba(30, 41, 59, 0.12);
+    color: #1e293b;
 }
 
 .theorem-card--flip .theorem-title--back {
