@@ -24,7 +24,13 @@ const GameAudio = (() => {
         slingshot_ultra: new Audio('../assets/audio/game/gravity-slingshot/ultra_universe.mp3'),
         slingshot_ice: new Audio('../assets/audio/game/gravity-slingshot/ice.mp3'),
         slingshot_volcano: new Audio('../assets/audio/game/gravity-slingshot/volcano.mp3'),
-        slingshot_cyberpunk: new Audio('../assets/audio/game/gravity-slingshot/cyberpunk.mp3')
+        slingshot_cyberpunk: new Audio('../assets/audio/game/gravity-slingshot/cyberpunk.mp3'),
+        // chord-breaker BGM
+        chord_default: new Audio('../assets/audio/game/chord-breaker/space.mp3'),
+        chord_cherryBlossom: new Audio('../assets/audio/game/chord-breaker/cherry_blossom.mp3'),
+        chord_deepOcean: new Audio('../assets/audio/game/chord-breaker/sea.mp3'),
+        chord_goldenAge: new Audio('../assets/audio/game/chord-breaker/golden_age.mp3'),
+        chord_cyberMatrix: new Audio('../assets/audio/game/chord-breaker/cyberpunk.mp3')
     };
 
     // 配置 BGM 循环
@@ -33,6 +39,12 @@ const GameAudio = (() => {
     }
 
     let currentBgm = null;
+
+    function getSafeVolume() {
+        const v = Number(volume);
+        if (!Number.isFinite(v)) return 0.5;
+        return Math.max(0, Math.min(1, v));
+    }
 
     function playBgm(theme) {
         if (!enabled) return;
@@ -53,6 +65,13 @@ const GameAudio = (() => {
         else if (theme === 'slingshot_lavaWorld') trackKey = 'slingshot_volcano';
         else if (theme === 'slingshot_cyberNeon') trackKey = 'slingshot_cyberpunk';
 
+        // chord-breaker 映射 (弦界皮肤)
+        else if (theme === 'chord_default') trackKey = 'chord_default';
+        else if (theme === 'chord_cherryBlossom') trackKey = 'chord_cherryBlossom';
+        else if (theme === 'chord_deepOcean') trackKey = 'chord_deepOcean';
+        else if (theme === 'chord_goldenAge') trackKey = 'chord_goldenAge';
+        else if (theme === 'chord_cyberMatrix') trackKey = 'chord_cyberMatrix';
+
         const track = bgmTracks[trackKey];
         if (!track) return;
 
@@ -60,7 +79,7 @@ const GameAudio = (() => {
         if (currentBgm === track) {
             // 如果音乐被暂停了，尝试继续播放
             if (currentBgm.paused) {
-                currentBgm.volume = volume * 0.5; // BGM音量稍低一点，避免盖过音效
+                currentBgm.volume = getSafeVolume() * 0.5; // BGM音量稍低一点，避免盖过音效
                 currentBgm.play().catch(e => console.warn("BGM播放失败:", e));
             }
             return;
@@ -74,9 +93,17 @@ const GameAudio = (() => {
 
         // 播放新音乐
         currentBgm = track;
-        currentBgm.volume = volume * 0.5;
-        currentBgm.currentTime = 0;
-        currentBgm.play().catch(e => console.warn("BGM播放失败:", e));
+        currentBgm.volume = getSafeVolume() * 0.5;
+        // 在大多数浏览器中，对未完全加载的 Audio 对象设置 currentTime = 0 可能会静默失败或抛错，
+        // 这里采用更安全的处理方式：如果是第一次播放，直接 play
+        try {
+            currentBgm.currentTime = 0;
+        } catch (e) { }
+
+        const playPromise = currentBgm.play();
+        if (playPromise !== undefined) {
+            playPromise.catch(e => console.warn("BGM播放失败 (可能被自动播放策略拦截):", e));
+        }
     }
 
     function stopBgm() {
@@ -310,7 +337,8 @@ const GameAudio = (() => {
     }
 
     function setVolume(v) {
-        volume = Math.max(0, Math.min(1, v));
+        const parsed = Number(v);
+        volume = Number.isFinite(parsed) ? Math.max(0, Math.min(1, parsed)) : 0.5;
         if (masterGain) masterGain.gain.value = volume;
         if (currentBgm) currentBgm.volume = volume * 0.5;
         localStorage.setItem('game_audio_volume', volume.toString());
@@ -319,7 +347,7 @@ const GameAudio = (() => {
     function getVolume() { return volume; }
 
     function setEnabled(state) {
-        enabled = state;
+        enabled = !!state;
         if (!enabled) {
             stopBgm();
         } else if (currentBgm) {
@@ -332,9 +360,17 @@ const GameAudio = (() => {
 
     function initSettings() {
         const sv = localStorage.getItem('game_audio_volume');
-        if (sv !== null) volume = parseFloat(sv);
+        if (sv !== null) {
+            const parsed = parseFloat(sv);
+            volume = Number.isFinite(parsed) ? Math.max(0, Math.min(1, parsed)) : 0.5;
+        } else {
+            volume = 0.5;
+        }
+
         const se = localStorage.getItem('game_audio_enabled');
-        if (se !== null) enabled = se === 'true';
+        if (se === 'true') enabled = true;
+        else if (se === 'false') enabled = false;
+        else enabled = true;
     }
 
     return {

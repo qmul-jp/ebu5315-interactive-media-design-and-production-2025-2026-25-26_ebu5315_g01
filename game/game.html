@@ -725,6 +725,14 @@
             <span class="knowledge-tip-label">💡</span>
             <span id="chordKnowledgeText">Chord Theorem: PA × PB = PC × PD</span>
         </div>
+        <!-- 高层级的游戏内 Toast -->
+        <div id="chordToast"
+            style="position: absolute; top: 20px; left: 50%; transform: translateX(-50%) translateY(-100%); opacity: 0; background: rgba(30, 41, 59, 0.95); border: 1.5px solid rgba(255, 255, 255, 0.2); border-radius: 8px; padding: 12px 20px; display: flex; align-items: center; gap: 12px; z-index: 1000; transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); pointer-events: none; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5), 0 8px 10px -6px rgba(0, 0, 0, 0.1); width: max-content; min-width: 250px;">
+            <span id="chordToastIcon" style="font-size: 1.5rem;">🏆</span>
+            <span id="chordToastText"
+                style="color: #F8FAFC; font-weight: bold; font-family: Inter, sans-serif; font-size: 1rem;"></span>
+        </div>
+
         <div class="game-overlay" id="chordStartOverlay">
             <div class="game-overlay-panel">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
@@ -736,8 +744,31 @@
                 </div>
                 <p class="game-overlay-desc" data-game-i18n="game.chord.desc">Launch energy balls that bounce inside the
                     circle!</p>
+                <button type="button" class="btn btn-primary btn-primary-full" id="chordStartBtn"
+                    data-game-i18n="chord.start">Start</button>
+                <div class="game-overlay-buttons" style="margin-top:12px;">
+                    <button type="button" class="btn btn-outline" id="chordAchievementBtn" style="flex:1;">🏆 <span
+                            data-game-i18n="chord.achievements">成就</span></button>
+                    <button type="button" class="btn btn-outline" id="chordSkinBtn" style="flex:1;">🎨 <span
+                            data-game-i18n="chord.skins">皮肤</span></button>
+                </div>
+                <div class="game-overlay-buttons" style="margin-top:12px;">
+                    <button type="button" class="btn btn-outline" id="chordSelectLevelBtn"
+                        style="flex:1; width: 100%;">🎛️ <span data-game-i18n="chord.selectLevel">选择关卡</span></button>
+                </div>
+            </div>
+        </div>
+
+        <div class="game-overlay" id="chordLevelSelectOverlay" style="display:none;">
+            <div class="game-overlay-panel">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <h2 data-game-i18n="chord.selectLevel" style="margin: 0;">Select Level</h2>
+                    <button type="button" class="btn btn-outline" id="chordCloseLevelSelectBtn"
+                        style="padding: 6px 12px; min-width: auto; font-size: 0.9rem; margin-top: -10px; margin-right: -10px;">
+                        ✕
+                    </button>
+                </div>
                 <div class="level-select-container">
-                    <p class="level-select-title" data-game-i18n="game.selectLevel">Select Level:</p>
                     <div class="level-select-grid">
                         <button type="button" class="btn btn-outline chord-level-btn level-btn"
                             data-level="0">1</button>
@@ -755,6 +786,14 @@
                             data-level="6">7</button>
                         <button type="button" class="btn btn-outline chord-level-btn level-btn"
                             data-level="7">8</button>
+                        <button type="button" class="btn btn-outline chord-level-btn level-btn"
+                            data-level="8">9</button>
+                        <button type="button" class="btn btn-outline chord-level-btn level-btn"
+                            data-level="9">10</button>
+                        <button type="button" class="btn btn-outline chord-level-btn level-btn"
+                            data-level="10">11</button>
+                        <button type="button" class="btn btn-outline chord-level-btn level-btn"
+                            data-level="11">12</button>
                     </div>
                 </div>
             </div>
@@ -777,13 +816,117 @@
             <div class="game-overlay-panel">
                 <h2 data-game-i18n="chord.finalCongrats">Congratulations!</h2>
                 <p class="game-overlay-desc" data-game-i18n="chord.finalDesc">You have completed all levels.</p>
-                <div class="game-final-score" id="chordFinalScore">0 / 24 ★</div>
+                <div class="game-final-score" id="chordFinalScore">0 / 36 ★</div>
                 <div class="game-stars" id="chordFinalStars">⭐⭐⭐</div>
                 <div class="game-overlay-buttons">
                     <button type="button" class="btn btn-primary" id="chordReplayAllBtn"
                         data-game-i18n="chord.playAgain">Play Again</button>
                     <button type="button" class="btn btn-outline" id="chordFinalMenuBtn"
                         data-game-i18n="chord.backToMenu">Back to Menu</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 成就面板 -->
+        <div class="game-overlay" id="chordAchievementOverlay" style="display:none;">
+            <div class="game-overlay-panel sniper-feature-panel">
+                <div class="sniper-feature-header">
+                    <h2>🏆 <span data-game-i18n="chord.achievements">Achievements</span></h2>
+                    <button type="button" class="btn-icon" id="chordAchievementCloseBtn">✕</button>
+                </div>
+                <div class="sniper-feature-content" id="chordAchievementList">
+                    <!-- JS 渲染成就卡片 -->
+                </div>
+            </div>
+        </div>
+
+        <!-- 皮肤面板 -->
+        <div class="game-overlay" id="chordSkinOverlay" style="display:none;">
+            <div class="game-overlay-panel sniper-feature-panel">
+                <div class="sniper-feature-header">
+                    <h2>🎨 <span data-game-i18n="chord.skins">Skins</span></h2>
+                    <button type="button" class="btn-icon" id="chordSkinCloseBtn">✕</button>
+                </div>
+                <div class="sniper-skin-tabs" id="chordSkinTabs">
+                    <button class="skin-tab active" data-target="ball" data-game-i18n="chord.skin.balls">能量球皮肤</button>
+                    <button class="skin-tab" data-target="skin" data-game-i18n="chord.skin.skins">弦界皮肤</button>
+                </div>
+                <div class="sniper-feature-content" id="chordSkinList">
+                    <!-- JS 渲染皮肤卡片 -->
+                </div>
+            </div>
+        </div>
+
+        <!-- 成就详情面板 -->
+        <div class="game-overlay" id="chordAchievementDetailOverlay" style="display:none; z-index: 300;">
+            <div class="game-overlay-panel sniper-feature-panel" style="max-width: 400px; text-align: center;">
+                <div class="sniper-feature-header">
+                    <h2 data-game-i18n="chord.achievementDetail">成就详情</h2>
+                    <button type="button" class="btn-icon" id="chordAchievementDetailCloseBtn">✕</button>
+                </div>
+                <div class="sniper-feature-content">
+                    <div class="detail-icon" id="chordAchievementDetailIcon"
+                        style="font-size: 4rem; margin-bottom: 16px;">🏆</div>
+                    <h3 id="chordAchievementDetailName" style="font-size: 1.5rem; margin-bottom: 8px; color: #fff;">
+                        成就名称</h3>
+                    <p id="chordAchievementDetailDesc" style="color: #cbd5e1; line-height: 1.6; margin-bottom: 24px;">
+                        成就描述内容</p>
+                    <div class="progress-container"
+                        style="background: rgba(15, 23, 42, 0.5); padding: 16px; border-radius: 8px;">
+                        <div
+                            style="display: flex; justify-content: space-between; margin-bottom: 8px; color: #fff; font-size: 0.9rem;">
+                            <span data-game-i18n="chord.progress">进度</span>
+                            <span id="chordAchievementDetailProgressText">0/1</span>
+                        </div>
+                        <div class="progress-bar-bg"
+                            style="width: 100%; height: 8px; background: rgba(255, 255, 255, 0.1); border-radius: 4px; overflow: hidden;">
+                            <div id="chordAchievementDetailProgressBar"
+                                style="height: 100%; width: 0%; background: var(--primary); transition: width 0.3s;">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 皮肤详情面板 -->
+        <div class="game-overlay" id="chordSkinDetailOverlay" style="display:none; z-index: 300;">
+            <div class="game-overlay-panel sniper-feature-panel" style="max-width: 400px; text-align: center;">
+                <div class="sniper-feature-header">
+                    <h2 data-game-i18n="chord.skinDetail">皮肤详情</h2>
+                    <button type="button" class="btn-icon" id="chordSkinDetailCloseBtn">✕</button>
+                </div>
+                <div class="sniper-feature-content">
+                    <div class="detail-preview"
+                        style="width: 160px; height: 160px; margin: 0 auto 16px; background: rgba(15, 23, 42, 0.8); border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center; overflow: hidden; position: relative;">
+                        <canvas id="chordSkinPreviewCanvas" width="160" height="160"></canvas>
+                    </div>
+                    <h3 id="chordSkinDetailName" style="font-size: 1.5rem; margin-bottom: 8px; color: #fff;">皮肤名称
+                    </h3>
+                    <p id="chordSkinDetailDesc" style="color: #cbd5e1; line-height: 1.6; margin-bottom: 24px;">
+                        解锁条件描述
+                    </p>
+                    <div class="progress-container"
+                        style="background: rgba(15, 23, 42, 0.5); padding: 16px; border-radius: 8px;">
+                        <div
+                            style="display: flex; justify-content: space-between; margin-bottom: 8px; color: #fff; font-size: 0.9rem;">
+                            <span data-game-i18n="chord.progress">进度</span>
+                            <span id="chordSkinDetailProgressText">0/1</span>
+                        </div>
+                        <div class="progress-bar-bg"
+                            style="width: 100%; height: 8px; background: rgba(255, 255, 255, 0.1); border-radius: 4px; overflow: hidden;">
+                            <div id="chordSkinDetailProgressBar"
+                                style="height: 100%; width: 0%; background: var(--primary); transition: width 0.3s;">
+                            </div>
+                        </div>
+                    </div>
+                    <div style="margin-top: 24px;">
+                        <button type="button" class="btn btn-primary btn-primary-full" id="chordSkinDetailEquipBtn"
+                            style="display:none;" data-game-i18n="chord.equip">穿戴</button>
+                        <button type="button" class="btn btn-outline btn-primary-full" id="chordSkinDetailEquippedBtn"
+                            disabled style="display:none; opacity: 0.5; cursor: default;"
+                            data-game-i18n="chord.equipped">已装备</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -857,11 +1000,11 @@
     <script src="../js/main.js"></script>
     <script src="../js/data/game-i18n.js"></script>
     <script src="../js/data/game-audio.js"></script>
-    <script src="../js/pages/game.js"></script>
     <script src="../js/pages/pi-sniper.js"></script>
     <script src="../js/pages/gravity-slingshot.js"></script>
     <script src="../js/pages/angle-hunter.js"></script>
     <script src="../js/pages/chord-breaker.js"></script>
+    <script src="../js/pages/game.js"></script>
     <script src="../js/components/ai-sprite.js"></script>
 </body>
 

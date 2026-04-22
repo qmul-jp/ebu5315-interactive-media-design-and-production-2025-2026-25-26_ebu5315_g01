@@ -270,11 +270,15 @@ const PiSniper = (() => {
     function bindEvents() {
         // 开始按钮
         const startBtn = document.getElementById('sniperStartBtn');
-        if (startBtn) startBtn.addEventListener('click', startGame);
+        if (startBtn) startBtn.addEventListener('click', () => {
+            if (window.GameAudio && typeof window.GameAudio.init === 'function') window.GameAudio.init();
+            startGame();
+        });
 
         // 重新开始
         const restartBtn = document.getElementById('sniperRestartBtn');
         if (restartBtn) restartBtn.addEventListener('click', () => {
+            if (window.GameAudio && typeof window.GameAudio.init === 'function') window.GameAudio.init();
             elEndOverlay.style.display = 'none';
             startGame();
         });
@@ -293,6 +297,8 @@ const PiSniper = (() => {
         const closeRecord = document.getElementById('sniperRecordCloseBtn');
 
         if (btnAchievement) btnAchievement.addEventListener('click', () => {
+            if (window.GameAudio && typeof window.GameAudio.init === 'function') window.GameAudio.init();
+            GameAudio.playClick();
             if (elStartOverlay) elStartOverlay.style.display = 'none';
             if (overlayAchievement) {
                 overlayAchievement.style.display = 'flex';
@@ -300,6 +306,8 @@ const PiSniper = (() => {
             }
         });
         if (btnSkin) btnSkin.addEventListener('click', () => {
+            if (window.GameAudio && typeof window.GameAudio.init === 'function') window.GameAudio.init();
+            GameAudio.playClick();
             if (elStartOverlay) elStartOverlay.style.display = 'none';
             if (overlaySkin) {
                 overlaySkin.style.display = 'flex';
@@ -315,6 +323,8 @@ const PiSniper = (() => {
             }
         });
         if (btnRecord) btnRecord.addEventListener('click', () => {
+            if (window.GameAudio && typeof window.GameAudio.init === 'function') window.GameAudio.init();
+            GameAudio.playClick();
             if (elStartOverlay) elStartOverlay.style.display = 'none';
             if (overlayRecord) {
                 overlayRecord.style.display = 'flex';
@@ -377,8 +387,11 @@ const PiSniper = (() => {
         if (elEndOverlay) elEndOverlay.style.display = 'none';
         // 绘制静态预览
         drawStaticPreview();
-        // 播放背景音乐
-        GameAudio.playBgm(skin.background);
+        // 初始化音频上下文并播放背景音乐
+        if (window.GameAudio) {
+            if (typeof window.GameAudio.init === 'function') window.GameAudio.init();
+            if (typeof window.GameAudio.playBgm === 'function') window.GameAudio.playBgm(skin.background);
+        }
     }
 
     function hide() {

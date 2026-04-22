@@ -320,6 +320,60 @@ window.GameI18N = (() => {
         'chord.knowledge.secantTheorem': { zh: '割线定理：从圆外一点引割线，切线²=割线外段×全段', en: 'Secant Theorem: Tangent² = External segment × Whole secant' },
         'chord.knowledge.perpBisector': { zh: '弦的垂直平分线过圆心', en: 'Perpendicular bisector of a chord passes through the center' },
         'chord.knowledge.reflection': { zh: '反射定律：入射角=反射角（圆弧法线=半径方向）', en: 'Reflection: Angle of incidence = Angle of reflection (normal = radius direction)' },
+
+        // ===== 弦之裂变 - 成就与皮肤 UI =====
+        'chord.achievements': { zh: '成就', en: 'Achievements' },
+        'chord.skins': { zh: '皮肤', en: 'Skins' },
+        'chord.selectLevel': { zh: '选择关卡', en: 'Select Level' },
+        'chord.achievementDetail': { zh: '成就详情', en: 'Achievement Detail' },
+        'chord.skinDetail': { zh: '皮肤详情', en: 'Skin Detail' },
+        'chord.progress': { zh: '进度', en: 'Progress' },
+        'chord.equip': { zh: '穿戴', en: 'Equip' },
+        'chord.equipped': { zh: '已装备', en: 'Equipped' },
+        'chord.skin.skins': { zh: '弦界皮肤', en: 'Chord Skins' },
+        'chord.achievement.unlocked': { zh: '已达成', en: 'Unlocked' },
+        'chord.skin.unlocked': { zh: '解锁皮肤', en: 'Unlocked Skin' },
+
+        // ===== 弦之裂变 - 成就详情 =====
+        'chord.achievement.novice': { zh: '初探弦界', en: 'Novice' },
+        'chord.achievement.novice.desc': { zh: '首次通关第 1 关。', en: 'Clear Level 1 for the first time.' },
+        'chord.achievement.gettingTheHangOfIt': { zh: '渐入佳境', en: 'Getting the Hang of It' },
+        'chord.achievement.gettingTheHangOfIt.desc': { zh: '累计获得 15 颗星星。', en: 'Collect 15 stars in total.' },
+        'chord.achievement.fiveStarChain': { zh: '五星连珠', en: 'Five-Star Chain' },
+        'chord.achievement.fiveStarChain.desc': { zh: '只发射一次便通关第 10 关。', en: 'Clear Level 10 with only 1 shot.' },
+        'chord.achievement.geometryMaster': { zh: '几何大师', en: 'Geometry Master' },
+        'chord.achievement.geometryMaster.desc': { zh: '成功通关最高难度（第 12 关）。', en: 'Clear the highest difficulty (Level 12).' },
+        'chord.achievement.perfectionist': { zh: '完美主义', en: 'Perfectionist' },
+        'chord.achievement.perfectionist.desc': { zh: '在所有 12 个关卡中全部获得 3 星评价。', en: 'Get 3 stars in all 12 levels.' },
+        'chord.achievement.chordResonance': { zh: '弦音共振', en: 'Chord Resonance' },
+        'chord.achievement.chordResonance.desc': { zh: '光线在关卡中累计发生 50 次反射。', en: 'Accumulate 50 ray reflections in levels.' },
+        'chord.achievement.neverGiveUp': { zh: '百折不挠', en: 'Never Give Up' },
+        'chord.achievement.neverGiveUp.desc': { zh: '在同一个关卡中消耗 5 个能量球后通关。', en: 'Clear a level after using 5 energy balls.' },
+
+        // ===== 弦之裂变 - 皮肤详情 =====
+        'chord.skin.balls': { zh: '能量球皮肤', en: 'Ball Skins' },
+        'chord.skin.default': { zh: '经典霓虹', en: 'Classic Neon' },
+        'chord.skin.default.desc': { zh: '默认拥有的经典青蓝色弦界。', en: 'The default classic cyan chord world.' },
+        'chord.skin.cherryBlossom': { zh: '樱花飞舞', en: 'Cherry Blossom' },
+        'chord.skin.cherryBlossom.desc': { zh: '累计获得 15 颗星星解锁。柔和的粉红色光晕与花瓣特效。', en: 'Unlock: Collect 15 stars. Soft pink halos with petal effects.' },
+        'chord.skin.deepOcean': { zh: '深海潜流', en: 'Deep Ocean' },
+        'chord.skin.deepOcean.desc': { zh: '通关第 8 关解锁。幽蓝色节点与类似水波纹的流动光线。', en: 'Unlock: Clear Level 8. Deep blue nodes and water-like flowing light.' },
+        'chord.skin.goldenAge': { zh: '黄金时代', en: 'Golden Age' },
+        'chord.skin.goldenAge.desc': { zh: '全12关获得3星解锁。纯金色描边与耀眼的金色激光。', en: 'Unlock: 3 stars in all 12 levels. Pure golden strokes and dazzling golden lasers.' },
+        'chord.skin.cyberMatrix': { zh: '赛博矩阵', en: 'Cyber Matrix' },
+        'chord.skin.cyberMatrix.desc': { zh: '累计光线反射 50 次解锁。品红与荧光绿撞色，带有故障风格的连线。', en: 'Unlock: 50 ray reflections. Magenta and neon green with glitch style.' },
+
+        // ===== 弦之裂变 - 能量球皮肤 =====
+        'chord.skin.ball.default': { zh: '纯白光球', en: 'Pure White' },
+        'chord.skin.ball.default.desc': { zh: '默认拥有的纯白色实心圆球，带有柔和白光拖尾。', en: 'Default pure white solid ball with soft white trail.' },
+        'chord.skin.ball.fireball': { zh: '炽热火球', en: 'Fireball' },
+        'chord.skin.ball.fireball.desc': { zh: '累计获得 20 颗星星解锁。核心为橙黄色，拖尾为跳动的火焰粒子。', en: 'Unlock: Collect 20 stars. Orange-yellow core with jumping fire particle trail.' },
+        'chord.skin.ball.frostCore': { zh: '冰霜核心', en: 'Frost Core' },
+        'chord.skin.ball.frostCore.desc': { zh: '达成成就【初探弦界】解锁。冰蓝色球体，拖尾为菱形冰晶碎片。', en: 'Unlock: "Novice" achievement. Ice blue ball with diamond ice crystal trail.' },
+        'chord.skin.ball.darkMatter': { zh: '暗影物质', en: "Dark Matter" },
+        'chord.skin.ball.darkMatter.desc': { zh: '达成成就【百折不挠】解锁。黑色球体，带有紫色的发光边缘与深紫迷雾拖尾。', en: 'Unlock: "Never Give Up" achievement. Black ball with purple glowing edge and dark purple mist trail.' },
+        'chord.skin.ball.lightning': { zh: '闪电穿梭', en: 'Lightning' },
+        'chord.skin.ball.lightning.desc': { zh: '达成成就【五星连珠】解锁。亮黄色球体，拖尾带有折线的电流闪烁特效。', en: 'Unlocked by achievement "Five-Star Chain". Bright yellow ball with lightning trail.' },
     };
 
     function t(key) {

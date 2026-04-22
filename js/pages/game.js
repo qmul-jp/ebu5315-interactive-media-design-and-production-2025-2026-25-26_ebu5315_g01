@@ -64,6 +64,7 @@
             if (el) {
                 el.addEventListener('click', (e) => {
                     e.stopPropagation();
+                    if (window.GameAudio && typeof window.GameAudio.init === 'function') window.GameAudio.init();
                     GameAudio.playClick();
                     showView(view);
                     const gameModule = getGameModule(module);

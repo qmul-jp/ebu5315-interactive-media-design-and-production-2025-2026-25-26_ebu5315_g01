@@ -77,7 +77,8 @@
     /* Achievements                                                               */
     /* -------------------------------------------------------------------------- */
     #sniperAchievementList,
-    #slingshotAchievementList {
+    #slingshotAchievementList,
+    #chordAchievementList {
         display: flex;
         flex-direction: column;
         gap: 12px;
@@ -187,7 +188,8 @@
     }
 
     #sniperSkinList,
-    #slingshotSkinList {
+    #slingshotSkinList,
+    #chordSkinList {
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
         gap: 16px;

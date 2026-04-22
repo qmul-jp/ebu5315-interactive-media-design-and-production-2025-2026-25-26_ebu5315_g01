@@ -225,10 +225,16 @@ const AngleHunter = (() => {
 
     function bindEvents() {
         const startBtn = document.getElementById('hunterStartBtn');
-        if (startBtn) startBtn.addEventListener('click', startGame);
+        if (startBtn) startBtn.addEventListener('click', () => {
+            if (window.GameAudio && typeof window.GameAudio.init === 'function') window.GameAudio.init();
+            startGame();
+        });
 
         const nextBtn = document.getElementById('hunterNextBtn');
-        if (nextBtn) nextBtn.addEventListener('click', nextLevel);
+        if (nextBtn) nextBtn.addEventListener('click', () => {
+            if (window.GameAudio && typeof window.GameAudio.init === 'function') window.GameAudio.init();
+            nextLevel();
+        });
 
         if (canvas) {
             canvas.addEventListener('pointerdown', onPointerDown);
@@ -248,6 +254,13 @@ const AngleHunter = (() => {
         resizeCanvas();
         if (elStartOverlay) elStartOverlay.style.display = 'flex';
         if (elWinOverlay) elWinOverlay.style.display = 'none';
+
+        // 初始化音频上下文并播放背景音乐（复用森林背景音效，可根据需要调整）
+        if (window.GameAudio) {
+            if (typeof window.GameAudio.init === 'function') window.GameAudio.init();
+            if (typeof window.GameAudio.playBgm === 'function') window.GameAudio.playBgm('forest');
+        }
+
         drawStatic();
     }
 
@@ -256,6 +269,10 @@ const AngleHunter = (() => {
         if (animId) cancelAnimationFrame(animId);
         animId = null;
         inputMode = false;
+
+        if (window.GameAudio && typeof window.GameAudio.stopBgm === 'function') {
+            window.GameAudio.stopBgm();
+        }
     }
 
     function startGame() {

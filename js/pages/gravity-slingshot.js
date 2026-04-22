@@ -598,6 +598,7 @@ const GravitySlingshot = (() => {
         const startBtn = document.getElementById('slingshotStartBtn');
         if (startBtn) {
             startBtn.addEventListener('click', () => {
+                if (window.GameAudio && typeof window.GameAudio.init === 'function') window.GameAudio.init();
                 GameAudio.playClick();
                 if (elStartOverlay) elStartOverlay.style.display = 'none';
                 running = true;
@@ -608,6 +609,7 @@ const GravitySlingshot = (() => {
         const selectLevelBtn = document.getElementById('slingshotSelectLevelBtn');
         if (selectLevelBtn) {
             selectLevelBtn.addEventListener('click', () => {
+                if (window.GameAudio && typeof window.GameAudio.init === 'function') window.GameAudio.init();
                 GameAudio.playClick();
                 if (elStartOverlay) elStartOverlay.style.display = 'none';
                 if (elLevelSelectOverlay) elLevelSelectOverlay.style.display = 'flex';
@@ -655,6 +657,7 @@ const GravitySlingshot = (() => {
         const achievementBtn = document.getElementById('slingshotAchievementBtn');
         if (achievementBtn) {
             achievementBtn.addEventListener('click', () => {
+                if (window.GameAudio && typeof window.GameAudio.init === 'function') window.GameAudio.init();
                 GameAudio.playClick();
                 if (elStartOverlay) elStartOverlay.style.display = 'none';
                 document.getElementById('slingshotAchievementOverlay').style.display = 'flex';
@@ -665,6 +668,7 @@ const GravitySlingshot = (() => {
         const skinBtn = document.getElementById('slingshotSkinBtn');
         if (skinBtn) {
             skinBtn.addEventListener('click', () => {
+                if (window.GameAudio && typeof window.GameAudio.init === 'function') window.GameAudio.init();
                 GameAudio.playClick();
                 if (elStartOverlay) elStartOverlay.style.display = 'none';
                 document.getElementById('slingshotSkinOverlay').style.display = 'flex';
@@ -753,8 +757,11 @@ const GravitySlingshot = (() => {
         resizeCanvas();
         generateStars();
 
-        // 根据当前装备的星球皮肤播放对应的 BGM
-        GameAudio.playBgm('slingshot_' + (equippedSkins.planet || 'default'));
+        // 初始化音频上下文并根据当前装备的星球皮肤播放对应的 BGM
+        if (window.GameAudio) {
+            if (typeof window.GameAudio.init === 'function') window.GameAudio.init();
+            if (typeof window.GameAudio.playBgm === 'function') window.GameAudio.playBgm('slingshot_' + (equippedSkins.planet || 'default'));
+        }
 
         // 显示开始卡片，并暂停游戏逻辑
         const startOverlay = document.getElementById('slingshotStartOverlay');
