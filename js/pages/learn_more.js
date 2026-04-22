@@ -2,6 +2,48 @@
  * Learn More：Basic / 进阶 / 更进阶 下拉导航、滚动高亮（定理卡片为静态 HTML）
  */
 (function () {
+    function initSpriteLearnBreakPrompt() {
+        const SPRITE_ENABLED_KEY = 'circlelearnSpriteEnabledV1';
+        if (localStorage.getItem(SPRITE_ENABLED_KEY) === '0') return;
+
+        let triggered = false;
+        let visibilityWaitHandler = null;
+        const triggerPrompt = () => {
+            if (triggered) return;
+            if (localStorage.getItem(SPRITE_ENABLED_KEY) === '0') return;
+            triggered = true;
+            document.dispatchEvent(new CustomEvent('circlelearn:spriteLearnBreakPrompt'));
+        };
+
+        const timer = window.setTimeout(() => {
+            if (document.visibilityState === 'visible') {
+                triggerPrompt();
+                return;
+            }
+            visibilityWaitHandler = () => {
+                if (document.visibilityState !== 'visible') return;
+                if (visibilityWaitHandler) {
+                    document.removeEventListener('visibilitychange', visibilityWaitHandler);
+                    visibilityWaitHandler = null;
+                }
+                triggerPrompt();
+            };
+            document.addEventListener('visibilitychange', visibilityWaitHandler);
+        }, 30000);
+
+        window.addEventListener(
+            'pagehide',
+            () => {
+                window.clearTimeout(timer);
+                if (visibilityWaitHandler) {
+                    document.removeEventListener('visibilitychange', visibilityWaitHandler);
+                    visibilityWaitHandler = null;
+                }
+            },
+            { once: true }
+        );
+    }
+
     function bindDropdowns() {
         const dropdowns = document.querySelectorAll('.learn-toc-dropdown');
         if (!dropdowns.length) return;
@@ -113,4 +155,5 @@
     bindDropdowns();
     initScrollSpy();
     initBackToTop();
+    initSpriteLearnBreakPrompt();
 })();

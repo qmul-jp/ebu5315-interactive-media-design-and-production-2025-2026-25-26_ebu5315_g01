@@ -710,16 +710,16 @@ body:not(.theme-sync-ready):not(.dark-mode) .switch > .moon {
 }
 
 .settings-trigger-icon {
-    width: 20px;
-    height: 20px;
+    width: 22px;
+    height: 22px;
     display: block;
     transition: transform 0.25s ease, filter 0.25s ease, opacity 0.25s ease;
     opacity: 0.92;
 }
 
 .settings-trigger-arrow {
-    width: 11px;
-    height: 11px;
+    width: 13px;
+    height: 13px;
     display: block;
     fill: currentColor;
     transform: rotate(-90deg);
@@ -754,7 +754,7 @@ body.dark-mode .nav-contact-select .selected:hover {
 }
 
 body.dark-mode .settings-trigger-icon {
-    filter: brightness(1.1);
+    filter: brightness(0) saturate(100%) invert(100%);
 }
 
 body.dark-mode .nav-contact-select .selected:hover .settings-trigger-icon {
