@@ -412,6 +412,12 @@ const GravitySlingshot = (() => {
                     GameAudio.playClick();
                     equippedSkins[type] = skin.id;
                     saveProgress();
+
+                    // 如果更换的是星球皮肤，实时更新背景音乐
+                    if (type === 'planet') {
+                        GameAudio.playBgm('slingshot_' + (skin.id || 'default'));
+                    }
+
                     renderSkins(currentSkinTab);
                     return;
                 }
@@ -719,6 +725,12 @@ const GravitySlingshot = (() => {
                 GameAudio.playClick();
                 equippedSkins[currentViewingSkinType] = currentViewingSkin.id;
                 saveProgress();
+
+                // 如果更换的是星球皮肤，实时更新背景音乐
+                if (currentViewingSkinType === 'planet') {
+                    GameAudio.playBgm('slingshot_' + (currentViewingSkin.id || 'default'));
+                }
+
                 renderSkins(currentSkinTab); // update list UI
                 showSkinDetail(currentViewingSkinType, currentViewingSkin); // update detail UI
             });
@@ -741,6 +753,9 @@ const GravitySlingshot = (() => {
         resizeCanvas();
         generateStars();
 
+        // 根据当前装备的星球皮肤播放对应的 BGM
+        GameAudio.playBgm('slingshot_' + (equippedSkins.planet || 'default'));
+
         // 显示开始卡片，并暂停游戏逻辑
         const startOverlay = document.getElementById('slingshotStartOverlay');
         if (startOverlay) startOverlay.style.display = 'flex';
@@ -754,6 +769,7 @@ const GravitySlingshot = (() => {
     function hide() {
         active = false;
         running = false;
+        GameAudio.stopBgm();
         if (animId) cancelAnimationFrame(animId);
         animId = null;
     }

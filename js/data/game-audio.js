@@ -10,14 +10,21 @@ const GameAudio = (() => {
     let volume = 0.5;
 
     // 外部加载的音效文件 (使用相对于 HTML 页面的正确路径)
-    const bossWarningAudio = new Audio('../assets/audio/game/boss_alert.mp3');
+    const bossWarningAudio = new Audio('../assets/audio/game/pi-sniper/boss_alert.mp3');
 
     // BGM 音频对象
     const bgmTracks = {
-        cyberpunk: new Audio('../assets/audio/game/cyberpunk.mp3'),
-        forest: new Audio('../assets/audio/game/forest.mp3'),
-        sea: new Audio('../assets/audio/game/sea.mp3'),
-        space: new Audio('../assets/audio/game/space.mp3')
+        // pi-sniper BGM
+        cyberpunk: new Audio('../assets/audio/game/pi-sniper/cyberpunk.mp3'),
+        forest: new Audio('../assets/audio/game/pi-sniper/forest.mp3'),
+        sea: new Audio('../assets/audio/game/pi-sniper/sea.mp3'),
+        space: new Audio('../assets/audio/game/pi-sniper/space.mp3'),
+        // gravity-slingshot BGM
+        slingshot_normal: new Audio('../assets/audio/game/gravity-slingshot/normal_universe.mp3'),
+        slingshot_ultra: new Audio('../assets/audio/game/gravity-slingshot/ultra_universe.mp3'),
+        slingshot_ice: new Audio('../assets/audio/game/gravity-slingshot/ice.mp3'),
+        slingshot_volcano: new Audio('../assets/audio/game/gravity-slingshot/volcano.mp3'),
+        slingshot_cyberpunk: new Audio('../assets/audio/game/gravity-slingshot/cyberpunk.mp3')
     };
 
     // 配置 BGM 循环
@@ -32,10 +39,19 @@ const GameAudio = (() => {
 
         // 映射主题到对应的音乐
         let trackKey = 'space'; // 默认
+
+        // pi-sniper 映射
         if (theme === 'cyberpunk') trackKey = 'cyberpunk';
         else if (theme === 'forest') trackKey = 'forest';
         else if (theme === 'ocean') trackKey = 'sea';
         else if (theme === 'deepSpace') trackKey = 'space';
+
+        // gravity-slingshot 映射 (星球皮肤)
+        else if (theme === 'slingshot_default') trackKey = 'slingshot_normal';
+        else if (theme === 'slingshot_ringedPlanet') trackKey = 'slingshot_ultra';
+        else if (theme === 'slingshot_iceAge') trackKey = 'slingshot_ice';
+        else if (theme === 'slingshot_lavaWorld') trackKey = 'slingshot_volcano';
+        else if (theme === 'slingshot_cyberNeon') trackKey = 'slingshot_cyberpunk';
 
         const track = bgmTracks[trackKey];
         if (!track) return;
