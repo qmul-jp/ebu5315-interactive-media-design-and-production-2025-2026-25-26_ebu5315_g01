@@ -224,21 +224,16 @@
     /** 飘动振幅渐强时长（秒），消弭与弹开衔接处的抖动 */
     const RING_FLOAT_AMP_RAMP_SEC = prefersParticleMotion ? 1.15 : 0.72;
     /**
-     * 环上飞出装饰图：每项一组「角度 + 环外额外距离（px）」独立调节。
-     * 角度：0 = 向右，Math.PI/2 = 向下。距离：落点半径 ≈ ringGeom.rMax + 对应常量（prefers-reduced-motion 时该 px 会 ×0.72）。
+     * 环上飞出装饰图：统一外扩距离（PC/移动都一致）。
+     * 角度：0 = 向右，Math.PI/2 = 向下。距离：落点半径 ≈ ringGeom.rMax + 该常量（prefers-reduced-motion 时该 px 会 ×0.72）。
      */
+    const RING_POPOUT_UNIFORM_OUTER_PAD_PX = 92;
     const RING_POPOUT_MOONCAKE_ANGLE_RAD = Math.PI * 1.3;
-    const RING_POPOUT_MOONCAKE_OUTER_PAD_PX = 110;
     const RING_POPOUT_CAP_ANGLE_RAD = Math.PI * 0.6;
-    const RING_POPOUT_CAP_OUTER_PAD_PX = 80;
-    const RING_POPOUT_BUBBLE_ANGLE_RAD = Math.PI * 1.8;
-    const RING_POPOUT_BUBBLE_OUTER_PAD_PX = -100;
+    const RING_POPOUT_BUBBLE_ANGLE_RAD = Math.PI * 1.9;
     const RING_POPOUT_CLOCK_ANGLE_RAD = Math.PI * 0.3;
-    const RING_POPOUT_CLOCK_OUTER_PAD_PX = 85;
     const RING_POPOUT_PIE_ANGLE_RAD = Math.PI * 0.9;
-    const RING_POPOUT_PIE_OUTER_PAD_PX = 180;
     const RING_POPOUT_BURGER_ANGLE_RAD = Math.PI * 1.6;
-    const RING_POPOUT_BURGER_OUTER_PAD_PX = 70;
     /** 各层装饰图 <img> 宽度（px），高度按比例；与弹出 transform scale 相乘为最终大小 */
     const RING_POPOUT_IMG_DEFAULT_WIDTH_PX = 260;
     const RING_POPOUT_MOONCAKE_IMG_WIDTH_PX = RING_POPOUT_IMG_DEFAULT_WIDTH_PX;
@@ -253,42 +248,42 @@
             src: 'assets/images/homepage/月饼.png',
             zIndex: 4,
             angleRad: RING_POPOUT_MOONCAKE_ANGLE_RAD,
-            outerPadPx: RING_POPOUT_MOONCAKE_OUTER_PAD_PX,
+            outerPadPx: RING_POPOUT_UNIFORM_OUTER_PAD_PX,
             imgWidthPx: RING_POPOUT_MOONCAKE_IMG_WIDTH_PX
         },
         {
             src: 'assets/images/homepage/瓶盖.png',
             zIndex: 5,
             angleRad: RING_POPOUT_CAP_ANGLE_RAD,
-            outerPadPx: RING_POPOUT_CAP_OUTER_PAD_PX,
+            outerPadPx: RING_POPOUT_UNIFORM_OUTER_PAD_PX,
             imgWidthPx: RING_POPOUT_CAP_IMG_WIDTH_PX
         },
         {
             src: 'assets/images/homepage/气泡2.png',
             zIndex: 6,
             angleRad: RING_POPOUT_BUBBLE_ANGLE_RAD,
-            outerPadPx: RING_POPOUT_BUBBLE_OUTER_PAD_PX,
+            outerPadPx: RING_POPOUT_UNIFORM_OUTER_PAD_PX,
             imgWidthPx: RING_POPOUT_BUBBLE_IMG_WIDTH_PX
         },
         {
             src: 'assets/images/homepage/钟表.png',
             zIndex: 7,
             angleRad: RING_POPOUT_CLOCK_ANGLE_RAD,
-            outerPadPx: RING_POPOUT_CLOCK_OUTER_PAD_PX,
+            outerPadPx: RING_POPOUT_UNIFORM_OUTER_PAD_PX,
             imgWidthPx: RING_POPOUT_CLOCK_IMG_WIDTH_PX
         },
         {
             src: 'assets/images/homepage/派.png',
             zIndex: 8,
             angleRad: RING_POPOUT_PIE_ANGLE_RAD,
-            outerPadPx: RING_POPOUT_PIE_OUTER_PAD_PX,
+            outerPadPx: RING_POPOUT_UNIFORM_OUTER_PAD_PX,
             imgWidthPx: RING_POPOUT_PIE_IMG_WIDTH_PX
         },
         {
             src: 'assets/images/homepage/汉堡.png',
             zIndex: 9,
             angleRad: RING_POPOUT_BURGER_ANGLE_RAD,
-            outerPadPx: RING_POPOUT_BURGER_OUTER_PAD_PX,
+            outerPadPx: RING_POPOUT_UNIFORM_OUTER_PAD_PX,
             imgWidthPx: RING_POPOUT_BURGER_IMG_WIDTH_PX
         }
     ];
@@ -330,6 +325,12 @@
     function smoothstep01(t) {
         const x = Math.min(1, Math.max(0, t));
         return x * x * (3 - 2 * x);
+    }
+
+    /** 稳定伪随机：同一索引每次触发返回固定 0~1，用于“每次距离一致但仍有层次”。 */
+    function stableRand01(i, salt) {
+        const x = Math.sin((i + 1) * 12.9898 + salt * 78.233) * 43758.5453;
+        return x - Math.floor(x);
     }
 
     function ringPopoutEffectiveOuterPadPx(basePadPx) {
@@ -737,8 +738,8 @@
 
         ringParticles = [];
         for (let i = 0; i < count; i += 1) {
-            const baseAng = (i / count) * Math.PI * 2 + (Math.random() - 0.5) * 0.12;
-            const radT = Math.random();
+            const baseAng = (i / count) * Math.PI * 2;
+            const radT = 0.18 + stableRand01(i, 37) * 0.64;
             const baseRe = ringGeom.rMin + radT * (ringGeom.rMax - ringGeom.rMin);
             const tx = ringGeom.cx + Math.cos(baseAng) * baseRe;
             const ty = ringGeom.cy + Math.sin(baseAng) * baseRe;

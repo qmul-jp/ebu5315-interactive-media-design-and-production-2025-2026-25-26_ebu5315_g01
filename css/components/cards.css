@@ -563,3 +563,119 @@ body.dark-mode .feature-card {
     line-height: 1.6;
     margin-bottom: 24px;
 }
+
+@media (max-width: 1024px) {
+    .theorem-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 14px;
+    }
+
+    /* 把 Learn More 提到最上方，不占用卡片格子空间 */
+    .theorem-card-spotlight {
+        display: contents;
+    }
+
+    .theorem-card-spotlight .btn-theorem-learn-more {
+        position: static;
+        left: auto;
+        right: auto;
+        bottom: auto;
+        width: 100%;
+        margin-bottom: 2px;
+        grid-column: 1 / -1;
+        order: -10;
+    }
+
+    .theorem-card-spotlight .theorem-card {
+        order: 0;
+    }
+
+    .theorem-card--flip,
+    .theorem-card-spotlight .theorem-card--flip {
+        min-height: 250px;
+    }
+
+    .theorem-card--flip .theorem-card-face {
+        padding: 14px;
+    }
+
+    /* 手机端：保留 theorem-icon，尺寸缩小避免挤压 */
+    .theorem-media {
+        display: block;
+        margin-bottom: 8px;
+    }
+
+    .theorem-media .theorem-icon {
+        display: flex;
+        width: 34px;
+        height: 34px;
+        margin: 0 auto 8px;
+        top: 0;
+        font-size: 20px;
+    }
+
+    .theorem-image {
+        margin-bottom: 8px;
+    }
+
+    .theorem-image img {
+        height: 88px;
+    }
+
+    .theorem-title {
+        margin-top: 0;
+        margin-bottom: 0;
+        font-size: 18px;
+        line-height: 1.35;
+        overflow-wrap: anywhere;
+        word-break: break-word;
+    }
+
+    /* 翻转后排版收紧，避免混乱 */
+    .theorem-card--flip .theorem-card-back {
+        gap: 8px;
+    }
+
+    .theorem-card--flip .theorem-title--back {
+        font-size: 16px;
+        line-height: 1.3;
+        margin: 0;
+    }
+
+    .theorem-card--flip .theorem-back-text {
+        font-size: 13px;
+        line-height: 1.5;
+        line-clamp: 4;
+        -webkit-line-clamp: 4;
+        overflow-wrap: anywhere;
+        word-break: break-word;
+    }
+
+    .theorem-card--flip .theorem-back-hint {
+        display: none;
+    }
+}
+
+@media (max-width: 560px) {
+    .theorem-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .theorem-card--flip,
+    .theorem-card-spotlight .theorem-card--flip {
+        min-height: 232px;
+    }
+
+    .theorem-image img {
+        height: 82px;
+    }
+
+    .theorem-title {
+        font-size: 16px;
+    }
+
+    .btn-theorem-learn-more {
+        padding: 12px 16px;
+        font-size: 15px;
+    }
+}

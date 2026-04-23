@@ -672,6 +672,10 @@ function initSmoothAnchorScroll() {
             const target = document.getElementById(id);
             if (target) {
                 e.preventDefault();
+                if (id === 'home') {
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                    return;
+                }
                 target.scrollIntoView({
                     behavior: 'smooth',
                     block: 'start'
@@ -679,6 +683,53 @@ function initSmoothAnchorScroll() {
             }
         });
     });
+}
+
+function initHomeTopNavigationBehavior() {
+    const HOME_TOP_FLAG = 'circlelearnForceHomeTop';
+    const links = document.querySelectorAll('a[href*="index.html#home"], a[href="#home"]');
+    links.forEach((link) => {
+        link.addEventListener('click', () => {
+            try {
+                sessionStorage.setItem(HOME_TOP_FLAG, '1');
+            } catch (e) {
+                // ignore storage exceptions
+            }
+        });
+    });
+
+    const isHomePath =
+        window.location.pathname.endsWith('/index.html') ||
+        window.location.pathname.endsWith('\\index.html') ||
+        /\/$/.test(window.location.pathname);
+    if (!isHomePath) return;
+
+    let shouldForceTop = false;
+    try {
+        shouldForceTop =
+            window.location.hash === '#home' ||
+            sessionStorage.getItem(HOME_TOP_FLAG) === '1';
+    } catch (e) {
+        shouldForceTop = window.location.hash === '#home';
+    }
+    if (!shouldForceTop) return;
+
+    if ('scrollRestoration' in history) {
+        history.scrollRestoration = 'manual';
+    }
+    const resetToTop = () => window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+    resetToTop();
+    requestAnimationFrame(resetToTop);
+    window.setTimeout(resetToTop, 0);
+
+    if (window.location.hash === '#home') {
+        history.replaceState(null, '', `${window.location.pathname}${window.location.search}`);
+    }
+    try {
+        sessionStorage.removeItem(HOME_TOP_FLAG);
+    } catch (e) {
+        // ignore storage exceptions
+    }
 }
 
 function initNavScrollSpy() {

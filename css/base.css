@@ -8,8 +8,50 @@ body {
     transition: background-color 0.3s ease, color 0.3s ease;
 }
 
+html {
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+    overflow-x: clip;
+}
+
+body {
+    min-width: 320px;
+    overflow-x: hidden;
+}
+
 .container {
     max-width: 1440px;
     margin: 0 auto;
     padding: 0 80px;
+}
+
+img,
+svg,
+video,
+canvas {
+    max-width: 100%;
+}
+
+img,
+video {
+    height: auto;
+}
+
+input,
+button,
+textarea,
+select {
+    font: inherit;
+}
+
+@media (max-width: 1200px) {
+    .container {
+        padding: 0 40px;
+    }
+}
+
+@media (max-width: 768px) {
+    .container {
+        padding: 0 20px;
+    }
 }

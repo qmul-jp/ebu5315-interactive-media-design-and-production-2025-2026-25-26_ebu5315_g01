@@ -170,6 +170,7 @@
         if (prefillText) inputEl.value = prefillText;
         window.setTimeout(() => inputEl.focus(), 0);
     }
+    window.openAiChatWidget = openWidget;
 
     function closeWidget() {
         root.classList.remove('is-open');
@@ -197,20 +198,6 @@
         if (event.key === 'Escape' && root.classList.contains('is-open')) {
             closeWidget();
         }
-    });
-
-    spriteWidget.addEventListener('click', (event) => {
-        const target = event.target;
-        if (!(target instanceof Element)) return;
-        const trigger = target.closest('.ai-sprite-stack, .ai-sprite-widget__sprite-stage');
-        if (!trigger) return;
-        const isPeekState = spriteWidget.classList.contains('is-peek');
-        const isPopoutOrRestState =
-            spriteWidget.classList.contains('is-peek-popout') ||
-            spriteWidget.classList.contains('is-smile-rest');
-        // 仅在“收回探头”状态点击时打开聊天框；处于“弹出/已出现(将收回)”状态不触发。
-        if (!isPeekState || isPopoutOrRestState) return;
-        openWidget();
     });
 
     document.addEventListener('circlelearn:langchange', () => {

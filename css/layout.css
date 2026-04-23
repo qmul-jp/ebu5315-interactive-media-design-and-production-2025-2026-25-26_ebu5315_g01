@@ -1490,3 +1490,260 @@ body.dark-mode .page-subhero {
         font-size: 32px;
     }
 }
+
+/* ===== Global responsive + browser compatibility hardening ===== */
+.nav {
+    min-height: 72px;
+    height: auto;
+    gap: 12px;
+    flex-wrap: nowrap;
+}
+
+.nav-links {
+    position: static;
+    left: auto;
+}
+
+.nav-actions {
+    transform: none;
+    max-width: 100%;
+}
+
+.settings-link,
+.nav-contact-select .selected,
+.select.is-open > .options,
+.select.is-open > .selected .arrow {
+    transform: none;
+}
+
+.select .options {
+    transform: translateY(-5px);
+}
+
+.select.is-open > .options {
+    transform: translateY(6px);
+}
+
+/* backdrop-filter fallback for browsers without support */
+@supports not ((-webkit-backdrop-filter: blur(1px)) or (backdrop-filter: blur(1px))) {
+    .glass-radio-group {
+        backdrop-filter: none;
+        background: rgba(241, 245, 249, 0.95);
+    }
+
+    .settings-modal__backdrop,
+    .legal-modal__backdrop {
+        backdrop-filter: none;
+    }
+}
+
+@media (max-width: 1200px) {
+    .nav {
+        flex-wrap: wrap;
+        justify-content: space-between;
+        padding: 10px 0;
+    }
+
+    .logo-text {
+        font-size: 1.05rem;
+    }
+
+    .nav-links {
+        gap: 18px;
+        font-size: 1.05rem;
+    }
+
+    .nav-actions {
+        gap: 10px;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+    }
+
+    .nav-contact-select .selected {
+        width: 42px;
+        height: 30px;
+        padding: 0 5px;
+    }
+}
+
+@media (max-width: 992px) {
+    .nav {
+        align-items: center;
+    }
+
+    .nav-links {
+        order: 3;
+        width: 100%;
+        justify-content: center;
+        padding-top: 6px;
+        gap: 16px;
+    }
+
+    .nav-actions {
+        order: 2;
+        margin-left: auto;
+    }
+
+    .settings-modal__panel {
+        width: min(94vw, 620px);
+        max-height: 84vh;
+        padding: 16px;
+    }
+
+    .legal-modal__panel {
+        width: min(94vw, 760px);
+        max-height: 82vh;
+    }
+}
+
+@media (max-width: 768px) {
+    .header {
+        position: sticky;
+        top: 0;
+    }
+
+    .nav {
+        padding: 8px 0;
+        gap: 10px;
+    }
+
+    .logo {
+        gap: 6px;
+    }
+
+    .logo-text {
+        font-size: 0.98rem;
+    }
+
+    .nav-links {
+        display: flex;
+        justify-content: center;
+        width: 100%;
+        font-size: 0.98rem;
+        gap: 14px;
+        padding-top: 4px;
+    }
+
+    .nav-actions {
+        width: 100%;
+        justify-content: flex-start;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .nav-actions > div {
+        flex-shrink: 0;
+    }
+
+    .nav-contact-select {
+        margin-left: auto;
+    }
+
+    .nav-actions .switch {
+        margin-left: -2px;
+    }
+
+    .glass-radio-group label {
+        min-width: 68px;
+        font-size: 11px;
+        padding: 0.34rem 0.52rem;
+    }
+
+    .select .options {
+        right: 0;
+        left: auto;
+        min-width: 170px;
+    }
+
+    .page-breadcrumb-row {
+        padding: 24px 0 0;
+    }
+
+    .learn-breadcrumb {
+        transform: none;
+        font-size: 0.98rem;
+        gap: 6px;
+    }
+
+    .footer {
+        padding: 44px 0;
+    }
+
+    .footer-grid {
+        gap: 22px;
+    }
+
+    .footer-links-title {
+        font-size: 1rem;
+    }
+
+    .settings-modal__panel {
+        top: auto;
+        bottom: 12px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: min(96vw, 640px);
+        max-height: min(82vh, 760px);
+        border-radius: 14px;
+    }
+
+    .settings-range-row {
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    .settings-percent-input-wrap {
+        min-width: 82px;
+    }
+
+    .legal-modal__panel {
+        width: min(96vw, 760px);
+        max-height: 84vh;
+        padding: 14px;
+    }
+}
+
+@media (max-width: 560px) {
+    .logo-text {
+        display: none;
+    }
+
+    .nav {
+        gap: 8px;
+    }
+
+    .nav-links {
+        font-size: 0.92rem;
+        gap: 12px;
+    }
+
+    .nav-actions {
+        gap: 8px;
+    }
+
+    .glass-radio-group {
+        max-width: 172px;
+    }
+
+    .switch {
+        transform: scale(0.95);
+        transform-origin: center;
+    }
+
+    .select .option {
+        width: 138px;
+        font-size: 12px;
+    }
+
+    .page-content {
+        padding: 32px 0 60px;
+    }
+
+    .section-header {
+        margin-bottom: 32px;
+    }
+
+    .settings-item-block {
+        padding: 10px;
+    }
+}

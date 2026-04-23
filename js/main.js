@@ -10,6 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initTheme();
     initLangToggle();
     initFontSize();
+    initHomeTopNavigationBehavior();
     initSmoothAnchorScroll();
     initNavScrollSpy();
     initLegalDocsModal();

@@ -444,13 +444,20 @@ body.dark-mode .hero-visual-arrow:hover:not(:disabled) {
 }
 
 .hero-ring-popout__inner {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: max-content;
+    height: max-content;
     will-change: transform;
+    transform-origin: center center;
 }
 
 .hero-ring-popout__inner img {
     display: block;
     /* 宽度由 home.js 各层 imgWidthPx 内联设置；此处仅作无 JS 时的回退 */
     width: 260px;
+    max-width: none;
     height: auto;
     user-select: none;
     -webkit-user-drag: none;
@@ -470,6 +477,13 @@ body.dark-mode .hero-ring-popout__inner img {
 @media (prefers-reduced-motion: reduce) {
     .hero-ring-popout__inner.is-settled img {
         animation: none;
+    }
+}
+
+/* 移动端不显示弹出图片，PC 端保留 */
+@media (max-width: 900px) {
+    .hero-ring-popout {
+        display: none !important;
     }
 }
 
@@ -1541,5 +1555,47 @@ body.dark-mode .ai-sprite-widget__welcome {
 
     .ai-sprite-widget__arm {
         max-height: none;
+    }
+}
+
+/* 首页移动端：圆在上，文案在下 */
+@media (max-width: 900px) {
+    .hero {
+        height: auto;
+        min-height: calc(100vh - 50px);
+    }
+
+    .hero .container {
+        padding-top: 28px;
+        padding-bottom: 54px;
+    }
+
+    .hero-grid {
+        display: flex;
+        flex-direction: column-reverse;
+        align-items: center;
+        justify-content: flex-start;
+        gap: 30px;
+        min-height: 0;
+    }
+
+    .hero-visual {
+        width: 100%;
+        height: auto;
+        min-height: min(82vw, 360px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .hero-content {
+        width: 100%;
+        align-items: center;
+        text-align: center;
+        gap: 14px;
+    }
+
+    .hero-buttons {
+        justify-content: center;
     }
 }

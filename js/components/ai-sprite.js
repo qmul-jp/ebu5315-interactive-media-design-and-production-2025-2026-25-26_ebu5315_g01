@@ -225,6 +225,32 @@
         bubbleNav.hidden = !visible;
     }
 
+    let bubbleAiBtn = bubble ? bubble.querySelector('.ai-sprite-widget__ai-btn') : null;
+    if (bubble && !bubbleAiBtn) {
+        const aiBtn = document.createElement('button');
+        aiBtn.type = 'button';
+        aiBtn.className = 'ai-sprite-widget__ai-btn';
+        aiBtn.setAttribute('data-i18n', 'sprite.cta.ai');
+        aiBtn.textContent = 'AI';
+        aiBtn.hidden = true;
+        aiBtn.addEventListener('click', (ev) => {
+            ev.preventDefault();
+            ev.stopPropagation();
+            if (typeof window.openAiChatWidget === 'function') {
+                window.openAiChatWidget();
+            }
+        });
+        bubble.appendChild(aiBtn);
+        bubbleAiBtn = aiBtn;
+    } else if (bubbleAiBtn) {
+        bubbleAiBtn.hidden = true;
+    }
+
+    function setBubbleAiBtnVisible(visible) {
+        if (!bubbleAiBtn) return;
+        bubbleAiBtn.hidden = !visible;
+    }
+
     function applyBubblePromptMode() {
         const welcome = widget.querySelector('.ai-sprite-widget__welcome');
         if (!welcome) return;
@@ -234,15 +260,18 @@
             widget.classList.add('is-bubble-learnbreak');
             setBubbleCtaVisible(true);
             setBubbleNavVisible(false);
+            setBubbleAiBtnVisible(false);
         } else if (bubblePromptMode === 'quickNav') {
             welcome.setAttribute('data-i18n', 'sprite.quickNav.prompt');
             widget.classList.add('is-bubble-quicknav');
             setBubbleCtaVisible(false);
             setBubbleNavVisible(true);
+            setBubbleAiBtnVisible(true);
         } else {
             welcome.setAttribute('data-i18n', 'home.sprite.welcome');
             setBubbleCtaVisible(false);
             setBubbleNavVisible(false);
+            setBubbleAiBtnVisible(false);
         }
         if (typeof window.applySiteI18n === 'function') {
             window.applySiteI18n();
