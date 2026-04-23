@@ -124,6 +124,17 @@
         // 获取正确率
         getAccuracy() {
             return this.answeredCount > 0 ? Math.round((this.totalCorrect / this.answeredCount) * 100) : 0;
+        },
+
+        // 重置所有数据
+        reset() {
+            if (confirm(getCurrentLang() === 'zh' ? '确定要清除所有作答记录吗？此操作无法撤销。' : 'Are you sure you want to clear all progress? This cannot be undone.')) {
+                localStorage.removeItem('quizGameState');
+                localStorage.removeItem('quizAnsweredCount');
+                localStorage.removeItem('quizTotalCorrect');
+                localStorage.removeItem('quizScore');
+                location.reload(); // 清除后刷新页面以重置所有状态
+            }
         }
     };
 
@@ -510,5 +521,13 @@
         renderQuestion();
         // 确保侧边栏导航网格在页面加载时显示
         renderSidebarNavigator();
+        
+        // 绑定清除按钮
+        const clearBtn = document.getElementById('clearDataBtn');
+        if (clearBtn) {
+            clearBtn.addEventListener('click', () => {
+                QuizState.reset();
+            });
+        }
     });
 })();
