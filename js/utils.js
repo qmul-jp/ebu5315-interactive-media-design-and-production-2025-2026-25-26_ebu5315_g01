@@ -122,6 +122,14 @@ function initLangToggle() {
     };
     updateLangText();
     setSiteLang(currentLang);
+    if (document.body) {
+        // 两帧后显示控件，确保 radio / glider 状态已稳定，避免首帧闪动
+        requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
+            document.body.classList.add('lang-sync-ready');
+            });
+        });
+    }
 
     const applyLang = (nextLang) => {
         currentLang = nextLang === 'zh' ? 'zh' : 'en';

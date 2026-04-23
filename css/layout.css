@@ -424,6 +424,19 @@ body.dark-mode .nav-settings-inline .settings-item:hover {
     transition: color 0.3s ease-in-out;
 }
 
+/* 语言控件首帧同步前禁用过渡，避免跨页时出现 EN -> 中文 的闪动动画 */
+body:not(.lang-sync-ready) .glass-radio-group label,
+body:not(.lang-sync-ready) .glass-radio-group .glass-glider {
+    transition: none !important;
+}
+
+/* 同步完成前隐藏语言控件，避免看到 EN -> 中文 的切换轨迹 */
+body:not(.lang-sync-ready) .glass-radio-group {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+}
+
 .glass-radio-group label:hover {
     color: #0f172a;
 }
