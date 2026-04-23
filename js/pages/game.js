@@ -102,10 +102,9 @@
 
     // ===== 视图管理 =====
     const views = {
-        menu: document.querySelectorAll('#gameMenuHero, #gameMenuMain'),
+        menu: document.getElementById('menuView'),
         sniper: document.getElementById('sniperView'),
         slingshot: document.getElementById('slingshotView'),
-        hunter: document.getElementById('hunterView'),
         chord: document.getElementById('chordView')
     };
 
@@ -120,7 +119,10 @@
         });
 
         if (name === 'menu') {
-            views.menu.forEach(el => el.style.display = '');
+            const menuHero = document.getElementById('gameMenuHero');
+            const menuMain = document.getElementById('gameMenuMain');
+            if (menuHero) menuHero.style.display = 'block';
+            if (menuMain) menuMain.style.display = 'block';
         } else if (views[name]) {
             views[name].style.display = 'flex';
         }
@@ -140,17 +142,14 @@
     function getGameModule(moduleName) {
         if (moduleName === 'PiSniper' && typeof PiSniper !== 'undefined') return PiSniper;
         if (moduleName === 'GravitySlingshot' && typeof GravitySlingshot !== 'undefined') return GravitySlingshot;
-        if (moduleName === 'AngleHunter' && typeof AngleHunter !== 'undefined') return AngleHunter;
         if (moduleName === 'ChordBreaker' && typeof ChordBreaker !== 'undefined') return ChordBreaker;
         return null;
     }
 
     function initNavigation() {
-        // 进入游戏
         const gameEntries = [
             { btn: 'btnPlaySniper', view: 'sniper', module: 'PiSniper' },
             { btn: 'btnPlaySlingshot', view: 'slingshot', module: 'GravitySlingshot' },
-            { btn: 'btnPlayHunter', view: 'hunter', module: 'AngleHunter' },
             { btn: 'btnPlayChord', view: 'chord', module: 'ChordBreaker' }
         ];
 
@@ -172,7 +171,6 @@
         const backBtns = [
             'sniperBackBtn', 'sniperMenuBtn', 'sniperBackFromStartBtn',
             'slingshotBackBtn', 'slingshotMenuBtn', 'slingshotBackFromStartBtn',
-            'hunterBackBtn', 'hunterMenuBtn', 'hunterBackFromStartBtn',
             'chordBackBtn', 'chordMenuBtn', 'chordFinalMenuBtn', 'chordBackFromStartBtn'
         ];
         backBtns.forEach(id => {
@@ -182,7 +180,6 @@
                     GameAudio.playClick();
                     if (typeof PiSniper !== 'undefined') PiSniper.hide();
                     if (typeof GravitySlingshot !== 'undefined') GravitySlingshot.hide();
-                    if (typeof AngleHunter !== 'undefined') AngleHunter.hide();
                     if (typeof ChordBreaker !== 'undefined') ChordBreaker.hide();
                     showView('menu');
                 });
