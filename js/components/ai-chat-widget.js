@@ -39,7 +39,7 @@
 
     let typingTimer = null;
 
-    const SPARK_HTTP_URL = 'http://localhost:5174/api/spark';
+    const SPARK_HTTP_URL = 'https://mifnlzfrnlhrunokusdi.supabase.co/functions/v1/spark-proxy';
     const SPARK_MODEL = 'lite';
     const SPARK_TIMEOUT_MS = 30000;
 
