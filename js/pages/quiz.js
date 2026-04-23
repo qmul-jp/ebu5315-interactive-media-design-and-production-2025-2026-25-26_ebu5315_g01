@@ -429,50 +429,114 @@
         feedback.id = 'quizFeedback';
 
         const options = lang === 'zh' && q.options_zh ? q.options_zh : q.options;
+        
+        // 检查是否已经回答过此题
+        const previousStatus = QuizState.getQuestionStatus(q.id);
+        const hasAnswered = previousStatus.selected !== null;
+        
         options.forEach((text, i) => {
             const b = document.createElement('button');
             b.type = 'button';
             b.className = 'quiz-option-btn';
             b.textContent = text;
-            b.addEventListener('click', () => {
-                opts.querySelectorAll('button').forEach((btn) => {
-                    btn.disabled = true;
-                });
-
-                const correct = i === q.correctIndex;
-                QuizState.recordAnswer(q.id, i, correct);
+            
+            // 如果已经回答过，显示之前的选择和结果
+            if (hasAnswered) {
+                b.disabled = true;
                 
-                feedback.classList.add('show');
-                feedback.classList.remove('correct', 'wrong');
-                feedback.classList.add(correct ? 'correct' : 'wrong');
+                // 如果这是用户之前选择的选项
+                if (i === previousStatus.selected) {
+                    if (previousStatus.correct) {
+                        // 答对了，用绿色标记
+                        b.style.backgroundColor = '#4CAF50';
+                        b.style.color = 'white';
+                        b.style.borderColor = '#45a049';
+                    } else {
+                        // 答错了，用红色标记
+                        b.style.backgroundColor = '#f44336';
+                        b.style.color = 'white';
+                        b.style.borderColor = '#da190b';
+                    }
+                }
                 
-                const correctText = lang === 'zh' ? '正确！' : 'Correct! ';
-                const wrongText = lang === 'zh' ? '不对哦。' : 'Not quite. ';
-                const explanationText = lang === 'zh' && q.explanation_zh ? q.explanation_zh : q.explanation;
-                feedback.textContent = correct
-                    ? `${correctText} ${explanationText}`
-                    : `${wrongText} ${explanationText}`;
+                // 如果答错了，还要显示正确答案（绿色）
+                if (!previousStatus.correct && i === q.correctIndex) {
+                    b.style.backgroundColor = '#4CAF50';
+                    b.style.color = 'white';
+                    b.style.borderColor = '#45a049';
+                }
+            } else {
+                // 未回答过，可以点击
+                b.addEventListener('click', () => {
+                    opts.querySelectorAll('button').forEach((btn) => {
+                        btn.disabled = true;
+                    });
 
-                const oldNext = root.querySelector('#quizNextBtn');
-                if (oldNext) oldNext.remove();
+                    const correct = i === q.correctIndex;
+                    QuizState.recordAnswer(q.id, i, correct);
+                    
+                    feedback.classList.add('show');
+                    feedback.classList.remove('correct', 'wrong');
+                    feedback.classList.add(correct ? 'correct' : 'wrong');
+                    
+                    const correctText = lang === 'zh' ? '正确！' : 'Correct! ';
+                    const wrongText = lang === 'zh' ? '不对哦。' : 'Not quite. ';
+                    const explanationText = lang === 'zh' && q.explanation_zh ? q.explanation_zh : q.explanation;
 
-                const next = document.createElement('button');
-                next.id = 'quizNextBtn';
-                next.type = 'button';
-                next.className = 'btn btn-primary';
-                next.style.marginTop = '24px';
-                next.textContent = lang === 'zh' ? '下一题' : 'Next question';
-                next.addEventListener('click', () => {
-                    renderQuestion();
+                    // 获取用户选择的选项和正确的选项
+                    const selectedOption = options[i];
+                    const correctOption = options[q.correctIndex];
+                    const selectedText = lang === 'zh' ? '你选择了：' : 'You selected: ';
+                    const correctOptionText = lang === 'zh' ? '正确答案是：' : 'Correct answer: ';
+
+                    if (correct) {
+                        feedback.textContent = `${correctText} ${explanationText}`;
+                    } else {
+                        feedback.textContent = `${wrongText}${selectedText}${selectedOption}。${correctOptionText}${correctOption}。${explanationText}`;
+                    }
+
+                    const oldNext = root.querySelector('#quizNextBtn');
+                    if (oldNext) oldNext.remove();
+
+                    const next = document.createElement('button');
+                    next.id = 'quizNextBtn';
+                    next.type = 'button';
+                    next.className = 'btn btn-primary';
+                    next.style.marginTop = '24px';
+                    next.textContent = lang === 'zh' ? '下一题' : 'Next question';
+                    next.addEventListener('click', () => {
+                        renderQuestion();
+                    });
+                    root.appendChild(next);
+
+                    // 更新侧边栏
+                    renderSidebarNavigator();
+                    updateUI();
                 });
-                root.appendChild(next);
-
-                // 更新侧边栏
-                renderSidebarNavigator();
-                updateUI();
-            });
+            }
             opts.appendChild(b);
         });
+        
+        // 如果已经回答过，显示之前的反馈
+        if (hasAnswered) {
+            feedback.classList.add('show');
+            feedback.classList.remove('correct', 'wrong');
+            feedback.classList.add(previousStatus.correct ? 'correct' : 'wrong');
+            
+            const correctText = lang === 'zh' ? '正确！' : 'Correct! ';
+            const wrongText = lang === 'zh' ? '不对哦。' : 'Not quite. ';
+            const explanationText = lang === 'zh' && q.explanation_zh ? q.explanation_zh : q.explanation;
+            const selectedOption = options[previousStatus.selected];
+            const correctOption = options[q.correctIndex];
+            const selectedText = lang === 'zh' ? '你选择了：' : 'You selected: ';
+            const correctOptionText = lang === 'zh' ? '正确答案是：' : 'Correct answer: ';
+            
+            if (previousStatus.correct) {
+                feedback.textContent = `${correctText} ${explanationText}`;
+            } else {
+                feedback.textContent = `${wrongText}${selectedText}${selectedOption}。${correctOptionText}${correctOption}。${explanationText}`;
+            }
+        }
 
         root.appendChild(opts);
         root.appendChild(feedback);
