@@ -7,6 +7,7 @@ const GameAudio = (() => {
     let ctx = null;
     let masterGain = null;
     let enabled = true;
+    let bgmEnabled = true;
     let volume = 0.5;
 
     // 外部加载的音效文件 (使用相对于 HTML 页面的正确路径)
@@ -78,7 +79,7 @@ const GameAudio = (() => {
         // 如果要播放的正是当前音乐，不中断
         if (currentBgm === track) {
             // 如果音乐被暂停了，尝试继续播放
-            if (currentBgm.paused) {
+            if (bgmEnabled && currentBgm.paused) {
                 currentBgm.volume = getSafeVolume() * 0.5; // BGM音量稍低一点，避免盖过音效
                 currentBgm.play().catch(e => console.warn("BGM播放失败:", e));
             }
@@ -100,9 +101,11 @@ const GameAudio = (() => {
             currentBgm.currentTime = 0;
         } catch (e) { }
 
-        const playPromise = currentBgm.play();
-        if (playPromise !== undefined) {
-            playPromise.catch(e => console.warn("BGM播放失败 (可能被自动播放策略拦截):", e));
+        if (bgmEnabled) {
+            const playPromise = currentBgm.play();
+            if (playPromise !== undefined) {
+                playPromise.catch(e => console.warn("BGM播放失败 (可能被自动播放策略拦截):", e));
+            }
         }
     }
 
@@ -350,13 +353,25 @@ const GameAudio = (() => {
         enabled = !!state;
         if (!enabled) {
             stopBgm();
-        } else if (currentBgm) {
+        } else if (currentBgm && bgmEnabled) {
             currentBgm.play().catch(e => console.warn("BGM恢复失败:", e));
         }
         localStorage.setItem('game_audio_enabled', state.toString());
     }
 
     function isEnabled() { return enabled; }
+
+    function setBgmEnabled(state) {
+        bgmEnabled = !!state;
+        if (!bgmEnabled) {
+            stopBgm();
+        } else if (currentBgm && enabled) {
+            currentBgm.play().catch(e => console.warn("BGM恢复失败:", e));
+        }
+        localStorage.setItem('game_audio_bgm_enabled', state.toString());
+    }
+
+    function isBgmEnabled() { return bgmEnabled; }
 
     function initSettings() {
         const sv = localStorage.getItem('game_audio_volume');
@@ -371,6 +386,11 @@ const GameAudio = (() => {
         if (se === 'true') enabled = true;
         else if (se === 'false') enabled = false;
         else enabled = true;
+
+        const sb = localStorage.getItem('game_audio_bgm_enabled');
+        if (sb === 'true') bgmEnabled = true;
+        else if (sb === 'false') bgmEnabled = false;
+        else bgmEnabled = true;
     }
 
     return {
@@ -382,7 +402,7 @@ const GameAudio = (() => {
         playPowerupSpawn, playPowerupPickup, playPowerupActivate,
         playAchievement,
         playClick,
-        setVolume, getVolume, setEnabled, isEnabled, initSettings
+        setVolume, getVolume, setEnabled, isEnabled, setBgmEnabled, isBgmEnabled, initSettings
     };
 })();
 

@@ -343,6 +343,19 @@ function buildSettingsModal() {
                     </div>
                 </div>
                 <div class="settings-item-block">
+                    <label for="settingsBgmCheckbox" data-i18n="settings.bgm.label">Background Music</label>
+                    <p class="settings-item-help" data-i18n="settings.bgm.desc">Turn the background music on or off during gameplay.</p>
+                    <div class="settings-mode-row">
+                        <span class="settings-mode-state" id="settingsBgmState">Disabled</span>
+                        <label class="settings-mode-switch" for="settingsBgmCheckbox">
+                            <input id="settingsBgmCheckbox" type="checkbox" />
+                            <span class="settings-mode-switch__track">
+                                <span class="settings-mode-switch__thumb"></span>
+                            </span>
+                        </label>
+                    </div>
+                </div>
+                <div class="settings-item-block">
                     <label for="settingsColorblindCheckbox" data-i18n="settings.colorblind.label">Colorblind Friendly Mode</label>
                     <p class="settings-item-help" data-i18n="settings.colorblind.desc">Use a blue-orange high-contrast palette for clearer distinctions.</p>
                     <div class="settings-mode-row">
@@ -378,13 +391,15 @@ function initSettingsModal() {
     const modal = buildSettingsModal();
     const spriteCheckbox = modal.querySelector('#settingsSpriteCheckbox');
     const spriteState = modal.querySelector('#settingsSpriteState');
+    const bgmCheckbox = modal.querySelector('#settingsBgmCheckbox');
+    const bgmState = modal.querySelector('#settingsBgmState');
     const colorblindCheckbox = modal.querySelector('#settingsColorblindCheckbox');
     const colorblindState = modal.querySelector('#settingsColorblindState');
     const fontRange = modal.querySelector('#settingsFontRange');
     const fontValue = modal.querySelector('#settingsFontRangeValue');
     const fontResetBtn = modal.querySelector('#settingsFontResetBtn');
     const openers = document.querySelectorAll('.option-settings');
-    if (!spriteCheckbox || !spriteState || !colorblindCheckbox || !colorblindState || !fontRange || !fontValue || !fontResetBtn || !openers.length) return;
+    if (!spriteCheckbox || !spriteState || !bgmCheckbox || !bgmState || !colorblindCheckbox || !colorblindState || !fontRange || !fontValue || !fontResetBtn || !openers.length) return;
 
     const setFontUIValue = (value, persist = true) => {
         const next = applyGlobalFontScale(value, persist);
@@ -414,11 +429,32 @@ function initSettingsModal() {
         return enabled ? 'Enabled' : 'Disabled';
     };
 
+    const getBgmStateText = (enabled) => {
+        const lang = getSiteLang();
+        if (lang === 'zh') return enabled ? '已启用' : '已禁用';
+        return enabled ? 'Enabled' : 'Disabled';
+    };
+
     const setSpriteUIValue = (enabled) => {
         const nextEnabled = Boolean(enabled);
         spriteCheckbox.checked = nextEnabled;
         spriteState.textContent = getSpriteStateText(nextEnabled);
         spriteState.classList.toggle('is-on', nextEnabled);
+        return nextEnabled;
+    };
+
+    const setBgmUIValue = (enabled, persist = true) => {
+        const nextEnabled = Boolean(enabled);
+        bgmCheckbox.checked = nextEnabled;
+        bgmState.textContent = getBgmStateText(nextEnabled);
+        bgmState.classList.toggle('is-on', nextEnabled);
+        if (persist) {
+            if (window.GameAudio && typeof window.GameAudio.setBgmEnabled === 'function') {
+                window.GameAudio.setBgmEnabled(nextEnabled);
+            } else {
+                localStorage.setItem('game_audio_bgm_enabled', nextEnabled.toString());
+            }
+        }
         return nextEnabled;
     };
 
@@ -526,6 +562,8 @@ function initSettingsModal() {
     const openModal = () => {
         const enabled = localStorage.getItem(SPRITE_ENABLED_KEY) !== '0';
         setSpriteUIValue(enabled);
+        const bgmEnabled = localStorage.getItem('game_audio_bgm_enabled') !== 'false';
+        setBgmUIValue(bgmEnabled, false);
         setColorblindUIValue(isColorblindModeEnabled(), false);
         const scale = getGlobalFontScale();
         setFontUIValue(scale, false);
@@ -533,6 +571,7 @@ function initSettingsModal() {
         if (typeof window.applySiteI18n === 'function') {
             window.applySiteI18n();
             setSpriteUIValue(enabled);
+            setBgmUIValue(bgmEnabled, false);
             setColorblindUIValue(isColorblindModeEnabled(), false);
         }
     };
@@ -586,8 +625,13 @@ function initSettingsModal() {
         setColorblindUIValue(colorblindCheckbox.checked, true);
     });
 
+    bgmCheckbox.addEventListener('change', () => {
+        setBgmUIValue(bgmCheckbox.checked, true);
+    });
+
     document.addEventListener('circlelearn:langchange', () => {
         setSpriteUIValue(spriteCheckbox.checked);
+        setBgmUIValue(bgmCheckbox.checked, false);
         setColorblindUIValue(colorblindCheckbox.checked, false);
     });
 

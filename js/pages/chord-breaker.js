@@ -112,6 +112,15 @@ const ChordBreaker = (() => {
 
     function playChordBgm(skinId) {
         const sid = skinId || 'default';
+        if (window.GameAudio && typeof window.GameAudio.playBgm === 'function') {
+            window.GameAudio.playBgm('chord_' + sid);
+            return;
+        }
+
+        if (window.GameAudio && typeof window.GameAudio.isBgmEnabled === 'function' && !window.GameAudio.isBgmEnabled()) {
+            return;
+        }
+
         const src = getChordBgmSrc(sid);
 
         if (!chordBgmAudio || chordBgmSkinId !== sid) {
@@ -131,6 +140,9 @@ const ChordBreaker = (() => {
     }
 
     function stopChordBgm() {
+        if (window.GameAudio && typeof window.GameAudio.stopBgm === 'function') {
+            window.GameAudio.stopBgm();
+        }
         if (!chordBgmAudio) return;
         chordBgmAudio.pause();
     }
