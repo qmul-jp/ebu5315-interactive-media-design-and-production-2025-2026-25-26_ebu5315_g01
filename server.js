@@ -61,8 +61,7 @@ function safeResolveFile(urlPath) {
 }
 
 async function handleSparkProxy(req, res) {
-    // 【作业免配置版】这里直接硬编码了你的明文密钥（请填入你正确的 APIPassword，不要填带冒号的 APIKey:APISecret）
-    const apiPassword = '填入你真实的APIPassword';
+    const apiPassword = 'kjDNOGERQDBWQjFacqif:QwLGyDkSUfFdrDyfAUvc';
 
     let raw = '';
     req.on('data', (chunk) => {
