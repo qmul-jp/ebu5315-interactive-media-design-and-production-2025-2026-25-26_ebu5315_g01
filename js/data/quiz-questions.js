@@ -14,7 +14,9 @@ window.QUIZ_QUESTIONS = {
         category: 'center_circumference',
         points: 10,
         question: 'The angle at the centre is how many times the angle at the circumference subtended by the same arc?',
+        question_zh: '圆心角是同弧所对的圆周角的多少倍？',  // 添加这一行
         options: ['Equal', 'Twice', 'Half', 'Three times'],
+        options_zh: ['相等的', '两倍的', '一半的', '三倍的'],
         correctIndex: 1,
         explanation: 'The angle at the centre is twice the angle at the circumference.'
       },
