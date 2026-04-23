@@ -1,0 +1,182 @@
+/* Premium 页面 */
+.premium-page-content {
+    padding-top: 0px;
+    padding-bottom: 98px;
+}
+
+.page-breadcrumb-row {
+    background: #f8fafc;
+}
+
+body.dark-mode .page-breadcrumb-row {
+    background: var(--background);
+}
+
+/* 与 home/game/quiz 导航文字保持一致，避免页面额外样式覆盖 */
+.header .nav-links {
+    font-size: 1.25rem;
+}
+
+.header .nav-link {
+    font-family: inherit;
+    font-size: 1em;
+    font-weight: 500;
+    line-height: 1.2;
+    letter-spacing: normal;
+}
+
+.premium-hero {
+    padding: 0 0 16px;
+}
+
+.premium-eyebrow {
+    display: inline-block;
+    margin-bottom: 10px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #7CC4FF;
+}
+
+.premium-hero h1 {
+    margin: 0 0 10px;
+    font-size: clamp(1.9rem, 4vw, 2.8rem);
+    line-height: 1.2;
+    color: var(--text);
+}
+
+.premium-hero-subtitle {
+    max-width: 760px;
+    color: var(--text-muted);
+    line-height: 1.7;
+    margin-bottom: 18px;
+}
+
+.premium-member-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 14px;
+    border-radius: 999px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #0F172A;
+    background: linear-gradient(120deg, #93C5FD, #BFDBFE);
+}
+
+.premium-debug-reset-btn {
+    margin-left: 10px;
+    border: 1px dashed rgba(15, 23, 42, 0.35);
+    background: rgba(255, 255, 255, 0.8);
+    color: #1E293B;
+    font-size: 0.85rem;
+    padding: 8px 12px;
+    border-radius: 999px;
+    cursor: pointer;
+}
+
+.premium-debug-reset-btn:hover {
+    border-color: rgba(37, 99, 235, 0.6);
+    color: #1D4ED8;
+}
+
+.plan-grid {
+    display: grid;
+    gap: 18px;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+}
+
+.plan-card {
+    border: 1px solid rgba(37, 99, 235, 0.18);
+    border-radius: 18px;
+    padding: 24px 20px;
+    background: linear-gradient(145deg, rgba(219, 234, 254, 0.45), rgba(255, 255, 255, 0.9));
+    box-shadow: 0 8px 28px rgba(37, 99, 235, 0.1);
+    display: flex;
+    flex-direction: column;
+}
+
+.plan-card--featured {
+    position: relative;
+    overflow: hidden;
+    border-color: rgba(37, 99, 235, 0.42);
+    box-shadow: 0 16px 40px rgba(37, 99, 235, 0.18);
+    transform: translateY(-4px);
+}
+
+.plan-card-flame {
+    position: absolute;
+    top: 8px;
+    right: 10px;
+    width: 58px;
+    height: 58px;
+    object-fit: contain;
+    opacity: 0.9;
+    pointer-events: none;
+}
+
+.plan-name {
+    margin: 0 0 8px;
+    color: #2563EB;
+    font-weight: 700;
+}
+
+.plan-card h2 {
+    margin: 0;
+    font-size: 1.65rem;
+    color: var(--text);
+}
+
+.plan-price {
+    margin: 10px 0 14px;
+    font-size: 2rem;
+    font-weight: 800;
+    color: #1D4ED8;
+}
+
+.plan-card ul {
+    margin: 0 0 18px;
+    padding-left: 18px;
+    color: var(--text-muted);
+    line-height: 1.65;
+    flex: 1;
+}
+
+.plan-buy-btn {
+    width: 100%;
+}
+
+body.dark-mode .premium-member-status {
+    color: #E2E8F0;
+    background: linear-gradient(120deg, rgba(37, 99, 235, 0.5), rgba(59, 130, 246, 0.35));
+}
+
+body.dark-mode .premium-debug-reset-btn {
+    background: rgba(30, 41, 59, 0.9);
+    color: #CBD5E1;
+    border-color: rgba(148, 163, 184, 0.55);
+}
+
+body.dark-mode .plan-card {
+    background: linear-gradient(145deg, rgba(30, 41, 59, 0.98), rgba(15, 23, 42, 0.95));
+    border-color: rgba(96, 165, 250, 0.24);
+}
+
+body.dark-mode .plan-card--featured {
+    border-color: rgba(147, 197, 253, 0.46);
+    box-shadow: 0 18px 45px rgba(59, 130, 246, 0.26);
+}
+
+body.dark-mode .plan-card-flame {
+    opacity: 0.84;
+    filter: drop-shadow(0 4px 10px rgba(249, 115, 22, 0.25));
+}
+
+body.dark-mode .plan-name {
+    color: #93C5FD;
+}
+
+body.dark-mode .plan-price {
+    color: #BFDBFE;
+}

@@ -2,13 +2,17 @@
  * 全局初始化（各页共用）
  */
 document.addEventListener('DOMContentLoaded', () => {
+    initGlobalFontScale();
+    initColorblindMode();
     initSettingsMenu();
     initClickSelectMenu();
+    initSettingsModal();
     initTheme();
     initLangToggle();
     initFontSize();
     initSmoothAnchorScroll();
     initNavScrollSpy();
+    initLegalDocsModal();
     injectRippleStyles();
     initButtonRipples();
 

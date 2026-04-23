@@ -7,17 +7,31 @@ const GameAudio = (() => {
     let ctx = null;
     let masterGain = null;
     let enabled = true;
+    let bgmEnabled = true;
     let volume = 0.5;
 
     // 外部加载的音效文件 (使用相对于 HTML 页面的正确路径)
-    const bossWarningAudio = new Audio('../assets/audio/game/boss_alert.mp3');
+    const bossWarningAudio = new Audio('../assets/audio/game/pi-sniper/boss_alert.mp3');
 
     // BGM 音频对象
     const bgmTracks = {
-        cyberpunk: new Audio('../assets/audio/game/cyberpunk.mp3'),
-        forest: new Audio('../assets/audio/game/forest.mp3'),
-        sea: new Audio('../assets/audio/game/sea.mp3'),
-        space: new Audio('../assets/audio/game/space.mp3')
+        // pi-sniper BGM
+        cyberpunk: new Audio('../assets/audio/game/pi-sniper/cyberpunk.mp3'),
+        forest: new Audio('../assets/audio/game/pi-sniper/forest.mp3'),
+        sea: new Audio('../assets/audio/game/pi-sniper/sea.mp3'),
+        space: new Audio('../assets/audio/game/pi-sniper/space.mp3'),
+        // gravity-slingshot BGM
+        slingshot_normal: new Audio('../assets/audio/game/gravity-slingshot/normal_universe.mp3'),
+        slingshot_ultra: new Audio('../assets/audio/game/gravity-slingshot/ultra_universe.mp3'),
+        slingshot_ice: new Audio('../assets/audio/game/gravity-slingshot/ice.mp3'),
+        slingshot_volcano: new Audio('../assets/audio/game/gravity-slingshot/volcano.mp3'),
+        slingshot_cyberpunk: new Audio('../assets/audio/game/gravity-slingshot/cyberpunk.mp3'),
+        // chord-breaker BGM
+        chord_default: new Audio('../assets/audio/game/chord-breaker/space.mp3'),
+        chord_cherryBlossom: new Audio('../assets/audio/game/chord-breaker/cherry_blossom.mp3'),
+        chord_deepOcean: new Audio('../assets/audio/game/chord-breaker/sea.mp3'),
+        chord_goldenAge: new Audio('../assets/audio/game/chord-breaker/golden_age.mp3'),
+        chord_cyberMatrix: new Audio('../assets/audio/game/chord-breaker/cyberpunk.mp3')
     };
 
     // 配置 BGM 循环
@@ -27,15 +41,37 @@ const GameAudio = (() => {
 
     let currentBgm = null;
 
+    function getSafeVolume() {
+        const v = Number(volume);
+        if (!Number.isFinite(v)) return 0.5;
+        return Math.max(0, Math.min(1, v));
+    }
+
     function playBgm(theme) {
         if (!enabled) return;
 
         // 映射主题到对应的音乐
         let trackKey = 'space'; // 默认
+
+        // pi-sniper 映射
         if (theme === 'cyberpunk') trackKey = 'cyberpunk';
         else if (theme === 'forest') trackKey = 'forest';
         else if (theme === 'ocean') trackKey = 'sea';
         else if (theme === 'deepSpace') trackKey = 'space';
+
+        // gravity-slingshot 映射 (星球皮肤)
+        else if (theme === 'slingshot_default') trackKey = 'slingshot_normal';
+        else if (theme === 'slingshot_ringedPlanet') trackKey = 'slingshot_ultra';
+        else if (theme === 'slingshot_iceAge') trackKey = 'slingshot_ice';
+        else if (theme === 'slingshot_lavaWorld') trackKey = 'slingshot_volcano';
+        else if (theme === 'slingshot_cyberNeon') trackKey = 'slingshot_cyberpunk';
+
+        // chord-breaker 映射 (弦界皮肤)
+        else if (theme === 'chord_default') trackKey = 'chord_default';
+        else if (theme === 'chord_cherryBlossom') trackKey = 'chord_cherryBlossom';
+        else if (theme === 'chord_deepOcean') trackKey = 'chord_deepOcean';
+        else if (theme === 'chord_goldenAge') trackKey = 'chord_goldenAge';
+        else if (theme === 'chord_cyberMatrix') trackKey = 'chord_cyberMatrix';
 
         const track = bgmTracks[trackKey];
         if (!track) return;
@@ -43,8 +79,8 @@ const GameAudio = (() => {
         // 如果要播放的正是当前音乐，不中断
         if (currentBgm === track) {
             // 如果音乐被暂停了，尝试继续播放
-            if (currentBgm.paused) {
-                currentBgm.volume = volume * 0.5; // BGM音量稍低一点，避免盖过音效
+            if (bgmEnabled && currentBgm.paused) {
+                currentBgm.volume = getSafeVolume() * 0.5; // BGM音量稍低一点，避免盖过音效
                 currentBgm.play().catch(e => console.warn("BGM播放失败:", e));
             }
             return;
@@ -58,9 +94,19 @@ const GameAudio = (() => {
 
         // 播放新音乐
         currentBgm = track;
-        currentBgm.volume = volume * 0.5;
-        currentBgm.currentTime = 0;
-        currentBgm.play().catch(e => console.warn("BGM播放失败:", e));
+        currentBgm.volume = getSafeVolume() * 0.5;
+        // 在大多数浏览器中，对未完全加载的 Audio 对象设置 currentTime = 0 可能会静默失败或抛错，
+        // 这里采用更安全的处理方式：如果是第一次播放，直接 play
+        try {
+            currentBgm.currentTime = 0;
+        } catch (e) { }
+
+        if (bgmEnabled) {
+            const playPromise = currentBgm.play();
+            if (playPromise !== undefined) {
+                playPromise.catch(e => console.warn("BGM播放失败 (可能被自动播放策略拦截):", e));
+            }
+        }
     }
 
     function stopBgm() {
@@ -294,7 +340,8 @@ const GameAudio = (() => {
     }
 
     function setVolume(v) {
-        volume = Math.max(0, Math.min(1, v));
+        const parsed = Number(v);
+        volume = Number.isFinite(parsed) ? Math.max(0, Math.min(1, parsed)) : 0.5;
         if (masterGain) masterGain.gain.value = volume;
         if (currentBgm) currentBgm.volume = volume * 0.5;
         localStorage.setItem('game_audio_volume', volume.toString());
@@ -303,10 +350,10 @@ const GameAudio = (() => {
     function getVolume() { return volume; }
 
     function setEnabled(state) {
-        enabled = state;
+        enabled = !!state;
         if (!enabled) {
             stopBgm();
-        } else if (currentBgm) {
+        } else if (currentBgm && bgmEnabled) {
             currentBgm.play().catch(e => console.warn("BGM恢复失败:", e));
         }
         localStorage.setItem('game_audio_enabled', state.toString());
@@ -314,11 +361,36 @@ const GameAudio = (() => {
 
     function isEnabled() { return enabled; }
 
+    function setBgmEnabled(state) {
+        bgmEnabled = !!state;
+        if (!bgmEnabled) {
+            stopBgm();
+        } else if (currentBgm && enabled) {
+            currentBgm.play().catch(e => console.warn("BGM恢复失败:", e));
+        }
+        localStorage.setItem('game_audio_bgm_enabled', state.toString());
+    }
+
+    function isBgmEnabled() { return bgmEnabled; }
+
     function initSettings() {
         const sv = localStorage.getItem('game_audio_volume');
-        if (sv !== null) volume = parseFloat(sv);
+        if (sv !== null) {
+            const parsed = parseFloat(sv);
+            volume = Number.isFinite(parsed) ? Math.max(0, Math.min(1, parsed)) : 0.5;
+        } else {
+            volume = 0.5;
+        }
+
         const se = localStorage.getItem('game_audio_enabled');
-        if (se !== null) enabled = se === 'true';
+        if (se === 'true') enabled = true;
+        else if (se === 'false') enabled = false;
+        else enabled = true;
+
+        const sb = localStorage.getItem('game_audio_bgm_enabled');
+        if (sb === 'true') bgmEnabled = true;
+        else if (sb === 'false') bgmEnabled = false;
+        else bgmEnabled = true;
     }
 
     return {
@@ -330,7 +402,7 @@ const GameAudio = (() => {
         playPowerupSpawn, playPowerupPickup, playPowerupActivate,
         playAchievement,
         playClick,
-        setVolume, getVolume, setEnabled, isEnabled, initSettings
+        setVolume, getVolume, setEnabled, isEnabled, setBgmEnabled, isBgmEnabled, initSettings
     };
 })();
 

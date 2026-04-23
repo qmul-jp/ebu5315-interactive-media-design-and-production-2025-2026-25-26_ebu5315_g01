@@ -178,34 +178,117 @@ const PiSniper = (() => {
             default: { unlocked: true },
             circle: { unlocked: true },
             laser: { condition: 'singlePerfect20', desc: 'sniper.skin.laserDesc' },
-            bow: { condition: 'totalPerfect50', desc: 'sniper.skin.bowDesc' },
+            bow: { condition: 'premium', desc: 'sniper.skin.bowDesc' },
         },
         lineColor: {
             green: { unlocked: true },
             gold: { unlocked: true },
             blue: { unlocked: true },
             purple: { condition: 'totalBoss5', desc: 'sniper.skin.purpleDesc' },
-            rainbow: { condition: 'totalScore10000', desc: 'sniper.skin.rainbowDesc' },
+            rainbow: { condition: 'premium', desc: 'sniper.skin.rainbowDesc' },
         },
         circleStyle: {
             standard: { unlocked: true },
-            neon: { condition: 'firstPerfect', desc: 'sniper.skin.neonDesc' },
+            neon: { condition: 'premium', desc: 'sniper.skin.neonDesc' },
             minimal: { unlocked: true },
             retro: { condition: 'totalGames10', desc: 'sniper.skin.retroDesc' },
         },
         particle: {
             standard: { unlocked: true },
             star: { condition: 'firstPerfect', desc: 'sniper.skin.starDesc' },
-            fire: { condition: 'combo30', desc: 'sniper.skin.fireDesc' },
+            fire: { condition: 'premium', desc: 'sniper.skin.fireDesc' },
             electric: { condition: 'totalBoss3', desc: 'sniper.skin.electricDesc' },
         },
         background: {
             deepSpace: { unlocked: true },
-            ocean: { unlocked: true },
+            ocean: { condition: 'premiumOrTotalGames10', desc: 'sniper.skin.oceanDesc' },
             forest: { unlocked: true },
-            cyberpunk: { condition: 'totalGames20', desc: 'sniper.skin.cyberpunkDesc' },
+            cyberpunk: { condition: 'premium', desc: 'sniper.skin.cyberpunkDesc' },
         },
     };
+
+    function getLifetimeStats() {
+        try {
+            return JSON.parse(localStorage.getItem('pi_sniper_lifetime') || '{}');
+        } catch (e) {
+            return {};
+        }
+    }
+
+    function hasActivePremium() {
+        try {
+            const raw = localStorage.getItem('circlelearnPremiumPlanV1');
+            if (!raw) return false;
+            const plan = JSON.parse(raw);
+            if (!plan || typeof plan !== 'object') return false;
+            if (typeof plan.expireAt === 'number' && Date.now() > plan.expireAt) return false;
+            return true;
+        } catch (e) {
+            return false;
+        }
+    }
+
+    function isSkinUnlockedByCondition(conf, lt) {
+        if (!conf) return false;
+        if (conf.unlocked) return true;
+        switch (conf.condition) {
+            case 'singlePerfect20': return achievements['godlike']?.unlocked;
+            case 'totalPerfect50': return (lt.totalPerfects || 0) >= 50;
+            case 'totalBoss5': return (lt.totalBossDefeated || 0) >= 5;
+            case 'totalScore10000': return (lt.totalScore || 0) >= 10000;
+            case 'firstPerfect': return achievements['firstPerfect']?.unlocked;
+            case 'totalGames10': return (lt.totalGames || 0) >= 10;
+            case 'combo30': return achievements['combo30']?.unlocked;
+            case 'totalBoss3': return (lt.totalBossDefeated || 0) >= 3;
+            case 'totalGames20': return (lt.totalGames || 0) >= 20;
+            case 'premium': return hasActivePremium();
+            case 'premiumOrTotalGames10': return hasActivePremium() || (lt.totalGames || 0) >= 10;
+            default: return false;
+        }
+    }
+
+    function getSkinLockedHint(conf) {
+        if (!conf || conf.unlocked) return '';
+        switch (conf.condition) {
+            case 'premium':
+                return GameI18N.t('sniper.skin.hint.premium') || '会员专属';
+            case 'totalGames10':
+                return GameI18N.t('sniper.skin.hint.games10') || '玩10局解锁';
+            case 'premiumOrTotalGames10':
+                return GameI18N.t('sniper.skin.hint.premiumOrGames10') || '会员或玩10局解锁';
+            default:
+                return GameI18N.t('sniper.skin.locked') || '未解锁';
+        }
+    }
+
+    function sanitizeSkinByUnlock() {
+        const lt = getLifetimeStats();
+        Object.keys(SKIN_UNLOCK_CONDITIONS).forEach((category) => {
+            const key = skin[category];
+            const conf = SKIN_UNLOCK_CONDITIONS[category]?.[key];
+            if (!conf) {
+                const defaults = {
+                    crosshair: 'default',
+                    lineColor: 'green',
+                    circleStyle: 'standard',
+                    particle: 'standard',
+                    background: 'deepSpace'
+                };
+                skin[category] = defaults[category] || key;
+                return;
+            }
+            if (!isSkinUnlockedByCondition(conf, lt)) {
+                const defaults = {
+                    crosshair: 'default',
+                    lineColor: 'green',
+                    circleStyle: 'standard',
+                    particle: 'standard',
+                    background: 'deepSpace'
+                };
+                skin[category] = defaults[category];
+            }
+        });
+    }
 
     // ===== DOM 引用 =====
     let elScore, elCombo, elTime;
@@ -270,11 +353,15 @@ const PiSniper = (() => {
     function bindEvents() {
         // 开始按钮
         const startBtn = document.getElementById('sniperStartBtn');
-        if (startBtn) startBtn.addEventListener('click', startGame);
+        if (startBtn) startBtn.addEventListener('click', () => {
+            if (window.GameAudio && typeof window.GameAudio.init === 'function') window.GameAudio.init();
+            startGame();
+        });
 
         // 重新开始
         const restartBtn = document.getElementById('sniperRestartBtn');
         if (restartBtn) restartBtn.addEventListener('click', () => {
+            if (window.GameAudio && typeof window.GameAudio.init === 'function') window.GameAudio.init();
             elEndOverlay.style.display = 'none';
             startGame();
         });
@@ -293,6 +380,8 @@ const PiSniper = (() => {
         const closeRecord = document.getElementById('sniperRecordCloseBtn');
 
         if (btnAchievement) btnAchievement.addEventListener('click', () => {
+            if (window.GameAudio && typeof window.GameAudio.init === 'function') window.GameAudio.init();
+            GameAudio.playClick();
             if (elStartOverlay) elStartOverlay.style.display = 'none';
             if (overlayAchievement) {
                 overlayAchievement.style.display = 'flex';
@@ -300,6 +389,8 @@ const PiSniper = (() => {
             }
         });
         if (btnSkin) btnSkin.addEventListener('click', () => {
+            if (window.GameAudio && typeof window.GameAudio.init === 'function') window.GameAudio.init();
+            GameAudio.playClick();
             if (elStartOverlay) elStartOverlay.style.display = 'none';
             if (overlaySkin) {
                 overlaySkin.style.display = 'flex';
@@ -315,6 +406,8 @@ const PiSniper = (() => {
             }
         });
         if (btnRecord) btnRecord.addEventListener('click', () => {
+            if (window.GameAudio && typeof window.GameAudio.init === 'function') window.GameAudio.init();
+            GameAudio.playClick();
             if (elStartOverlay) elStartOverlay.style.display = 'none';
             if (overlayRecord) {
                 overlayRecord.style.display = 'flex';
@@ -377,8 +470,11 @@ const PiSniper = (() => {
         if (elEndOverlay) elEndOverlay.style.display = 'none';
         // 绘制静态预览
         drawStaticPreview();
-        // 播放背景音乐
-        GameAudio.playBgm(skin.background);
+        // 初始化音频上下文并播放背景音乐
+        if (window.GameAudio) {
+            if (typeof window.GameAudio.init === 'function') window.GameAudio.init();
+            if (typeof window.GameAudio.playBgm === 'function') window.GameAudio.playBgm(skin.background);
+        }
     }
 
     function hide() {
@@ -1564,27 +1660,7 @@ const PiSniper = (() => {
         if (!skins) return;
 
         // 获取累计数据用于解锁判定
-        let lt = {};
-        try {
-            lt = JSON.parse(localStorage.getItem('pi_sniper_lifetime') || '{}');
-        } catch (e) { }
-
-        // 判断解锁状态
-        const isUnlocked = (key, conf) => {
-            if (conf.unlocked) return true;
-            switch (conf.condition) {
-                case 'singlePerfect20': return achievements['godlike']?.unlocked;
-                case 'totalPerfect50': return (lt.totalPerfects || 0) >= 50;
-                case 'totalBoss5': return (lt.totalBossDefeated || 0) >= 5;
-                case 'totalScore10000': return (lt.totalScore || 0) >= 10000;
-                case 'firstPerfect': return achievements['firstPerfect']?.unlocked;
-                case 'totalGames10': return (lt.totalGames || 0) >= 10;
-                case 'combo30': return achievements['combo30']?.unlocked;
-                case 'totalBoss3': return (lt.totalBossDefeated || 0) >= 3;
-                case 'totalGames20': return (lt.totalGames || 0) >= 20;
-                default: return false;
-            }
-        };
+        const lt = getLifetimeStats();
 
         const previewRenderers = {
             crosshair: (k) => `<div style="color:#FFF;">${k === 'circle' ? '⭕' : k === 'laser' ? '⚡' : k === 'bow' ? '🏹' : '➕'}</div>`,
@@ -1596,10 +1672,11 @@ const PiSniper = (() => {
 
         container.innerHTML = Object.keys(skins).map(key => {
             const conf = skins[key];
-            const unlocked = isUnlocked(key, conf);
+            const unlocked = isSkinUnlockedByCondition(conf, lt);
             const isEquipped = skin[category] === key;
             const name = GameI18N.t(`sniper.skin.${key}`) || key;
             const desc = conf.desc ? (GameI18N.t(conf.desc) || conf.desc) : '';
+            const lockHint = getSkinLockedHint(conf);
 
             let btnHtml = '';
             if (unlocked) {
@@ -1616,6 +1693,7 @@ const PiSniper = (() => {
                         ${previewRenderers[category] ? previewRenderers[category](key) : ''}
                     </div>
                     <div class="skin-name">${name}</div>
+                    ${!unlocked ? `<div class="skin-lock-hint">${lockHint}</div>` : ''}
                     ${btnHtml}
                     ${!unlocked ? `
                         <div class="skin-locked-overlay">
@@ -1646,6 +1724,16 @@ const PiSniper = (() => {
             case 'combo30': current = lt.maxCombo || 0; max = 30; break;
             case 'totalBoss3': current = lt.totalBossDefeated || 0; max = 3; break;
             case 'totalGames20': current = lt.totalGames || 0; max = 20; break;
+            case 'premium': current = hasActivePremium() ? 1 : 0; max = 1; break;
+            case 'premiumOrTotalGames10':
+                if (hasActivePremium()) {
+                    current = 10;
+                    max = 10;
+                } else {
+                    current = lt.totalGames || 0;
+                    max = 10;
+                }
+                break;
         }
         current = Math.min(current, max);
         return { current, max };
@@ -1679,27 +1767,8 @@ const PiSniper = (() => {
         const name = GameI18N.t(`sniper.skin.${key}`) || key;
         const desc = conf.desc ? (GameI18N.t(conf.desc) || conf.desc) : '默认解锁';
 
-        let lt = {};
-        try { lt = JSON.parse(localStorage.getItem('pi_sniper_lifetime') || '{}'); } catch (e) { }
-
-        // 判断解锁状态
-        const isUnlockedFn = (k, c) => {
-            if (c.unlocked) return true;
-            switch (c.condition) {
-                case 'singlePerfect20': return achievements['godlike']?.unlocked;
-                case 'totalPerfect50': return (lt.totalPerfects || 0) >= 50;
-                case 'totalBoss5': return (lt.totalBossDefeated || 0) >= 5;
-                case 'totalScore10000': return (lt.totalScore || 0) >= 10000;
-                case 'firstPerfect': return achievements['firstPerfect']?.unlocked;
-                case 'totalGames10': return (lt.totalGames || 0) >= 10;
-                case 'combo30': return achievements['combo30']?.unlocked;
-                case 'totalBoss3': return (lt.totalBossDefeated || 0) >= 3;
-                case 'totalGames20': return (lt.totalGames || 0) >= 20;
-                default: return false;
-            }
-        };
-
-        const unlocked = isUnlockedFn(key, conf);
+        const lt = getLifetimeStats();
+        const unlocked = isSkinUnlockedByCondition(conf, lt);
         const isEquipped = skin[category] === key;
         const progress = getSkinProgress(conf, lt);
 
@@ -2252,6 +2321,8 @@ const PiSniper = (() => {
         } catch (e) {
             // 使用默认皮肤
         }
+        sanitizeSkinByUnlock();
+        saveSkin();
     }
 
     /**

@@ -956,13 +956,6 @@
         });
     }
 
-    const floatingChatBtn = document.getElementById('floatingChatBtn');
-    if (floatingChatBtn) {
-        floatingChatBtn.addEventListener('click', () => {
-            alert('Chat feature coming soon! This would open a chat window with our AI assistant.');
-        });
-    }
-
     const quickQuestionBtns = document.querySelectorAll('.quick-question-btn');
     const chatInput = document.querySelector('.chat-input');
     const btnSend = document.querySelector('.btn-send');

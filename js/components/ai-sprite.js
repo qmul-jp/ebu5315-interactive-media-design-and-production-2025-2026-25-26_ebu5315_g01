@@ -1,6 +1,21 @@
 (function initSharedAiSprite() {
     const widget = document.getElementById('aiSpriteWidget');
     if (!widget) return;
+    const SPRITE_ENABLED_KEY = 'circlelearnSpriteEnabledV1';
+    const spriteEnabled = localStorage.getItem(SPRITE_ENABLED_KEY) !== '0';
+    if (!spriteEnabled) {
+        window.__circlelearnSpriteRuntimeActive = false;
+        widget.setAttribute('hidden', '');
+        widget.style.display = 'none';
+        return;
+    }
+    window.__circlelearnSpriteRuntimeActive = true;
+    const forcePeekFromSettings = window.__circlelearnSpriteEnableFromSettings === true;
+    window.__circlelearnSpriteEnableFromSettings = false;
+    const navEntry = performance.getEntriesByType('navigation')[0];
+    const isReloadNav =
+        (navEntry && navEntry.type === 'reload') ||
+        (!!performance.navigation && performance.navigation.type === 1);
 
     const SPRITE_STATE_KEY = 'circlelearnAiSpriteStateV1';
     const MANAGED_CLASSES = [
@@ -14,6 +29,13 @@
         'is-peek-popout',
         'is-smile-rest',
         'is-welcome-done',
+        'is-returning-peek-exit',
+        'is-returning-peek-tilt'
+    ];
+    const TRANSIENT_CLASSES = [
+        'is-waving',
+        'is-exiting',
+        'is-peek-popout',
         'is-returning-peek-exit',
         'is-returning-peek-tilt'
     ];
@@ -34,6 +56,7 @@
     let returnPeekTiltFallbackTimer = null;
     let returnPeekSlideListener = null;
     let returnPeekTiltListener = null;
+    let learnPromptAutoDismissTimer = null;
 
     const PEEK_FALLBACK_MS = 1850;
     const PEEK_AFTER_OFFSCREEN_MS = 1000;
@@ -61,6 +84,170 @@
     const BODY_SMILE_TUCK_SRC = toCrossPageAssetUrl(
         widget.dataset.bodySmileTuckSrc || 'assets/images/global/笑容揣手.png'
     );
+    const SPRITE_EXIT_AFTER_BUBBLE_NAV_KEY = 'circlelearnSpriteExitAfterBubbleNavV1';
+    const path = window.location.pathname.replace(/\\/g, '/');
+    const isLearnMorePage = /\/learn_more(?:\/learn_more\.html)?$/i.test(path) || /\/learn_more\.html$/i.test(path);
+    const shouldExitAfterBubbleNav = (() => {
+        try {
+            const hit = window.sessionStorage.getItem(SPRITE_EXIT_AFTER_BUBBLE_NAV_KEY) === '1';
+            if (hit) window.sessionStorage.removeItem(SPRITE_EXIT_AFTER_BUBBLE_NAV_KEY);
+            return hit;
+        } catch (e) {
+            return false;
+        }
+    })();
+    let bubblePromptMode = 'welcome';
+    let pendingBubblePromptMode = null;
+
+    function resolveGamePageUrl() {
+        const navGame = document.querySelector('a.nav-link[href*="game/game.html"]');
+        if (navGame) {
+            const href = navGame.getAttribute('href');
+            if (href) return href;
+        }
+        if (path === '/' || /\/index\.html$/i.test(path)) return 'game/game.html';
+        if (/\/game(?:\/game\.html)?$/i.test(path)) return 'game.html';
+        return '../game/game.html';
+    }
+
+    function forceSmileTuckAppearance() {
+        const bodyImg = widget.querySelector('.ai-sprite-widget__body');
+        const armLayer = widget.querySelector('.ai-sprite-widget__arm-layer');
+        if (bodyImg) {
+            const current = bodyImg.getAttribute('src') || '';
+            if (!current.includes('笑容揣手')) {
+                bodyImg.src = BODY_SMILE_TUCK_SRC;
+            }
+            bodyImg.alt = '';
+        }
+        if (armLayer) armLayer.setAttribute('hidden', '');
+        widget.classList.remove('is-waving');
+    }
+
+    function resolveRouteUrl(target) {
+        const routeMatchers = {
+            home: /index\.html#home/i,
+            game: /game(?:\/game\.html|\.html)/i,
+            quiz: /quiz\/quiz-levels\.html|quiz-levels\.html/i,
+            learn: /learn_more\/learn_more\.html|learn_more\.html/i,
+            premium: /premium\/premium\.html|premium\.html/i
+        };
+        const matcher = routeMatchers[target];
+        if (matcher) {
+            const fromAnyLink = Array.from(document.querySelectorAll('a[href]')).find((a) => {
+                const href = a.getAttribute('href');
+                return href && matcher.test(href);
+            });
+            if (fromAnyLink) {
+                const href = fromAnyLink.getAttribute('href');
+                if (href) return href;
+            }
+        }
+        if (target === 'home') {
+            if (path === '/' || /\/index\.html$/i.test(path)) return 'index.html#home';
+            return '../index.html#home';
+        }
+        if (target === 'game') return resolveGamePageUrl();
+        if (target === 'quiz') {
+            if (path === '/' || /\/index\.html$/i.test(path)) return 'quiz/quiz-levels.html';
+            if (/\/quiz\//i.test(path)) return 'quiz-levels.html';
+            return '../quiz/quiz-levels.html';
+        }
+        if (target === 'learn') {
+            if (path === '/' || /\/index\.html$/i.test(path)) return 'learn_more/learn_more.html';
+            if (/\/learn_more\//i.test(path)) return 'learn_more.html';
+            return '../learn_more/learn_more.html';
+        }
+        if (target === 'premium') {
+            if (path === '/' || /\/index\.html$/i.test(path)) return 'premium/premium.html';
+            if (/\/premium\//i.test(path)) return 'premium.html';
+            return '../premium/premium.html';
+        }
+        return resolveGamePageUrl();
+    }
+
+    const bubble = widget.querySelector('.ai-sprite-widget__bubble');
+    let bubbleCta = bubble ? bubble.querySelector('.ai-sprite-widget__cta') : null;
+    if (bubble && !bubbleCta) {
+        const cta = document.createElement('button');
+        cta.type = 'button';
+        cta.className = 'ai-sprite-widget__cta';
+        cta.setAttribute('data-i18n', 'sprite.cta.playGame');
+        cta.textContent = 'Play Game';
+        cta.hidden = true;
+        cta.addEventListener('click', (ev) => {
+            ev.preventDefault();
+            ev.stopPropagation();
+            try {
+                window.sessionStorage.setItem(SPRITE_EXIT_AFTER_BUBBLE_NAV_KEY, '1');
+            } catch (e) {}
+            window.location.href = resolveGamePageUrl();
+        });
+        bubble.appendChild(cta);
+        bubbleCta = cta;
+    } else if (bubbleCta) {
+        bubbleCta.hidden = true;
+    }
+
+    function setBubbleCtaVisible(visible) {
+        if (!bubbleCta) return;
+        bubbleCta.hidden = !visible;
+    }
+
+    let bubbleNav = bubble ? bubble.querySelector('.ai-sprite-widget__nav-grid') : null;
+    if (bubble && !bubbleNav) {
+        bubbleNav = document.createElement('div');
+        bubbleNav.className = 'ai-sprite-widget__nav-grid';
+        bubbleNav.hidden = true;
+        const targets = ['home', 'game', 'quiz', 'learn', 'premium'];
+        targets.forEach((target) => {
+            const btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = 'ai-sprite-widget__nav-btn';
+            btn.setAttribute('data-target', target);
+            btn.setAttribute('data-i18n', `sprite.nav.${target}`);
+            btn.textContent = target;
+            btn.addEventListener('click', (ev) => {
+                ev.preventDefault();
+                ev.stopPropagation();
+                try {
+                    window.sessionStorage.setItem(SPRITE_EXIT_AFTER_BUBBLE_NAV_KEY, '1');
+                } catch (e) {}
+                window.location.href = resolveRouteUrl(target);
+            });
+            bubbleNav.appendChild(btn);
+        });
+        bubble.appendChild(bubbleNav);
+    }
+
+    function setBubbleNavVisible(visible) {
+        if (!bubbleNav) return;
+        bubbleNav.hidden = !visible;
+    }
+
+    function applyBubblePromptMode() {
+        const welcome = widget.querySelector('.ai-sprite-widget__welcome');
+        if (!welcome) return;
+        widget.classList.remove('is-bubble-learnbreak', 'is-bubble-quicknav');
+        if (bubblePromptMode === 'learnBreak') {
+            welcome.setAttribute('data-i18n', 'learn.sprite.breakPrompt');
+            widget.classList.add('is-bubble-learnbreak');
+            setBubbleCtaVisible(true);
+            setBubbleNavVisible(false);
+        } else if (bubblePromptMode === 'quickNav') {
+            welcome.setAttribute('data-i18n', 'sprite.quickNav.prompt');
+            widget.classList.add('is-bubble-quicknav');
+            setBubbleCtaVisible(false);
+            setBubbleNavVisible(true);
+        } else {
+            welcome.setAttribute('data-i18n', 'home.sprite.welcome');
+            setBubbleCtaVisible(false);
+            setBubbleNavVisible(false);
+        }
+        if (typeof window.applySiteI18n === 'function') {
+            window.applySiteI18n();
+        }
+    }
 
     function readPersistedState() {
         try {
@@ -74,10 +261,17 @@
         }
     }
 
+    function clearPersistedState() {
+        try {
+            window.sessionStorage.removeItem(SPRITE_STATE_KEY);
+        } catch (e) {}
+    }
+
     function persistState() {
         const bodyImg = widget.querySelector('.ai-sprite-widget__body');
         const armLayer = widget.querySelector('.ai-sprite-widget__arm-layer');
-        const classes = Array.from(widget.classList).filter((name) => MANAGED_CLASSES.includes(name));
+        const rawClasses = Array.from(widget.classList).filter((name) => MANAGED_CLASSES.includes(name));
+        const classes = normalizeSnapshotClasses(rawClasses);
         const isPreInitHidden = widget.hasAttribute('hidden') && !classes.includes('is-visible');
         if (isPreInitHidden) return;
         const snapshot = {
@@ -99,7 +293,7 @@
     function applyPersistedState(snapshot) {
         const bodyImg = widget.querySelector('.ai-sprite-widget__body');
         const armLayer = widget.querySelector('.ai-sprite-widget__arm-layer');
-        const classes = Array.isArray(snapshot.classes) ? snapshot.classes : [];
+        const classes = normalizeSnapshotClasses(Array.isArray(snapshot.classes) ? snapshot.classes : []);
 
         if (!classes.length) return false;
         if (snapshot.hidden && !classes.includes('is-visible')) return false;
@@ -127,10 +321,37 @@
         if (snapshot.hidden) widget.setAttribute('hidden', '');
         else widget.removeAttribute('hidden');
 
+        if (isLearnMorePage) {
+            forceSmileTuckAppearance();
+        }
+
         requestAnimationFrame(() => {
             alignHandToBody();
         });
         return true;
+    }
+
+    function normalizeSnapshotClasses(inputClasses) {
+        const classSet = new Set(
+            (Array.isArray(inputClasses) ? inputClasses : []).filter((name) => MANAGED_CLASSES.includes(name))
+        );
+        const hasTransient = TRANSIENT_CLASSES.some((name) => classSet.has(name));
+        const midPeek =
+            classSet.has('is-tuck-offscreen') &&
+            classSet.has('is-peek-emerge') &&
+            !classSet.has('is-peek');
+
+        if (hasTransient || midPeek) {
+            return [
+                'is-visible',
+                'is-tuck-offscreen',
+                'is-peek-emerge',
+                'is-peek-tilt',
+                'is-peek',
+                'is-welcome-done'
+            ];
+        }
+        return Array.from(classSet);
     }
 
     function restoreFromSession() {
@@ -232,6 +453,10 @@
             window.clearTimeout(returnPeekTiltFallbackTimer);
             returnPeekTiltFallbackTimer = null;
         }
+        if (learnPromptAutoDismissTimer !== null) {
+            window.clearTimeout(learnPromptAutoDismissTimer);
+            learnPromptAutoDismissTimer = null;
+        }
         const stackPeek = widget.querySelector('.ai-sprite-stack');
         if (stackPeek) {
             stackPeek.removeEventListener('transitionend', onPeekPopoutEnd);
@@ -289,6 +514,11 @@
             'is-peek-tilt'
         );
         widget.classList.add('is-smile-rest');
+        if (pendingBubblePromptMode) {
+            bubblePromptMode = pendingBubblePromptMode;
+            pendingBubblePromptMode = null;
+        }
+        applyBubblePromptMode();
         widget.style.removeProperty('--ai-exit-x');
         widget.style.removeProperty('--ai-exit-full');
         if (bodyImg.complete && bodyImg.naturalWidth) {
@@ -330,6 +560,12 @@
     const show = () => {
         widget.removeAttribute('hidden');
         widget.classList.remove('is-welcome-done');
+        bubblePromptMode = 'welcome';
+        applyBubblePromptMode();
+        setBubbleCtaVisible(false);
+        if (isLearnMorePage) {
+            forceSmileTuckAppearance();
+        }
         requestAnimationFrame(() => {
             widget.classList.add('is-visible');
         });
@@ -395,6 +631,14 @@
             else bodyImg.addEventListener('load', afterTuckLoad, { once: true });
         };
 
+        if (isLearnMorePage) {
+            applyFullExitMetrics();
+            applyPeekExitMetrics();
+            widget.classList.add('is-tuck-offscreen');
+            schedulePeekFromOffscreen(260);
+            return;
+        }
+
         const onExitSlideEnd = (ev) => {
             if (ev.propertyName !== 'transform') return;
             if (!widget.classList.contains('is-exiting')) return;
@@ -422,8 +666,18 @@
         }, ENTRANCE_MS);
     };
 
-    const restored = restoreFromSession();
-    if (!restored) {
+    if (isReloadNav) {
+        clearPersistedState();
+    }
+    const restored = !isReloadNav && !forcePeekFromSettings && restoreFromSession();
+    if (forcePeekFromSettings) {
+        widget.style.removeProperty('display');
+        widget.removeAttribute('hidden');
+        widget.classList.remove(...MANAGED_CLASSES);
+        // 设置启用时只播放探头动画，不显示欢迎文案气泡。
+        widget.classList.add('is-visible', 'is-tuck-offscreen', 'is-welcome-done');
+        schedulePeekFromOffscreen(80);
+    } else if (!restored) {
         const root = document.documentElement;
         if (root.classList.contains('hero-intro-play')) {
             window.addEventListener('circlelearn:heroIntroComplete', show, { once: true });
@@ -533,38 +787,142 @@
         });
     }
 
+    function startPeekPopout(promptMode = null) {
+        if (!widget.classList.contains('is-peek') || widget.classList.contains('is-peek-popout')) return false;
+        if (promptMode) pendingBubblePromptMode = promptMode;
+        const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        if (prefersReduced) {
+            finalizePeekPopoutOnce();
+            return true;
+        }
+        peekPopoutFinalized = false;
+        const stack = widget.querySelector('.ai-sprite-stack');
+        if (stack) {
+            stack.addEventListener('transitionend', onPeekPopoutEnd, { once: true });
+        }
+        requestAnimationFrame(() => {
+            widget.classList.add('is-peek-popout');
+            peekPopoutFallbackTimer = window.setTimeout(
+                finalizePeekPopoutOnce,
+                PEEK_POPOUT_MS + 180
+            );
+        });
+        return true;
+    }
+
+    function triggerRetreatAnimation() {
+        widget.classList.add('is-welcome-done');
+        bubblePromptMode = 'welcome';
+        pendingBubblePromptMode = null;
+        setBubbleNavVisible(false);
+        setBubbleCtaVisible(false);
+        if (widget.classList.contains('is-peek-popout')) {
+            finalizePeekPopoutOnce();
+            requestAnimationFrame(() => {
+                if (widget.classList.contains('is-smile-rest')) {
+                    startReturnToPeekFromSmileRest();
+                }
+            });
+            return true;
+        }
+        if (widget.classList.contains('is-smile-rest')) {
+            startReturnToPeekFromSmileRest();
+            return true;
+        }
+        if (startPeekPopout()) {
+            window.setTimeout(() => {
+                triggerRetreatAnimation();
+            }, PEEK_POPOUT_MS + 80);
+            return true;
+        }
+        return false;
+    }
+
+    function scheduleLearnPromptAutoDismiss() {
+        if (learnPromptAutoDismissTimer !== null) {
+            window.clearTimeout(learnPromptAutoDismissTimer);
+        }
+        learnPromptAutoDismissTimer = window.setTimeout(() => {
+            learnPromptAutoDismissTimer = null;
+            // 文案先渐隐，再复用原有“弹出 -> 侧边探头”退场链路。
+            triggerRetreatAnimation();
+        }, 10000);
+    }
+
+    function showLearnBreakPrompt() {
+        bubblePromptMode = 'learnBreak';
+        pendingBubblePromptMode = 'learnBreak';
+        applyBubblePromptMode();
+        widget.style.removeProperty('display');
+        widget.removeAttribute('hidden');
+        widget.classList.remove('is-welcome-done');
+
+        if (widget.classList.contains('is-smile-rest') || widget.classList.contains('is-peek-popout')) {
+            scheduleLearnPromptAutoDismiss();
+            return;
+        }
+        if (startPeekPopout('learnBreak')) {
+            scheduleLearnPromptAutoDismiss();
+            return;
+        }
+
+        // 若当前仍在侧边探头过渡链路中，稍后再次尝试复用弹出动画。
+        let retries = 10;
+        const retry = () => {
+            if (startPeekPopout('learnBreak')) {
+                scheduleLearnPromptAutoDismiss();
+                return;
+            }
+            retries -= 1;
+            if (retries <= 0) return;
+            window.setTimeout(retry, 220);
+        };
+        retry();
+    }
+
     const peekClickableTarget = peekStack || spriteStage;
     if (peekClickableTarget) {
         peekClickableTarget.addEventListener('click', () => {
+            if (learnPromptAutoDismissTimer !== null) {
+                window.clearTimeout(learnPromptAutoDismissTimer);
+                learnPromptAutoDismissTimer = null;
+            }
+            bubblePromptMode = 'welcome';
+            pendingBubblePromptMode = null;
+            setBubbleCtaVisible(false);
+            setBubbleNavVisible(false);
             if (
                 widget.classList.contains('is-returning-peek-exit') ||
                 widget.classList.contains('is-returning-peek-tilt')
             ) {
                 return;
             }
+            if (widget.classList.contains('is-peek-popout')) {
+                finalizePeekPopoutOnce();
+                requestAnimationFrame(() => {
+                    if (widget.classList.contains('is-smile-rest')) {
+                        startReturnToPeekFromSmileRest();
+                    }
+                });
+                return;
+            }
             if (widget.classList.contains('is-smile-rest')) {
                 startReturnToPeekFromSmileRest();
                 return;
             }
-            if (!widget.classList.contains('is-peek') || widget.classList.contains('is-peek-popout')) return;
-            const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-            if (prefersReduced) {
-                finalizePeekPopoutOnce();
-                return;
-            }
-            peekPopoutFinalized = false;
-            const stack = widget.querySelector('.ai-sprite-stack');
-            if (stack) {
-                stack.addEventListener('transitionend', onPeekPopoutEnd, { once: true });
-            }
-            requestAnimationFrame(() => {
-                widget.classList.add('is-peek-popout');
-                peekPopoutFallbackTimer = window.setTimeout(
-                    finalizePeekPopoutOnce,
-                    PEEK_POPOUT_MS + 180
-                );
-            });
+            // 从偷看点击弹出时，确保气泡可见，再切换到快捷导航文案模式。
+            widget.classList.remove('is-welcome-done');
+            bubblePromptMode = 'quickNav';
+            startPeekPopout('quickNav');
         });
+    }
+
+    document.addEventListener('circlelearn:spriteLearnBreakPrompt', showLearnBreakPrompt);
+
+    if (shouldExitAfterBubbleNav) {
+        window.setTimeout(() => {
+            triggerRetreatAnimation();
+        }, 260);
     }
 
     const persistObserver = new MutationObserver(() => {

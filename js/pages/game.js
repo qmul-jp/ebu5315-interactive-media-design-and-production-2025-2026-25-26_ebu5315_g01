@@ -5,6 +5,101 @@
 (function () {
     'use strict';
 
+    const PREMIUM_STORAGE_KEY = 'circlelearnPremiumPlanV1';
+    const GAME_SKIN_STORAGE_KEY = 'circlelearnGameSkinV1';
+
+    function readPremiumPlan() {
+        try {
+            const raw = localStorage.getItem(PREMIUM_STORAGE_KEY);
+            if (!raw) return null;
+            const plan = JSON.parse(raw);
+            if (!plan || typeof plan !== 'object') return null;
+            if (typeof plan.expireAt === 'number' && Date.now() > plan.expireAt) {
+                localStorage.removeItem(PREMIUM_STORAGE_KEY);
+                return null;
+            }
+            return plan;
+        } catch (err) {
+            return null;
+        }
+    }
+
+    function tGame(key, fallback = key) {
+        if (window.GameI18N && typeof window.GameI18N.t === 'function') {
+            return window.GameI18N.t(key);
+        }
+        return fallback;
+    }
+
+    function withVars(template, vars) {
+        return String(template).replace(/\{(\w+)\}/g, (_, name) => {
+            return Object.prototype.hasOwnProperty.call(vars, name) ? String(vars[name]) : '';
+        });
+    }
+
+    function formatPremiumRemaining(expireAt) {
+        if (!expireAt) return tGame('game.premium.remaining.forever', 'Lifetime');
+        const remainMs = Math.max(0, expireAt - Date.now());
+        const remainDays = Math.ceil(remainMs / (24 * 60 * 60 * 1000));
+        return withVars(
+            tGame('game.premium.remaining.days', '{days} days left'),
+            { days: remainDays }
+        );
+    }
+
+    function applyMenuSkin(skinName) {
+        document.body.classList.remove(
+            'game-skin-aurora',
+            'game-skin-sunset',
+            'game-skin-neon'
+        );
+        if (skinName && skinName !== 'default') {
+            document.body.classList.add(`game-skin-${skinName}`);
+        }
+    }
+
+    function initPremiumSkins() {
+        const lab = document.getElementById('premiumSkinLab');
+        const statusEl = document.getElementById('premiumSkinStatus');
+        const unlockCta = document.getElementById('premiumUnlockCta');
+        if (!lab || !statusEl || !unlockCta) return;
+
+        localStorage.removeItem(GAME_SKIN_STORAGE_KEY);
+        applyMenuSkin('default');
+
+        const renderPremiumStatus = () => {
+            const plan = readPremiumPlan();
+            const hasPremium = Boolean(plan);
+            if (hasPremium) {
+                statusEl.textContent = withVars(
+                    tGame('game.premium.status.active', 'Active: {plan} ({remaining})'),
+                    {
+                        plan: plan.name || tGame('game.premium.active', 'Premium Active'),
+                        remaining: formatPremiumRemaining(plan.expireAt)
+                    }
+                );
+                unlockCta.textContent = tGame('game.premium.active', 'Premium Active');
+                unlockCta.setAttribute('aria-disabled', 'true');
+                unlockCta.classList.add('is-disabled');
+                unlockCta.setAttribute('tabindex', '-1');
+                lab.classList.remove('is-locked');
+            } else {
+                statusEl.textContent = tGame(
+                    'game.premium.status.locked',
+                    'Not active: visit Premium page to unlock more skin themes.'
+                );
+                unlockCta.textContent = tGame('game.premium.unlock', 'Get Premium');
+                unlockCta.removeAttribute('aria-disabled');
+                unlockCta.classList.remove('is-disabled');
+                unlockCta.removeAttribute('tabindex');
+                lab.classList.add('is-locked');
+            }
+        };
+
+        renderPremiumStatus();
+        document.addEventListener('gameLanguageChanged', renderPremiumStatus);
+    }
+
     // ===== 视图管理 =====
     const views = {
         menu: document.querySelectorAll('#gameMenuHero, #gameMenuMain'),
@@ -64,6 +159,7 @@
             if (el) {
                 el.addEventListener('click', (e) => {
                     e.stopPropagation();
+                    if (window.GameAudio && typeof window.GameAudio.init === 'function') window.GameAudio.init();
                     GameAudio.playClick();
                     showView(view);
                     const gameModule = getGameModule(module);
@@ -363,6 +459,7 @@
         GameI18N.init();
         GameI18N.translatePage();
         initNavigation();
+        initPremiumSkins();
         initPreviewAnimations();
         showView('menu');
     });
